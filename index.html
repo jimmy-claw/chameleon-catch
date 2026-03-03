@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🦎 Chameleon Catch!</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --jungle-dark: #1a4a2e;
+    --jungle-mid: #2d6a4f;
+    --jungle-light: #52b788;
+    --leaf-green: #74c69d;
+    --sky-top: #87ceeb;
+    --sky-bot: #b5e8f7;
+    --chameleon-body: #5cb85c;
+    --chameleon-dark: #3d8b3d;
+    --chameleon-eye: #ffffff;
+    --branch-brown: #6b3a1f;
+    --branch-dark: #4a2810;
+    --tongue-color: #e63946;
+    --tongue-tip: #ff6b6b;
+    --fly-body: #2d2d2d;
+    --fly-wing: rgba(200,220,255,0.75);
+    --score-bg: rgba(0,0,0,0.45);
+    --missed-red: #e63946;
+    --gold: #ffd700;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--jungle-dark);
+    font-family: 'Nunito', sans-serif;
+    touch-action: none;
+  }
+
+  #game-container {
+    position: relative;
+    width: 100vw; height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bot) 45%, var(--jungle-mid) 46%, var(--jungle-dark) 100%);
+  }
+
+  /* ===== BACKGROUND ===== */
+  .bg-sun {
+    position: absolute;
+    top: 5%;
+    right: 8%;
+    width: 70px; height: 70px;
+    background: radial-gradient(circle, #fff7a0 30%, #ffe066 70%, transparent 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 40px 20px rgba(255,240,100,0.4);
+  }
+
+  .bg-cloud {
+    position: absolute;
+    background: rgba(255,255,255,0.85);
+    border-radius: 50px;
+  }
+  .bg-cloud::before, .bg-cloud::after {
+    content: '';
+    position: absolute;
+    background: rgba(255,255,255,0.85);
+    border-radius: 50%;
+  }
+
+  .cloud1 {
+    top: 8%; left: 10%;
+    width: 100px; height: 30px;
+  }
+  .cloud1::before {
+    width: 50px; height: 50px;
+    top: -25px; left: 15px;
+  }
+  .cloud1::after {
+    width: 35px; height: 35px;
+    top: -18px; left: 45px;
+  }
+
+  .cloud2 {
+    top: 14%; left: 40%;
+    width: 80px; height: 24px;
+  }
+  .cloud2::before {
+    width: 40px; height: 40px;
+    top: -22px; left: 10px;
+  }
+  .cloud2::after {
+    width: 28px; height: 28px;
+    top: -14px; left: 38px;
+  }
+
+  /* ===== LEAVES ===== */
+  .leaf {
+    position: absolute;
+    border-radius: 50% 0 50% 0;
+    opacity: 0.9;
+  }
+
+  /* ===== BRANCH ===== */
+  #branch {
+    position: absolute;
+    bottom: 22%;
+    left: -5%;
+    width: 55%;
+    height: 28px;
+    background: linear-gradient(180deg, var(--branch-dark) 0%, var(--branch-brown) 50%, var(--branch-dark) 100%);
+    border-radius: 0 14px 14px 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+  #branch::after {
+    content: '';
+    position: absolute;
+    top: 4px; left: 10%;
+    width: 80%; height: 6px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 3px;
+  }
+
+  /* ===== CHAMELEON ===== */
+  #chameleon {
+    position: absolute;
+    bottom: calc(22% + 20px);
+    left: 2%;
+    width: 160px; height: 110px;
+    transform-origin: bottom left;
+  }
+
+  /* SVG chameleon is inline in JS */
+  #chameleon-svg {
+    width: 100%; height: 100%;
+    overflow: visible;
+  }
+
+  /* ===== TONGUE ===== */
+  #tongue-canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  /* ===== FLIES ===== */
+  .fly {
+    position: absolute;
+    width: 44px; height: 44px;
+    cursor: pointer;
+    z-index: 10;
+    touch-action: none;
+    user-select: none;
+  }
+  .fly-body {
+    position: absolute;
+    bottom: 6px; left: 50%;
+    transform: translateX(-50%);
+    width: 18px; height: 22px;
+    background: radial-gradient(ellipse, #444 30%, #222 100%);
+    border-radius: 50% 50% 45% 45%;
+  }
+  .fly-head {
+    position: absolute;
+    bottom: 26px; left: 50%;
+    transform: translateX(-50%);
+    width: 12px; height: 11px;
+    background: #333;
+    border-radius: 50%;
+  }
+  .fly-eye {
+    position: absolute;
+    width: 5px; height: 5px;
+    background: #e63946;
+    border-radius: 50%;
+    top: 2px;
+  }
+  .fly-eye.left { left: 0px; }
+  .fly-eye.right { right: 0px; }
+  .fly-wing {
+    position: absolute;
+    width: 20px; height: 13px;
+    background: var(--fly-wing);
+    border-radius: 50%;
+    border: 1px solid rgba(180,210,255,0.6);
+    bottom: 18px;
+    animation: wing-flap 0.1s linear infinite alternate;
+  }
+  .fly-wing.left  { left: 1px;  transform-origin: right center; }
+  .fly-wing.right { right: 1px; transform-origin: left center; }
+
+  @keyframes wing-flap {
+    from { transform: scaleY(1) rotate(-8deg); }
+    to   { transform: scaleY(0.4) rotate(8deg); }
+  }
+
+  /* ===== HUD ===== */
+  #hud {
+    position: absolute;
+    top: 12px; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    z-index: 20;
+    pointer-events: none;
+  }
+  .hud-box {
+    background: var(--score-bg);
+    backdrop-filter: blur(4px);
+    border-radius: 14px;
+    padding: 6px 16px;
+    color: #fff;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .hud-box .label { opacity: 0.8; font-size: 0.85rem; }
+  .hud-box .value { color: var(--gold); font-size: 1.3rem; }
+
+  /* ===== FEEDBACK ===== */
+  .feedback-popup {
+    position: absolute;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.6rem;
+    pointer-events: none;
+    z-index: 30;
+    white-space: nowrap;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+    animation: popup-float 1s ease-out forwards;
+  }
+  @keyframes popup-float {
+    0%   { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-70px) scale(1.3); }
+  }
+
+  /* ===== SCREENS ===== */
+  .screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    background: rgba(20,60,35,0.88);
+    backdrop-filter: blur(6px);
+  }
+
+  .screen-card {
+    background: linear-gradient(135deg, #1e6b45, #124d30);
+    border: 3px solid var(--leaf-green);
+    border-radius: 28px;
+    padding: 36px 44px;
+    text-align: center;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    max-width: 90vw;
+  }
+
+  .screen h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 8vw, 3.2rem);
+    color: var(--gold);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    margin-bottom: 8px;
+  }
+
+  .screen p {
+    color: #c8f5d8;
+    font-size: clamp(0.9rem, 3vw, 1.1rem);
+    margin: 8px 0;
+    line-height: 1.5;
+  }
+
+  .screen .big-score {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(3rem, 12vw, 5rem);
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(255,215,0,0.5);
+    margin: 16px 0;
+  }
+
+  .btn {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 14px 36px;
+    background: linear-gradient(135deg, #5cb85c, #3d8b3d);
+    color: #fff;
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.1rem, 4vw, 1.5rem);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3), 0 1px 0 rgba(255,255,255,0.2) inset;
+    transition: transform 0.1s, box-shadow 0.1s;
+    touch-action: manipulation;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+  .btn:active { transform: translateY(1px); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+
+  .level-badge {
+    display: inline-block;
+    background: rgba(255,215,0,0.15);
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    padding: 4px 14px;
+    color: var(--gold);
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+
+  /* ===== LEVEL UP BANNER ===== */
+  #level-banner {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    color: var(--gold);
+    text-shadow: 0 0 30px rgba(255,215,0,0.8), 2px 2px 6px rgba(0,0,0,0.6);
+    z-index: 40;
+    pointer-events: none;
+    display: none;
+    animation: level-pop 1.6s ease-out forwards;
+  }
+  @keyframes level-pop {
+    0%   { opacity: 0; transform: translate(-50%,-50%) scale(0.5); }
+    30%  { opacity: 1; transform: translate(-50%,-50%) scale(1.1); }
+    70%  { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%,-50%) scale(0.9); }
+  }
+
+  /* mobile helpers */
+  @media (max-width: 480px) {
+    #branch { bottom: 18%; }
+    #chameleon { bottom: calc(18% + 20px); }
+  }
+</style>
+</head>
+<body>
+<div id="game-container">
+
+  <!-- Sky / Background -->
+  <div class="bg-sun"></div>
+  <div class="bg-cloud cloud1"></div>
+  <div class="bg-cloud cloud2"></div>
+
+  <!-- Jungle leaves (generated by JS) -->
+  <div id="leaves-container"></div>
+
+  <!-- Branch -->
+  <div id="branch"></div>
+
+  <!-- Chameleon -->
+  <div id="chameleon">
+    <!-- SVG inserted by JS -->
+  </div>
+
+  <!-- Tongue canvas (drawn by JS) -->
+  <canvas id="tongue-canvas"></canvas>
+
+  <!-- Flies (added by JS) -->
+
+  <!-- HUD -->
+  <div id="hud">
+    <div class="hud-box">
+      <span class="label">🎯 Score</span>
+      <span class="value" id="score-display">0</span>
+    </div>
+    <div class="hud-box">
+      <span class="label">⚡ Level</span>
+      <span class="value" id="level-display">1</span>
+    </div>
+    <div class="hud-box">
+      <span class="label">💀 Missed</span>
+      <span class="value" id="missed-display">0</span>
+    </div>
+  </div>
+
+  <!-- Level Up Banner -->
+  <div id="level-banner">🎉 Level Up!</div>
+
+  <!-- Start Screen -->
+  <div class="screen" id="start-screen">
+    <div class="screen-card">
+      <h1>🦎 Chameleon<br>Catch!</h1>
+      <p>Tap a fly to shoot your<br>sticky tongue and catch it!</p>
+      <p style="margin-top:12px; color:#a8d8b8;">Don't let <strong style="color:#e63946">5 flies</strong> escape!</p>
+      <button class="btn" id="start-btn">🌿 Start Game!</button>
+    </div>
+  </div>
+
+  <!-- Game Over Screen -->
+  <div class="screen" id="gameover-screen" style="display:none">
+    <div class="screen-card">
+      <h1>Game Over!</h1>
+      <p>The flies got away... 🪰🪰🪰</p>
+      <div class="big-score" id="final-score">0</div>
+      <p id="final-level-text" style="color:var(--gold)">Reached Level 1</p>
+      <p id="high-score-text" style="margin-top:8px;"></p>
+      <button class="btn" id="restart-btn">🔄 Try Again!</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ─── Constants ───────────────────────────────────────────────────────────
+  const MAX_MISSED      = 5;
+  const BASE_FLY_SPEED  = 90;   // px/s
+  const BASE_FLY_COUNT  = 3;
+  const MAX_FLIES       = 7;
+  const SCORE_PER_CATCH = 10;
+  const CATCHES_PER_LVL = 5;    // catches needed to level up
+  const TONGUE_SPEED    = 900;  // px/s out
+  const TONGUE_RETRACT  = 600;  // px/s back
+
+  // ─── State ────────────────────────────────────────────────────────────────
+  let score = 0, level = 1, missed = 0, catches = 0;
+  let gameActive = false;
+  let flies = [];
+  let tongue = null;         // {x0,y0,x1,y1,phase,targetFly,progress}
+  let lastTime = 0;
+  let rafId = null;
+  let highScore = parseInt(localStorage.getItem('chameleon_hs') || '0', 10);
+  let chameleonMouthPos = { x: 0, y: 0 }; // screen coords of mouth tip
+
+  // ─── DOM ──────────────────────────────────────────────────────────────────
+  const container   = document.getElementById('game-container');
+  const tongueCanvas= document.getElementById('tongue-canvas');
+  const ctx         = tongueCanvas.getContext('2d');
+  const scoreEl     = document.getElementById('score-display');
+  const levelEl     = document.getElementById('level-display');
+  const missedEl    = document.getElementById('missed-display');
+  const levelBanner = document.getElementById('level-banner');
+  const startScreen = document.getElementById('start-screen');
+  const gameoverScreen = document.getElementById('gameover-screen');
+  const finalScoreEl= document.getElementById('final-score');
+  const finalLevelEl= document.getElementById('final-level-text');
+  const highScoreEl = document.getElementById('high-score-text');
+  const startBtn    = document.getElementById('start-btn');
+  const restartBtn  = document.getElementById('restart-btn');
+  const chameleonEl = document.getElementById('chameleon');
+  const leavesContainer = document.getElementById('leaves-container');
+
+  // ─── Resize canvas ────────────────────────────────────────────────────────
+  function resizeCanvas() {
+    tongueCanvas.width  = window.innerWidth;
+    tongueCanvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  // ─── Build leaves ─────────────────────────────────────────────────────────
+  const leafColors = ['#2d6a4f','#40916c','#52b788','#74c69d','#1b4332','#388659'];
+  function buildLeaves() {
+    leavesContainer.innerHTML = '';
+    const leafData = [
+      {bottom:'52%', left:'-2%', width:80, height:50, rotate:-20, color:0},
+      {bottom:'50%', left:'8%',  width:60, height:40, rotate:30,  color:1},
+      {bottom:'55%', right:'0%', width:90, height:60, rotate:150, color:2},
+      {bottom:'53%', right:'8%',width:65, height:45, rotate:120, color:3},
+      {bottom:'58%', left:'30%',width:75, height:50, rotate:-10, color:4},
+      {bottom:'48%', right:'25%',width:55,height:38, rotate:200, color:5},
+      {bottom:'60%', left:'55%',width:80, height:52, rotate:45,  color:0},
+    ];
+    leafData.forEach(d => {
+      const el = document.createElement('div');
+      el.className = 'leaf';
+      el.style.cssText = `
+        bottom:${d.bottom}; ${d.left ? 'left:'+d.left : 'right:'+d.right};
+        width:${d.width}px; height:${d.height}px;
+        background:${leafColors[d.color]};
+        transform:rotate(${d.rotate}deg);
+      `;
+      leavesContainer.appendChild(el);
+    });
+  }
+  buildLeaves();
+
+  // ─── Chameleon SVG ────────────────────────────────────────────────────────
+  chameleonEl.innerHTML = `
+  <svg id="chameleon-svg" viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+    <!-- tail (curly, behind body) -->
+    <path d="M10,90 Q-10,100 -5,80 Q0,60 15,70" fill="none"
+          stroke="#3d8b3d" stroke-width="10" stroke-linecap="round"/>
+    <!-- body -->
+    <ellipse cx="75" cy="72" rx="50" ry="28"
+             fill="#5cb85c" stroke="#3d8b3d" stroke-width="2"/>
+    <!-- body ridge spikes -->
+    <polyline points="35,50 40,42 50,50 58,40 68,50 78,38 88,48 98,36 108,46 118,44 125,50"
+              fill="none" stroke="#3d8b3d" stroke-width="3" stroke-linejoin="round"/>
+    <!-- belly -->
+    <ellipse cx="75" cy="85" rx="36" ry="13" fill="#74c69d" opacity="0.7"/>
+    <!-- legs -->
+    <line x1="45" y1="90" x2="38" y2="108" stroke="#3d8b3d" stroke-width="8" stroke-linecap="round"/>
+    <line x1="105"y1="90" x2="112"y2="108" stroke="#3d8b3d" stroke-width="8" stroke-linecap="round"/>
+    <line x1="55" y1="88" x2="50" y2="108" stroke="#3d8b3d" stroke-width="6" stroke-linecap="round"/>
+    <line x1="95" y1="88" x2="100"y2="108" stroke="#3d8b3d" stroke-width="6" stroke-linecap="round"/>
+    <!-- neck / head transition -->
+    <path d="M120,65 Q140,60 148,50 Q152,44 148,42" fill="#5cb85c" stroke="#3d8b3d" stroke-width="2"/>
+    <!-- head -->
+    <ellipse cx="140" cy="50" rx="22" ry="17" fill="#5cb85c" stroke="#3d8b3d" stroke-width="2"/>
+    <!-- head casque (ridge on top) -->
+    <path d="M120,42 Q130,28 148,35" fill="#4aaa4a" stroke="#3d8b3d" stroke-width="2"/>
+    <!-- eye bulge outer -->
+    <circle cx="148" cy="44" r="12" fill="#4aaa4a" stroke="#3d8b3d" stroke-width="2"/>
+    <!-- eye white -->
+    <circle cx="148" cy="44" r="8"  fill="white"/>
+    <!-- eye iris -->
+    <circle cx="150" cy="44" r="5"  fill="#f4a261"/>
+    <!-- eye pupil -->
+    <circle cx="151" cy="44" r="2.5" fill="#1a1a1a"/>
+    <!-- eye glint -->
+    <circle cx="152" cy="42" r="1" fill="white"/>
+    <!-- nostril -->
+    <circle cx="158" cy="50" r="2" fill="#3d8b3d"/>
+    <!-- mouth line — tip is at ~(161, 55) -->
+    <path d="M148,52 Q155,56 161,55" fill="none" stroke="#3d8b3d" stroke-width="2" stroke-linecap="round"/>
+    <!-- smile crinkle -->
+    <path d="M148,52 Q149,55 148,56" fill="none" stroke="#3d8b3d" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>`;
+
+  // ─── Find chameleon mouth tip in screen coords ────────────────────────────
+  function updateMouthPos() {
+    const rect = chameleonEl.getBoundingClientRect();
+    // mouth tip is at SVG point (161, 55) in a 160×110 viewBox
+    chameleonMouthPos.x = rect.left + (161 / 160) * rect.width;
+    chameleonMouthPos.y = rect.top  + (55  / 110) * rect.height;
+  }
+  window.addEventListener('resize', updateMouthPos);
+  // Call after layout
+  requestAnimationFrame(updateMouthPos);
+
+  // ─── Fly factory ──────────────────────────────────────────────────────────
+  let flyIdCounter = 0;
+  function createFly() {
+    const id = ++flyIdCounter;
+    const el = document.createElement('div');
+    el.className = 'fly';
+    el.dataset.id = id;
+
+    // Random start pos — keep away from chameleon zone (left 20%)
+    const margin = 60;
+    const minX = window.innerWidth * 0.25;
+    const x = minX + Math.random() * (window.innerWidth - minX - margin);
+    const y = margin + Math.random() * (window.innerHeight * 0.65);
+
+    el.style.left = x + 'px';
+    el.style.top  = y + 'px';
+
+    // random direction
+    const angle = Math.random() * Math.PI * 2;
+    const speed = BASE_FLY_SPEED + (level - 1) * 20 + Math.random() * 30;
+
+    el.innerHTML = `
+      <div class="fly-wing left"></div>
+      <div class="fly-wing right"></div>
+      <div class="fly-head">
+        <div class="fly-eye left"></div>
+        <div class="fly-eye right"></div>
+      </div>
+      <div class="fly-body"></div>`;
+
+    // Click / touch
+    function handleClick(e) {
+      e.stopPropagation();
+      if (!gameActive || tongue) return;
+      shootTongue(fly);
+    }
+    el.addEventListener('click', handleClick);
+    el.addEventListener('touchend', handleClick, {passive:false});
+
+    const fly = {
+      id, el,
+      x, y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      caught: false,
+      escaped: false,
+      escapeTimer: 8 + Math.random() * 6, // secs before fly leaves
+      age: 0,
+      wobble: Math.random() * Math.PI * 2,
+    };
+
+    container.appendChild(el);
+    flies.push(fly);
+    return fly;
+  }
+
+  // ─── Remove fly ───────────────────────────────────────────────────────────
+  function removeFly(fly) {
+    fly.el.remove();
+    flies = flies.filter(f => f !== fly);
+  }
+
+  // ─── Tongue ───────────────────────────────────────────────────────────────
+  function shootTongue(targetFly) {
+    updateMouthPos();
+    // Center of fly
+    const flyRect = targetFly.el.getBoundingClientRect();
+    const tx = flyRect.left + flyRect.width / 2;
+    const ty = flyRect.top  + flyRect.height / 2;
+
+    const dx = tx - chameleonMouthPos.x;
+    const dy = ty - chameleonMouthPos.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+
+    tongue = {
+      x0: chameleonMouthPos.x,
+      y0: chameleonMouthPos.y,
+      tx, ty,
+      dist,
+      phase: 'out',    // 'out' | 'hold' | 'back'
+      progress: 0,     // 0..dist
+      targetFly,
+      caught: false,
+    };
+  }
+
+  // ─── Draw tongue ─────────────────────────────────────────────────────────
+  function drawTongue() {
+    if (!tongue) { ctx.clearRect(0,0,tongueCanvas.width,tongueCanvas.height); return; }
+    ctx.clearRect(0,0,tongueCanvas.width,tongueCanvas.height);
+
+    const {x0, y0, tx, ty, dist, progress, phase} = tongue;
+    const frac = Math.min(progress / dist, 1);
+    const curX = x0 + (tx - x0) * frac;
+    const curY = y0 + (ty - y0) * frac;
+
+    // tongue shaft
+    ctx.beginPath();
+    ctx.moveTo(x0, y0);
+    ctx.lineTo(curX, curY);
+    ctx.strokeStyle = '#c1121f';
+    ctx.lineWidth = 7;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    // tongue tip (sticky blob)
+    ctx.beginPath();
+    ctx.arc(curX, curY, 9, 0, Math.PI*2);
+    ctx.fillStyle = '#e63946';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(curX - 2, curY - 2, 3, 0, Math.PI*2);
+    ctx.fillStyle = '#ff8fa3';
+    ctx.fill();
+  }
+
+  // ─── Show feedback ───────────────────────────────────────────────────────
+  function showFeedback(text, x, y, color) {
+    const el = document.createElement('div');
+    el.className = 'feedback-popup';
+    el.style.left  = x + 'px';
+    el.style.top   = y + 'px';
+    el.style.color = color;
+    el.textContent = text;
+    container.appendChild(el);
+    setTimeout(() => el.remove(), 1100);
+  }
+
+  // ─── Level up ─────────────────────────────────────────────────────────────
+  function checkLevelUp() {
+    const newLevel = Math.floor(catches / CATCHES_PER_LVL) + 1;
+    if (newLevel > level) {
+      level = newLevel;
+      levelEl.textContent = level;
+      // show banner
+      levelBanner.style.display = 'block';
+      levelBanner.style.animation = 'none';
+      void levelBanner.offsetWidth; // reflow
+      levelBanner.style.animation = '';
+      levelBanner.textContent = `🎉 Level ${level}!`;
+      setTimeout(() => { levelBanner.style.display = 'none'; }, 1700);
+      // add a fly
+      const flyCount = Math.min(BASE_FLY_COUNT + level - 1, MAX_FLIES);
+      while (flies.length < flyCount) createFly();
+    }
+  }
+
+  // ─── Update HUD ───────────────────────────────────────────────────────────
+  function updateHUD() {
+    scoreEl.textContent  = score;
+    levelEl.textContent  = level;
+    missedEl.textContent = missed;
+    // flash missed counter red if > 0
+    missedEl.style.color = missed > 0 ? '#e63946' : '#ffd700';
+  }
+
+  // ─── Game loop ────────────────────────────────────────────────────────────
+  function gameLoop(timestamp) {
+    if (!gameActive) return;
+    const dt = Math.min((timestamp - lastTime) / 1000, 0.1); // cap at 100ms
+    lastTime = timestamp;
+
+    updateMouthPos();
+
+    // ── Move flies ──
+    const W = window.innerWidth, H = window.innerHeight;
+    flies.forEach(fly => {
+      if (fly.caught) return;
+      fly.age += dt;
+      fly.escapeTimer -= dt;
+
+      // Wobble movement
+      fly.wobble += dt * 3.5;
+      fly.vx += Math.sin(fly.wobble * 0.7) * 20 * dt;
+      fly.vy += Math.cos(fly.wobble * 1.1) * 20 * dt;
+
+      // clamp speed
+      const spd = Math.sqrt(fly.vx*fly.vx + fly.vy*fly.vy);
+      const maxSpd = BASE_FLY_SPEED + (level - 1) * 25 + 40;
+      if (spd > maxSpd) { fly.vx = (fly.vx/spd)*maxSpd; fly.vy = (fly.vy/spd)*maxSpd; }
+
+      fly.x += fly.vx * dt;
+      fly.y += fly.vy * dt;
+
+      // bounce off walls
+      if (fly.x < 0)        { fly.x = 0;   fly.vx =  Math.abs(fly.vx); }
+      if (fly.x > W - 44)   { fly.x = W-44; fly.vx = -Math.abs(fly.vx); }
+      if (fly.y < 0)        { fly.y = 0;   fly.vy =  Math.abs(fly.vy); }
+      if (fly.y > H * 0.85) { fly.y = H*0.85; fly.vy = -Math.abs(fly.vy); }
+
+      fly.el.style.left = fly.x + 'px';
+      fly.el.style.top  = fly.y + 'px';
+
+      // escape timer
+      if (fly.escapeTimer <= 0 && !fly.escaped) {
+        fly.escaped = true;
+        missed++;
+        if (missed <= MAX_MISSED) {
+          showFeedback('Missed! 😭', fly.x + 22, fly.y - 10, '#e63946');
+        }
+        updateHUD();
+        if (tongue && tongue.targetFly === fly) tongue = null;
+        removeFly(fly);
+        // Spawn a replacement after delay
+        if (gameActive && missed < MAX_MISSED) {
+          setTimeout(() => { if (gameActive) createFly(); }, 1200);
+        }
+        if (missed >= MAX_MISSED) {
+          endGame();
+        }
+        return;
+      }
+    });
+
+    // ── Tongue update ──
+    if (tongue) {
+      const {phase, dist} = tongue;
+
+      if (phase === 'out') {
+        tongue.progress += TONGUE_SPEED * dt;
+        if (tongue.progress >= dist) {
+          tongue.progress = dist;
+          tongue.phase = 'hold';
+          tongue.holdTimer = 0.06;
+
+          // Did we catch the fly?
+          const fly = tongue.targetFly;
+          if (fly && !fly.caught && !fly.escaped) {
+            fly.caught = true;
+            fly.el.style.opacity = '0';
+            tongue.caught = true;
+            score += SCORE_PER_CATCH + (level - 1) * 2;
+            catches++;
+            const fx = parseFloat(fly.el.style.left);
+            const fy = parseFloat(fly.el.style.top);
+            showFeedback('+' + (SCORE_PER_CATCH + (level-1)*2) + ' 🎯', fx, fy - 20, '#ffd700');
+            checkLevelUp();
+            updateHUD();
+          }
+        }
+      } else if (phase === 'hold') {
+        tongue.holdTimer -= dt;
+        if (tongue.holdTimer <= 0) tongue.phase = 'back';
+      } else if (phase === 'back') {
+        tongue.progress -= TONGUE_RETRACT * dt;
+        if (tongue.progress <= 0) {
+          // done — clean up caught fly
+          if (tongue.caught && tongue.targetFly) {
+            removeFly(tongue.targetFly);
+            if (gameActive) setTimeout(() => { if (gameActive) createFly(); }, 600);
+          }
+          tongue = null;
+        }
+      }
+    }
+
+    drawTongue();
+
+    rafId = requestAnimationFrame(gameLoop);
+  }
+
+  // ─── Start game ───────────────────────────────────────────────────────────
+  function startGame() {
+    score = 0; level = 1; missed = 0; catches = 0;
+    flies.forEach(f => f.el.remove());
+    flies = [];
+    tongue = null;
+    gameActive = true;
+
+    startScreen.style.display   = 'none';
+    gameoverScreen.style.display= 'none';
+
+    updateHUD();
+    updateMouthPos();
+
+    for (let i = 0; i < BASE_FLY_COUNT; i++) {
+      setTimeout(() => { if (gameActive) createFly(); }, i * 400);
+    }
+
+    lastTime = performance.now();
+    rafId = requestAnimationFrame(gameLoop);
+  }
+
+  // ─── End game ─────────────────────────────────────────────────────────────
+  function endGame() {
+    gameActive = false;
+    cancelAnimationFrame(rafId);
+    tongue = null;
+    ctx.clearRect(0,0,tongueCanvas.width,tongueCanvas.height);
+    flies.forEach(f => f.el.remove());
+    flies = [];
+
+    if (score > highScore) {
+      highScore = score;
+      localStorage.setItem('chameleon_hs', highScore);
+    }
+
+    finalScoreEl.textContent  = score;
+    finalLevelEl.textContent  = `Reached Level ${level} 🦎`;
+    highScoreEl.textContent   = highScore > 0 ? `🏆 Best: ${highScore}` : '';
+    gameoverScreen.style.display = 'flex';
+  }
+
+  // ─── Buttons ──────────────────────────────────────────────────────────────
+  startBtn.addEventListener('click',   startGame);
+  startBtn.addEventListener('touchend', e => { e.preventDefault(); startGame(); });
+  restartBtn.addEventListener('click',  startGame);
+  restartBtn.addEventListener('touchend', e => { e.preventDefault(); startGame(); });
+
+  // ─── Initial mouth pos after fonts/layout ────────────────────────────────
+  window.addEventListener('load', updateMouthPos);
+
+})();
+</script>
+</body>
+</html>

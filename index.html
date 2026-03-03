@@ -3828,6 +3828,64 @@
   // ─── Initial mouth pos after fonts/layout ────────────────────────────────
   window.addEventListener('load', updateMouthPos);
 
+  // ── Dev/Test hooks ────────────────────────────────────────────────────────
+  window.__gameState = {
+    get gameActive() { return typeof gameActive !== 'undefined' ? gameActive : false; },
+    get carActive()  { return typeof carActive  !== 'undefined' ? carActive  : false; },
+    get gamePaused() { return typeof gamePaused !== 'undefined' ? gamePaused : false; },
+    get score()   { return typeof score   !== 'undefined' ? score   : 0; },
+    get catches() { return typeof catches !== 'undefined' ? catches : 0; },
+    get missed()  { return typeof missed  !== 'undefined' ? missed  : 0; },
+    get level()   { return typeof level   !== 'undefined' ? level   : 1; },
+    get flies()   { return flies ? flies.length : 0; }
+  };
+
+  window.__getFlies = function() {
+    if (typeof flies === 'undefined' || !flies) return [];
+    return flies.filter(function(f) { return !f.caught && !f.escaped; }).map(function(f) {
+      if (!f.el) return null;
+      var r = f.el.getBoundingClientRect();
+      return { x: r.left + r.width/2, y: r.top + r.height/2, type: f.type };
+    }).filter(Boolean);
+  };
+
+  window.__botTap = function(x, y) {
+    // Fly tongue is triggered by 'click' on fly element
+    var el = document.elementFromPoint(x, y);
+    if (el) {
+      var co = {bubbles:true, cancelable:true, clientX:x, clientY:y};
+      // Walk up DOM to find fly element
+      var node = el;
+      while (node && !node.classList.contains('fly')) node = node.parentElement;
+      var target = (node && node.classList.contains('fly')) ? node : el;
+      target.dispatchEvent(new MouseEvent('click', co));
+    }
+    // Pointerdown on container for water/other mechanics
+    var c = document.getElementById('container');
+    if (c) {
+      var po = {bubbles:true, cancelable:true, clientX:x, clientY:y, pointerId:1, isPrimary:true};
+      c.dispatchEvent(new PointerEvent('pointerdown', po));
+      setTimeout(function() { c.dispatchEvent(new PointerEvent('pointerup', po)); }, 50);
+    }
+  };
+
+  window.__forceEndGame = function() {
+    if (typeof endGame    === 'function') endGame('test');
+    if (typeof endCarGame === 'function') endCarGame('test', true);
+  };
+
+  // Dev mode error overlay
+  if (window.location.search.indexOf('dev=1') !== -1) {
+    function showDevError(msg) {
+      var d = document.createElement('div');
+      d.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#e63946;color:#fff;padding:8px 12px;font-size:11px;z-index:99999;cursor:pointer;word-break:break-all;';
+      d.textContent = msg; d.onclick = function() { d.remove(); };
+      document.body.appendChild(d);
+    }
+    window.addEventListener('error', function(e) { showDevError('ERR: ' + e.message + ' ' + (e.filename||'').split('/').pop() + ':' + e.lineno); });
+    window.addEventListener('unhandledrejection', function(e) { showDevError('UNHANDLED: ' + (e.reason && e.reason.message ? e.reason.message : String(e.reason))); });
+  }
+
 })();
 </script>
 

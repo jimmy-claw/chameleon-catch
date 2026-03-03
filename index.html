@@ -369,6 +369,145 @@
     100% { opacity: 0; transform: translate(-50%,-50%) scale(0.9); }
   }
 
+  /* ===== POO MECHANIC ===== */
+  .poo-element {
+    position: absolute;
+    font-size: 2.2rem;
+    cursor: pointer;
+    z-index: 15;
+    user-select: none;
+    touch-action: none;
+    animation: poo-drop 0.4s cubic-bezier(.2,1.5,.5,1) forwards;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
+    transform-origin: center;
+  }
+  @keyframes poo-drop {
+    0%   { opacity: 0; transform: translateY(-20px) scale(0.5) rotate(-15deg); }
+    60%  { transform: translateY(6px) scale(1.1) rotate(5deg); }
+    100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+  }
+  .poo-element.splat {
+    animation: poo-splat 0.5s ease-out forwards;
+    pointer-events: none;
+  }
+  @keyframes poo-splat {
+    0%   { transform: scale(1); opacity: 1; }
+    40%  { transform: scale(2.2) rotate(20deg); opacity: 0.8; }
+    100% { transform: scale(0.2) rotate(-30deg); opacity: 0; }
+  }
+  .stink-cloud {
+    position: absolute;
+    pointer-events: none;
+    font-size: 1.1rem;
+    z-index: 16;
+    animation: stink-rise 1.4s ease-in-out infinite;
+    opacity: 0;
+  }
+  .stink-cloud:nth-child(2) { animation-delay: 0.4s; font-size: 0.9rem; }
+  .stink-cloud:nth-child(3) { animation-delay: 0.8s; font-size: 0.75rem; }
+  @keyframes stink-rise {
+    0%   { opacity: 0;   transform: translateY(0)    scale(0.6); }
+    30%  { opacity: 0.9; transform: translateY(-12px) scale(1); }
+    100% { opacity: 0;   transform: translateY(-36px) scale(0.4) translateX(8px); }
+  }
+  .blush-overlay {
+    position: absolute;
+    width: 100%; height: 100%;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 6;
+    border-radius: 50%;
+  }
+  .cleanup-flash {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.4rem, 5vw, 2.2rem);
+    color: #f4d03f;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.7), 0 0 20px rgba(244,208,63,0.4);
+    z-index: 35;
+    pointer-events: none;
+    white-space: nowrap;
+    animation: cleanup-flash 1.5s ease-out forwards;
+  }
+  @keyframes cleanup-flash {
+    0%   { opacity: 0; transform: translateX(-50%) scale(0.7); }
+    20%  { opacity: 1; transform: translateX(-50%) scale(1.1); }
+    60%  { opacity: 1; transform: translateX(-50%) scale(1); }
+    100% { opacity: 0; transform: translateX(-50%) scale(0.9); }
+  }
+  .poo-counter {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    font-size: 1.1rem;
+  }
+
+  /* ===== THIRST MECHANIC ===== */
+  #thirst-hud {
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+    background: var(--score-bg);
+    backdrop-filter: blur(4px);
+    border-radius: 14px;
+    padding: 7px 14px;
+    z-index: 20;
+    pointer-events: none;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Fredoka One', cursive;
+    color: #fff;
+    font-size: 0.9rem;
+  }
+  #thirst-bar-wrap {
+    width: 90px; height: 12px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  #thirst-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #38bdf8, #7dd3fc);
+    border-radius: 8px;
+    transition: width 0.3s ease, background 0.5s;
+    width: 100%;
+  }
+  #thirst-bar.low  { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+  #thirst-bar.critical { background: linear-gradient(90deg, #e63946, #ff6b6b); animation: bar-pulse 0.5s ease infinite alternate; }
+  @keyframes bar-pulse {
+    from { opacity: 1; }
+    to   { opacity: 0.5; }
+  }
+  .water-drop {
+    position: absolute;
+    pointer-events: none;
+    z-index: 25;
+    font-size: 1.4rem;
+    animation: drop-fall 0.7s ease-out forwards;
+  }
+  @keyframes drop-fall {
+    0%   { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(40px) scale(0.4); }
+  }
+  .thirsty-indicator {
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    transform: translateX(-50%);
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.2rem, 4vw, 1.9rem);
+    color: #7dd3fc;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+    z-index: 35;
+    pointer-events: none;
+    white-space: nowrap;
+    animation: cleanup-flash 2s ease-out forwards;
+  }
+
   /* mobile helpers */
   @media (max-width: 480px) {
     #branch { bottom: 18%; }
@@ -414,6 +553,16 @@
       <span class="label">💀 Missed</span>
       <span class="value" id="missed-display">0</span>
     </div>
+    <div class="hud-box">
+      <span class="label">💩</span>
+      <span class="value poo-counter" id="poo-display"></span>
+    </div>
+  </div>
+
+  <!-- Thirst HUD -->
+  <div id="thirst-hud">
+    <span>💧</span>
+    <div id="thirst-bar-wrap"><div id="thirst-bar"></div></div>
   </div>
 
   <!-- Level Up Banner -->
@@ -433,7 +582,7 @@
   <div class="screen" id="gameover-screen" style="display:none">
     <div class="screen-card">
       <h1>Game Over!</h1>
-      <p>The flies got away... 🪰🪰🪰</p>
+      <p id="gameover-message">The flies got away... 🪰🪰🪰</p>
       <div class="big-score" id="final-score">0</div>
       <p id="final-level-text" style="color:var(--gold)">Reached Level 1</p>
       <p id="high-score-text" style="margin-top:8px;"></p>
@@ -456,6 +605,10 @@
   const CATCHES_PER_LVL = 5;    // catches needed to level up
   const TONGUE_SPEED    = 900;  // px/s out
   const TONGUE_RETRACT  = 600;  // px/s back
+  const POO_INTERVAL    = 5;    // catches between each poo
+  const MAX_POO         = 3;    // poos before game over
+  const THIRST_DRAIN    = 100 / 20; // % per second (empties in 20s)
+  const THIRST_WARN     = 30;   // show thirsty message at this %
 
   // ─── State ────────────────────────────────────────────────────────────────
   let score = 0, level = 1, missed = 0, catches = 0;
@@ -467,6 +620,18 @@
   let highScore = parseInt(localStorage.getItem('chameleon_hs') || '0', 10);
   let chameleonMouthPos = { x: 0, y: 0 }; // screen coords of mouth tip
 
+  // Poop state
+  let poos = [];             // array of poo DOM elements
+  let nextPooAt = POO_INTERVAL; // catches count threshold for next poo
+
+  // Thirst state
+  let thirst = 100;          // 0-100, 100=full
+  let isThirsty = false;
+  let thirstWarned = false;
+  let pointerDown = false;
+  let lastPointerPos = null;
+  let waterDropTimer = 0;
+
   // ─── DOM ──────────────────────────────────────────────────────────────────
   const container   = document.getElementById('game-container');
   const tongueCanvas= document.getElementById('tongue-canvas');
@@ -474,9 +639,11 @@
   const scoreEl     = document.getElementById('score-display');
   const levelEl     = document.getElementById('level-display');
   const missedEl    = document.getElementById('missed-display');
+  const pooDisplayEl= document.getElementById('poo-display');
   const levelBanner = document.getElementById('level-banner');
   const startScreen = document.getElementById('start-screen');
   const gameoverScreen = document.getElementById('gameover-screen');
+  const gameoverMsg = document.getElementById('gameover-message');
   const finalScoreEl= document.getElementById('final-score');
   const finalLevelEl= document.getElementById('final-level-text');
   const highScoreEl = document.getElementById('high-score-text');
@@ -484,6 +651,8 @@
   const restartBtn  = document.getElementById('restart-btn');
   const chameleonEl = document.getElementById('chameleon');
   const leavesContainer = document.getElementById('leaves-container');
+  const thirstHud   = document.getElementById('thirst-hud');
+  const thirstBarEl = document.getElementById('thirst-bar');
 
   // ─── Resize canvas ────────────────────────────────────────────────────────
   function resizeCanvas() {
@@ -736,6 +905,25 @@
     const dt = Math.min((timestamp - lastTime) / 1000, 0.1); // cap at 100ms
     lastTime = timestamp;
 
+    // ── Thirst drain ──
+    thirst -= THIRST_DRAIN * dt;
+    if (thirst < 0) thirst = 0;
+    updateThirstHUD();
+
+    if (!thirstWarned && thirst <= THIRST_WARN) {
+      thirstWarned = true;
+      isThirsty = true;
+      showThirstyMessage();
+      // turn chameleon greyish
+      const svgEl = chameleonEl.querySelector('#chameleon-svg');
+      if (svgEl) svgEl.style.filter = 'saturate(0.2) brightness(0.8)';
+    }
+
+    if (thirst <= 0 && gameActive) {
+      endGame('He was thirsty! 💧');
+      return;
+    }
+
     updateMouthPos();
 
     // ── Move flies ──
@@ -812,6 +1000,12 @@
             showFeedback('+' + (SCORE_PER_CATCH + (level-1)*2) + ' 🎯', fx, fy - 20, '#ffd700');
             checkLevelUp();
             updateHUD();
+
+            // spawn poo every POO_INTERVAL catches (only if game still active)
+            if (catches >= nextPooAt && gameActive && poos.length < MAX_POO) {
+              nextPooAt = catches + POO_INTERVAL;
+              setTimeout(() => { if (gameActive) spawnPoo(); }, 400);
+            }
           }
         }
       } else if (phase === 'hold') {
@@ -835,14 +1029,174 @@
     rafId = requestAnimationFrame(gameLoop);
   }
 
+  // ─── Poo mechanic ─────────────────────────────────────────────────────────
+  function updatePooHUD() {
+    pooDisplayEl.textContent = '💩'.repeat(poos.length) || '✨';
+    pooDisplayEl.style.color = poos.length >= 2 ? '#e63946' : '#ffd700';
+  }
+
+  function spawnPoo() {
+    if (!gameActive) return;
+
+    // blush the chameleon briefly
+    const blush = document.createElement('div');
+    blush.style.cssText = `
+      position:absolute; inset:0; border-radius:50%;
+      background:radial-gradient(circle at 70% 55%, rgba(255,100,100,0.45) 0%, transparent 60%);
+      pointer-events:none; z-index:6;
+      animation:popup-float 1.2s ease-out forwards;
+    `;
+    chameleonEl.appendChild(blush);
+    setTimeout(() => blush.remove(), 1200);
+
+    // pick a random spot on the ground near the chameleon
+    const rect = chameleonEl.getBoundingClientRect();
+    const px = rect.left + rect.width * 0.3 + Math.random() * rect.width * 0.8;
+    const py = rect.bottom - 8 + Math.random() * 30;
+
+    const pooEl = document.createElement('div');
+    pooEl.className = 'poo-element';
+    pooEl.textContent = '💩';
+    pooEl.style.left = (px - 18) + 'px';
+    pooEl.style.top  = (py - 18) + 'px';
+
+    // stink clouds
+    for (let i = 0; i < 3; i++) {
+      const stink = document.createElement('div');
+      stink.className = 'stink-cloud';
+      stink.textContent = '〰️';
+      stink.style.left = (Math.random() * 20 - 5) + 'px';
+      stink.style.top  = (-10 - i * 8) + 'px';
+      pooEl.appendChild(stink);
+    }
+
+    // click to clean
+    function cleanPoo(e) {
+      e.stopPropagation();
+      if (!gameActive) return;
+      pooEl.classList.add('splat');
+      poos = poos.filter(p => p !== pooEl);
+      updatePooHUD();
+      const bx = parseFloat(pooEl.style.left) + 18;
+      const by = parseFloat(pooEl.style.top) + 18;
+      showFeedback('Cleaned! ✨', bx - 30, by - 50, '#74c69d');
+      setTimeout(() => pooEl.remove(), 500);
+    }
+    pooEl.addEventListener('click', cleanPoo);
+    pooEl.addEventListener('touchend', e => { e.preventDefault(); cleanPoo(e); }, {passive:false});
+
+    container.appendChild(pooEl);
+    poos.push(pooEl);
+    updatePooHUD();
+
+    // show "Clean up!" flash
+    const flashEl = document.createElement('div');
+    flashEl.className = 'cleanup-flash';
+    flashEl.textContent = 'Clean up! 💩';
+    container.appendChild(flashEl);
+    setTimeout(() => flashEl.remove(), 1500);
+
+    // check game over
+    if (poos.length >= MAX_POO) {
+      setTimeout(() => {
+        if (gameActive) endGame('Too much poo! 💩💩💩');
+      }, 300);
+    }
+  }
+
+  // ─── Thirst mechanic ──────────────────────────────────────────────────────
+  function updateThirstHUD() {
+    const pct = Math.max(0, thirst);
+    thirstBarEl.style.width = pct + '%';
+    thirstBarEl.className = pct <= 15 ? 'critical' : pct <= THIRST_WARN ? 'low' : '';
+  }
+
+  function showThirstyMessage() {
+    if (!gameActive) return;
+    const el = document.createElement('div');
+    el.className = 'thirsty-indicator';
+    el.textContent = 'He\'s thirsty! 💧 Tap to spray water!';
+    container.appendChild(el);
+    setTimeout(() => el.remove(), 2000);
+  }
+
+  function sprayWaterAt(x, y) {
+    if (!gameActive) return;
+    // spawn water drop visual
+    const drop = document.createElement('div');
+    drop.className = 'water-drop';
+    drop.textContent = '💧';
+    drop.style.left = (x - 12) + 'px';
+    drop.style.top  = (y - 12) + 'px';
+    container.appendChild(drop);
+    setTimeout(() => drop.remove(), 700);
+
+    // check if near chameleon (within 120px)
+    const rect = chameleonEl.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top  + rect.height / 2;
+    const dist = Math.sqrt((x - cx) ** 2 + (y - cy) ** 2);
+    const hitRadius = Math.max(rect.width, rect.height) * 0.9;
+
+    if (dist < hitRadius) {
+      const refill = 3 + Math.random() * 3;
+      thirst = Math.min(100, thirst + refill);
+      if (isThirsty && thirst > 50) {
+        isThirsty = false;
+        thirstWarned = false;
+        showFeedback('Yum! 💧', cx - 20, cy - 50, '#38bdf8');
+        // restore chameleon color
+        const svgEl = chameleonEl.querySelector('#chameleon-svg');
+        if (svgEl) svgEl.style.filter = '';
+      }
+      updateThirstHUD();
+    }
+  }
+
+  // pointer events for water spray
+  container.addEventListener('pointerdown', function(e) {
+    if (!gameActive) return;
+    pointerDown = true;
+    lastPointerPos = {x: e.clientX, y: e.clientY};
+    sprayWaterAt(e.clientX, e.clientY);
+  });
+  container.addEventListener('pointermove', function(e) {
+    if (!gameActive || !pointerDown) return;
+    waterDropTimer += 1;
+    if (waterDropTimer % 4 === 0) {
+      sprayWaterAt(e.clientX, e.clientY);
+    }
+  });
+  container.addEventListener('pointerup', function() { pointerDown = false; });
+  container.addEventListener('pointercancel', function() { pointerDown = false; });
+
   // ─── Start game ───────────────────────────────────────────────────────────
   function startGame() {
     score = 0; level = 1; missed = 0; catches = 0;
     flies.forEach(f => f.el.remove());
     flies = [];
     tongue = null;
-    gameActive = true;
 
+    // clear poos
+    poos.forEach(p => p.remove());
+    poos = [];
+    nextPooAt = POO_INTERVAL;
+    updatePooHUD();
+
+    // reset thirst
+    thirst = 100;
+    isThirsty = false;
+    thirstWarned = false;
+    pointerDown = false;
+    waterDropTimer = 0;
+    updateThirstHUD();
+    thirstHud.style.display = 'flex';
+
+    // restore chameleon appearance
+    const svgEl = chameleonEl.querySelector('#chameleon-svg');
+    if (svgEl) svgEl.style.filter = '';
+
+    gameActive = true;
     startScreen.style.display   = 'none';
     gameoverScreen.style.display= 'none';
 
@@ -858,19 +1212,24 @@
   }
 
   // ─── End game ─────────────────────────────────────────────────────────────
-  function endGame() {
+  function endGame(reason) {
     gameActive = false;
     cancelAnimationFrame(rafId);
     tongue = null;
     ctx.clearRect(0,0,tongueCanvas.width,tongueCanvas.height);
     flies.forEach(f => f.el.remove());
     flies = [];
+    poos.forEach(p => p.remove());
+    poos = [];
+    thirstHud.style.display = 'none';
+    pointerDown = false;
 
     if (score > highScore) {
       highScore = score;
       localStorage.setItem('chameleon_hs', highScore);
     }
 
+    gameoverMsg.textContent   = reason || 'The flies got away... 🪰🪰🪰';
     finalScoreEl.textContent  = score;
     finalLevelEl.textContent  = `Reached Level ${level} 🦎`;
     highScoreEl.textContent   = highScore > 0 ? `🏆 Best: ${highScore}` : '';

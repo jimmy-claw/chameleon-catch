@@ -4194,23 +4194,33 @@
       remaining.splice(ri, 1);
     }
 
-    // Step 2: Add extra edges to create CYCLES (this is what makes it a real maze)
-    // Cycles = multiple paths = real choices = actual maze feel
-    // More cycles on higher levels
-    var extraEdgeCount = level <= 2 ? 3 : (level <= 5 ? 5 : 7);
+    // Step 2: Add extra edges to create CYCLES — guaranteed branching
+    // Strategy: for each node, find its 2 nearest neighbours and add edges
+    // This guarantees every node has multiple connections = real maze
+    var extraEdgeCount = level <= 2 ? 3 : (level <= 5 ? 5 : 8);
+    // First, guarantee start node (0) has at least 2 extra connections
+    var dists = [];
+    for (var ni = 1; ni < nodeCount; ni++) {
+      var dx = nodes[0].x - nodes[ni].x;
+      var dy = nodes[0].y - nodes[ni].y;
+      dists.push({ idx: ni, d: Math.sqrt(dx*dx+dy*dy) });
+    }
+    dists.sort(function(a,b){ return a.d-b.d; });
+    for (var di = 0; di < Math.min(2, dists.length); di++) {
+      if (!edgeExists(0, dists[di].idx)) {
+        edges.push([0, dists[di].idx]);
+        extraEdgeCount--;
+      }
+    }
+    // Then add more random short edges
     var attempts = 0;
     var added = 0;
-    while (added < extraEdgeCount && attempts < 100) {
+    while (added < extraEdgeCount && attempts < 200) {
       attempts++;
       var a = Math.floor(mazeRandom() * nodeCount);
       var b = Math.floor(mazeRandom() * nodeCount);
       if (a === b) continue;
       if (edgeExists(a, b)) continue;
-      // Check nodes aren't too far apart (avoid crossing lines)
-      var dx = nodes[a].x - nodes[b].x;
-      var dy = nodes[a].y - nodes[b].y;
-      var dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist > 250) continue;
       edges.push([a, b]);
       added++;
     }

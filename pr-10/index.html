@@ -4205,6 +4205,58 @@
     img.src = url;
   });
 
+
+  // ── Dev mode hooks (exposed for Playwright tests) ──────────────────────
+  var DEV_MODE = window.location.search.indexOf('dev=1') !== -1;
+
+  window.__gameState = {
+    get gameActive() { return gameActive; },
+    get carActive() { return typeof carActive !== 'undefined' ? carActive : false; },
+    get score() { return score; },
+    get catches() { return catches; },
+    get missed() { return missed; },
+    get level() { return level; },
+    get flies() { return flies ? flies.length : 0; }
+  };
+
+  window.__getFlies = function() {
+    if (!flies) return [];
+    return flies.map(function(f) {
+      var r = f.el ? f.el.getBoundingClientRect() : {left:0,top:0,width:0,height:0};
+      return { x: r.left + r.width/2, y: r.top + r.height/2, type: f.type, caught: f.caught };
+    }).filter(function(f) { return !f.caught; });
+  };
+
+  window.__botTap = function(x, y) {
+    var el = document.elementFromPoint(x, y) || document.body;
+    ['pointerdown','pointerup'].forEach(function(type) {
+      el.dispatchEvent(new PointerEvent(type, {bubbles:true, clientX:x, clientY:y, pointerId:1}));
+    });
+  };
+
+  window.__forceEndGame = function() {
+    if (typeof endGame === 'function') endGame('test');
+    if (typeof endCarGame === 'function') endCarGame('test');
+  };
+
+  if (DEV_MODE) {
+    // Error overlay
+    window.addEventListener('error', function(e) {
+      var d = document.createElement('div');
+      d.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#e63946;color:#fff;padding:8px 12px;font-size:12px;z-index:99999;cursor:pointer;';
+      d.textContent = 'ERROR: ' + e.message + ' (' + (e.filename||'').split('/').pop() + ':' + e.lineno + ')';
+      d.onclick = function() { d.remove(); };
+      document.body.appendChild(d);
+    });
+    window.addEventListener('unhandledrejection', function(e) {
+      var d = document.createElement('div');
+      d.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#e63946;color:#fff;padding:8px 12px;font-size:12px;z-index:99999;cursor:pointer;';
+      d.textContent = 'UNHANDLED: ' + (e.reason && e.reason.message ? e.reason.message : String(e.reason));
+      d.onclick = function() { d.remove(); };
+      document.body.appendChild(d);
+    });
+  }
+
 })();
 </script>
 

@@ -4229,12 +4229,13 @@
   };
 
   window.__botTap = function(x, y) {
-    var el = document.elementFromPoint(x, y) || document.body;
     var opts = {bubbles:true, cancelable:true, clientX:x, clientY:y, pointerId:1, isPrimary:true};
-    document.body.dispatchEvent(new PointerEvent('pointerdown', opts));
-    el.dispatchEvent(new PointerEvent('pointerdown', opts));
-    el.dispatchEvent(new PointerEvent('pointerup', opts));
-    document.body.dispatchEvent(new PointerEvent('pointerup', opts));
+    var container = document.getElementById("container");
+    var el = document.elementFromPoint(x, y) || container || document.body;
+    if (container) container.dispatchEvent(new PointerEvent("pointerdown", opts));
+    el.dispatchEvent(new PointerEvent("pointerdown", opts));
+    el.dispatchEvent(new PointerEvent("pointerup", opts));
+    if (container) container.dispatchEvent(new PointerEvent("pointerup", opts));
   };
 
   window.__forceEndGame = function() {

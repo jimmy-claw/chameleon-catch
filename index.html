@@ -1692,11 +1692,11 @@
   }
   function getWeatherWindOffset(dt) {
     if (!currentWeather || currentWeather.id !== 'wind') return 0;
-    return 80 * dt; // drift right; in car mode causes slight drift
+    return 20 * dt; // gentle wind drift on flies only
   }
   function getWeatherDrainMultiplier() {
     if (!currentWeather || currentWeather.id !== 'heat') return 1;
-    return 2;
+    return 1.3;
   }
 
   // ═══════════════════════════════════════════════════════════════════════
@@ -2026,9 +2026,9 @@
 
   // ─── Difficulty ──────────────────────────────────────────────────────────
   const DIFFICULTIES = {
-    1: { label:'Easy',   flySpeed:60,  thirstTime:60, maxMissed:10, poiInterval:20, thirstStart:80,  pooStart:50  },
-    2: { label:'Normal', flySpeed:90,  thirstTime:30, maxMissed:8,  poiInterval:15, thirstStart:40,  pooStart:30  },
-    3: { label:'Hard',   flySpeed:130, thirstTime:15, maxMissed:5,  poiInterval:10, thirstStart:0,   pooStart:0   },
+    1: { label:'Easy',   flySpeed:60,  thirstTime:60, fuelTime:120, maxMissed:10, poiInterval:20, thirstStart:80,  pooStart:50,  fuelStart:80  },
+    2: { label:'Normal', flySpeed:90,  thirstTime:30, fuelTime:60,  maxMissed:8,  poiInterval:15, thirstStart:40,  pooStart:30,  fuelStart:40  },
+    3: { label:'Hard',   flySpeed:130, thirstTime:15, fuelTime:30,  maxMissed:5,  poiInterval:10, thirstStart:0,   pooStart:0,   fuelStart:0   },
   };
   let difficulty = 2;
   const diffSlider = document.getElementById('diff-slider');
@@ -3179,7 +3179,8 @@
   let carHighScore = parseInt(localStorage.getItem('chameleon_car_hs') || '0', 10);
   let carActiveFlySpeed = 90;
   let carActiveMaxMissed = 5;
-  let carActiveFuelDrain = 100 / 20;
+  let carActiveFuelDrain = 100 / 60;
+  let carActiveFuelStart = 0;
   let carActivePooInterval = 10;
 
   // Lane positions (percentages of road width)
@@ -3200,7 +3201,13 @@
     carScoreEl.textContent = carScore;
     carLevelEl.textContent = carLevel;
     carMissedEl.textContent = carMissed;
-    carMissedEl.style.color = carMissed > 0 ? '#e63946' : '#ffd700';
+    carMissedEl.style.color = carMissed > 0 ? "#e63946" : "#ffd700";
+    // Show fuel HUD when it unlocks
+    const fuelHudEl = document.getElementById("fuel-hud");
+    if (carActiveFuelStart > 0 && carScore >= carActiveFuelStart && fuelHudEl.style.display === "none") {
+      fuelHudEl.style.display = "";
+      showCarFeedback("⛽ Fuel gauge unlocked!", window.innerWidth/2 - 80, 80, "#ffd700");
+    }
   }
 
   function updateFuelHUD() {
@@ -3351,7 +3358,7 @@
     const H = window.innerHeight;
 
     // ── Fuel drain (weather: heat = 2x) ──
-    carFuel -= carActiveFuelDrain * dt * getWeatherDrainMultiplier();
+    if (carScore >= (carActiveFuelStart||0)) carFuel -= carActiveFuelDrain * dt * getWeatherDrainMultiplier();
     if (carFuel < 0) carFuel = 0;
     updateFuelHUD();
 
@@ -3390,12 +3397,7 @@
       setTimeout(function() { puff.remove(); }, 1000);
     }
 
-    // V9: Weather wind drift on car
-    if (currentWeather && currentWeather.id === 'wind') {
-      var drift = 15 * dt; // slight drift
-      var curLeft = parseFloat(carPlayer.style.left) || getCarLaneX(carLane);
-      carPlayer.style.left = (curLeft + drift) + 'px';
-    }
+    // V9: Weather wind drift on car — removed car drift, wind only affects flies
 
     // ── Update lane mark scroll speed ──
     const scrollDur = Math.max(0.15, 80 / carRoadSpeed);
@@ -3581,7 +3583,8 @@
     const diff = DIFFICULTIES[difficulty] || DIFFICULTIES[2];
     carActiveFlySpeed = diff.flySpeed;
     carActiveMaxMissed = diff.maxMissed;
-    carActiveFuelDrain = 100 / diff.thirstTime;
+    carActiveFuelDrain = 100 / (diff.fuelTime || diff.thirstTime * 3);
+    carActiveFuelStart = diff.fuelStart || 0;
     carActivePooInterval = diff.poiInterval;
 
     initAudio();
@@ -3637,6 +3640,7 @@
 
     // Hide classic game elements
     document.getElementById('hud').style.display = 'none';
+    document.getElementById('fuel-hud').style.display = carActiveFuelStart > 0 ? 'none' : '';
     thirstHud.style.display = 'none';
     comboHud.style.display = 'none';
 

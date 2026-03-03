@@ -4141,27 +4141,35 @@
     var edges = [];
 
     // Place nodes in a padded area
-    var padding = 60;
+    var padding = 50;
     var areaW = window.innerWidth || 360;
     var areaH = window.innerHeight || 640;
     var usableW = areaW - padding * 2;
-    var usableH = areaH - padding * 2 - 80; // top HUD space
+    var usableH = areaH - padding * 2 - 100; // top HUD space
 
     // Generate spanning tree first
+    // Divide area into grid cells, place one node per cell with jitter
+    // This guarantees spread across the whole screen
+    var cols = Math.ceil(Math.sqrt(nodeCount * (usableW / usableH)));
+    var rows = Math.ceil(nodeCount / cols);
+    var cellW = usableW / cols;
+    var cellH = usableH / rows;
+    var cellOrder = [];
+    for (var ci = 0; ci < cols * rows; ci++) cellOrder.push(ci);
+    // Shuffle cells
+    for (var si = cellOrder.length - 1; si > 0; si--) {
+      var sj = Math.floor(mazeRandom() * (si + 1));
+      var tmp = cellOrder[si]; cellOrder[si] = cellOrder[sj]; cellOrder[sj] = tmp;
+    }
     for (var i = 0; i < nodeCount; i++) {
-      var tries = 0;
-      var x, y, tooClose;
-      do {
-        x = padding + mazeRandom() * usableW;
-        y = padding + 60 + mazeRandom() * usableH;
-        tooClose = false;
-        for (var j = 0; j < nodes.length; j++) {
-          var dx = nodes[j].x - x;
-          var dy = nodes[j].y - y;
-          if (Math.sqrt(dx*dx + dy*dy) < 70) { tooClose = true; break; }
-        }
-        tries++;
-      } while (tooClose && tries < 50);
+      var cell = cellOrder[i];
+      var col = cell % cols;
+      var row = Math.floor(cell / cols);
+      // Place with jitter within cell, keep margin from edges
+      var jitterX = (mazeRandom() * 0.6 + 0.2) * cellW;
+      var jitterY = (mazeRandom() * 0.6 + 0.2) * cellH;
+      var x = padding + col * cellW + jitterX;
+      var y = padding + 70 + row * cellH + jitterY;
       nodes.push({ x: x, y: y });
     }
 

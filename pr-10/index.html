@@ -1359,105 +1359,6 @@
     to   { transform: translateX(-50%) scaleX(1.1); }
   }
 
-  /* ===== COLORING BOOK MODE ===== */
-  #coloring-area {
-    position: fixed;
-    inset: 0;
-    z-index: 200;
-    background: #f5f0e8;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-  #coloring-area .cb-toolbar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background: #2d6a4f;
-    color: #fff;
-    font-family: 'Fredoka One', cursive;
-    flex-shrink: 0;
-    flex-wrap: wrap;
-  }
-  #coloring-area .cb-toolbar button {
-    font-family: 'Fredoka One', cursive;
-    font-size: 0.85rem;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    background: rgba(255,255,255,0.2);
-    color: #fff;
-    touch-action: manipulation;
-  }
-  #coloring-area .cb-toolbar button:active {
-    opacity: 0.7;
-  }
-  .cb-scene-thumbs {
-    display: flex;
-    gap: 6px;
-    margin-left: auto;
-  }
-  .cb-scene-thumb {
-    width: 40px;
-    height: 50px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-radius: 8px;
-    background: #f5f0e8;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2em;
-    touch-action: manipulation;
-  }
-  .cb-scene-thumb.active {
-    border-color: var(--gold);
-    box-shadow: 0 0 8px rgba(255,215,0,0.5);
-  }
-  #coloring-area .cb-svg-wrap {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: auto;
-    padding: 8px;
-  }
-  #coloring-area .cb-svg-wrap svg {
-    max-width: 100%;
-    max-height: 100%;
-    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.15));
-  }
-  #coloring-area .cb-svg-wrap svg [data-region] {
-    cursor: pointer;
-    transition: fill 0.15s;
-  }
-  .cb-palette {
-    display: flex;
-    gap: 6px;
-    padding: 10px 12px;
-    background: #2d6a4f;
-    justify-content: center;
-    flex-wrap: wrap;
-    flex-shrink: 0;
-  }
-  .cb-swatch {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 3px solid rgba(255,255,255,0.3);
-    cursor: pointer;
-    touch-action: manipulation;
-    transition: transform 0.15s, border-color 0.15s;
-  }
-  .cb-swatch:active { transform: scale(0.9); }
-  .cb-swatch.selected {
-    border-color: var(--gold);
-    transform: scale(1.15);
-    box-shadow: 0 0 10px rgba(255,215,0,0.6);
-  }
-
 </style>
 </head>
 <body>
@@ -1544,7 +1445,6 @@
         <button class="mode-toggle-btn selected" id="mode-classic-btn" data-mode="classic">🦎 Classic</button>
         <button class="mode-toggle-btn" id="mode-car-btn" data-mode="car">🚗 Car Mode</button>
         <button class="mode-toggle-btn daily-btn" id="mode-daily-btn" data-mode="daily">📅 Daily<span id="daily-best-label"></span></button>
-        <button class="mode-toggle-btn" id="mode-color-btn" data-mode="color">🎨 Color</button>
       </div>
 
       <div style="margin-top:16px; background:rgba(0,0,0,0.25); border-radius:12px; padding:12px 16px; text-align:left;">
@@ -1635,22 +1535,6 @@
     <div id="car-level-banner" style="display:none;">🎉 Level Up!</div>
     <!-- Nitro lines -->
     <div id="nitro-lines" style="display:none;"></div>
-  </div>
-
-  <!-- ========== COLORING BOOK AREA ========== -->
-  <div id="coloring-area" style="display:none;">
-    <div class="cb-toolbar">
-      <button id="cb-back-btn">Back</button>
-      <button id="cb-clear-btn">Clear</button>
-      <button id="cb-save-btn">Save PNG</button>
-      <div class="cb-scene-thumbs">
-        <div class="cb-scene-thumb active" data-scene="branch" title="Branch">🌿</div>
-        <div class="cb-scene-thumb" data-scene="car" title="Car">🚗</div>
-        <div class="cb-scene-thumb" data-scene="rain" title="Rain">🌧</div>
-      </div>
-    </div>
-    <div class="cb-svg-wrap" id="cb-svg-wrap"></div>
-    <div class="cb-palette" id="cb-palette"></div>
   </div>
 
   <!-- Game Over Screen -->
@@ -3165,42 +3049,25 @@
   const modeClassicBtn = document.getElementById('mode-classic-btn');
   const modeCarBtn = document.getElementById('mode-car-btn');
   const modeDailyBtn = document.getElementById('mode-daily-btn');
-  const modeColorBtn = document.getElementById('mode-color-btn');
   const modeDescText = document.getElementById('mode-desc-text');
   const modeHintText = document.getElementById('mode-hint-text');
-
-  // Elements to hide/show when color mode is selected
-  var diffSection = document.getElementById('diff-slider').parentElement;
-  var skinSection = document.getElementById('skin-picker').parentElement;
 
   function updateModeUI() {
     modeClassicBtn.classList.toggle('selected', selectedMode === 'classic');
     modeCarBtn.classList.toggle('selected', selectedMode === 'car');
     modeDailyBtn.classList.toggle('selected', selectedMode === 'daily');
-    modeColorBtn.classList.toggle('selected', selectedMode === 'color');
-    var isColor = selectedMode === 'color';
     if (selectedMode === 'car') {
       modeDescText.innerHTML = 'Drive your chameleon car and<br>catch flies on the road!';
       modeHintText.innerHTML = 'Tap left/right to switch lanes. Don\'t run out of <strong style="color:#fbbf24">fuel</strong>! ⛽';
     } else if (selectedMode === 'daily') {
       modeDescText.innerHTML = 'Daily Challenge!<br>Same seed for everyone today.';
       modeHintText.innerHTML = 'Classic gameplay with a <strong style="color:#8b5cf6">seeded</strong> daily puzzle. Compare scores! 📅';
-    } else if (isColor) {
-      modeDescText.innerHTML = 'Coloring Book!<br>Tap to paint chameleon scenes.';
-      modeHintText.innerHTML = 'Pick a color, tap regions to fill. <strong style="color:#ffd700">3 scenes</strong> to color! 🎨';
     } else {
       modeDescText.innerHTML = 'Tap a fly to shoot your<br>sticky tongue and catch it!';
       modeHintText.innerHTML = 'Don\'t let <strong style="color:#e63946">5 flies</strong> escape! Catch 10 for a poo! 💩';
     }
-    // Hide difficulty / skin pickers in color mode
-    diffSection.style.display = isColor ? 'none' : '';
-    skinSection.style.display = isColor ? 'none' : '';
-    if (!isColor) {
-      updateDailyBestLabel();
-      renderStartLeaderboard();
-    } else {
-      startLeaderboard.style.display = 'none';
-    }
+    updateDailyBestLabel();
+    renderStartLeaderboard();
   }
   updateModeUI();
 
@@ -3219,16 +3086,9 @@
     localStorage.setItem('chameleon-mode', 'daily');
     updateModeUI();
   });
-  modeColorBtn.addEventListener('click', function() {
-    selectedMode = 'color';
-    localStorage.setItem('chameleon-mode', 'color');
-    updateModeUI();
-  });
 
   function handleStart() {
-    if (selectedMode === 'color') {
-      startColoringBook();
-    } else if (selectedMode === 'car') {
+    if (selectedMode === 'car') {
       dailyMode = false;
       dailyRng = null;
       startCarGame();
@@ -3968,297 +3828,62 @@
   // ─── Initial mouth pos after fonts/layout ────────────────────────────────
   window.addEventListener('load', updateMouthPos);
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // ─── COLORING BOOK MODE ────────────────────────────────────────────────────
-  // ═══════════════════════════════════════════════════════════════════════════
-  var cbArea = document.getElementById('coloring-area');
-  var cbSvgWrap = document.getElementById('cb-svg-wrap');
-  var cbPalette = document.getElementById('cb-palette');
-  var cbBackBtn = document.getElementById('cb-back-btn');
-  var cbClearBtn = document.getElementById('cb-clear-btn');
-  var cbSaveBtn = document.getElementById('cb-save-btn');
-  var cbCurrentScene = 'branch';
-  var cbSelectedColor = '#e63946';
-  var cbDefaultFill = '#e0e0e0';
-
-  var cbColors = [
-    '#e63946','#f77f00','#fcbf49','#a7c957','#4caf50','#009688',
-    '#2196f3','#7b2ff7','#e91e8a','#795548','#212121','#ffffff'
-  ];
-
-  // Build palette
-  cbColors.forEach(function(c) {
-    var sw = document.createElement('div');
-    sw.className = 'cb-swatch' + (c === cbSelectedColor ? ' selected' : '');
-    sw.style.background = c;
-    if (c === '#ffffff') sw.style.border = '3px solid #ccc';
-    sw.dataset.color = c;
-    cbPalette.appendChild(sw);
-  });
-  cbPalette.addEventListener('click', function(e) {
-    var sw = e.target.closest('.cb-swatch');
-    if (!sw) return;
-    cbSelectedColor = sw.dataset.color;
-    cbPalette.querySelectorAll('.cb-swatch').forEach(function(s) {
-      s.classList.toggle('selected', s === sw);
-    });
-  });
-
-  // SVG scene definitions
-  var cbScenes = {
-    branch: '<svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">' +
-      '<rect data-region="sky" x="0" y="0" width="400" height="300" fill="#e0e0e0" stroke="#333" stroke-width="2"/>' +
-      '<circle data-region="sun" cx="340" cy="60" r="45" fill="#e0e0e0" stroke="#333" stroke-width="2.5"/>' +
-      '<line x1="340" y1="5" x2="340" y2="0" stroke="#333" stroke-width="2"/>' +
-      '<line x1="385" y1="25" x2="395" y2="15" stroke="#333" stroke-width="2"/>' +
-      '<line x1="395" y1="60" x2="400" y2="60" stroke="#333" stroke-width="2"/>' +
-      '<line x1="385" y1="95" x2="395" y2="105" stroke="#333" stroke-width="2"/>' +
-      '<line x1="295" y1="25" x2="285" y2="15" stroke="#333" stroke-width="2"/>' +
-      '<line x1="295" y1="95" x2="285" y2="105" stroke="#333" stroke-width="2"/>' +
-      '<rect data-region="trunk" x="170" y="250" width="60" height="250" fill="#e0e0e0" stroke="#333" stroke-width="2.5"/>' +
-      '<rect data-region="branch-main" x="40" y="270" width="320" height="28" rx="14" fill="#e0e0e0" stroke="#333" stroke-width="2.5"/>' +
-      '<ellipse data-region="leaf1" cx="60" cy="240" rx="45" ry="25" fill="#e0e0e0" stroke="#333" stroke-width="2.5" transform="rotate(-20,60,240)"/>' +
-      '<ellipse data-region="leaf2" cx="130" cy="225" rx="40" ry="22" fill="#e0e0e0" stroke="#333" stroke-width="2.5" transform="rotate(15,130,225)"/>' +
-      '<ellipse data-region="leaf3" cx="310" cy="238" rx="42" ry="24" fill="#e0e0e0" stroke="#333" stroke-width="2.5" transform="rotate(-10,310,238)"/>' +
-      '<ellipse data-region="leaf4" cx="360" cy="252" rx="35" ry="20" fill="#e0e0e0" stroke="#333" stroke-width="2.5" transform="rotate(25,360,252)"/>' +
-      '<ellipse data-region="leaf5" cx="80" cy="265" rx="38" ry="20" fill="#e0e0e0" stroke="#333" stroke-width="2.5" transform="rotate(10,80,265)"/>' +
-      '<ellipse data-region="cham-body" cx="220" cy="258" rx="55" ry="30" fill="#e0e0e0" stroke="#333" stroke-width="2.5"/>' +
-      '<ellipse data-region="cham-head" cx="285" cy="248" rx="28" ry="22" fill="#e0e0e0" stroke="#333" stroke-width="2.5"/>' +
-      '<circle data-region="cham-eye" cx="298" cy="242" r="7" fill="#e0e0e0" stroke="#333" stroke-width="2"/>' +
-      '<circle cx="300" cy="241" r="3" fill="#333"/>' +
-      '<path data-region="cham-tail" d="M165,258 Q140,230 150,210 Q160,195 175,215 Q185,235 170,255" fill="#e0e0e0" stroke="#333" stroke-width="2.5"/>' +
-      '<line data-region="cham-leg1" x1="200" y1="282" x2="195" y2="296" stroke="#333" stroke-width="3" stroke-linecap="round"/>' +
-      '<line data-region="cham-leg2" x1="240" y1="282" x2="245" y2="296" stroke="#333" stroke-width="3" stroke-linecap="round"/>' +
-      '<rect data-region="ground" x="0" y="420" width="400" height="80" fill="#e0e0e0" stroke="#333" stroke-width="2"/>' +
-      '<ellipse data-region="bush1" cx="70" cy="430" rx="55" ry="30" fill="#e0e0e0" stroke="#333" stroke-width="2"/>' +
-      '<ellipse data-region="bush2" cx="330" cy="435" rx="50" ry="28" fill="#e0e0e0" stroke="#333" stroke-width="2"/>' +
-      '</svg>',
-
-    car: '<svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">' +
-      '<rect data-region="sky" x="0" y="0" width="400" height="250" fill="#e0e0e0" stroke="#333" stroke-width="2"/>' +
-      '<circle data-region="sun" cx="60" cy="55" r="35" fill="#e0e0e0" stroke="#333" stroke-width="2.5"/>' +
-      '<rect data-region="road" x="0" y="250" width="400" height="250" fill="#e0e0e0" stroke="#333" stroke-width="2"/>' +
-      '<line x1="200" y1="260" x2="200" y2="290" stroke="#333" stroke-width="3" stroke-dasharray="18,12"/>' +
-      '<line x1="200" y1="310" x2="200" y2="340" stroke="#333" stroke-width="3" stroke-dasharray="18,12"/>' +
-      '<line x1="200" y1="360" x2="200" y2="390" stroke="#333" stroke-width="3" stroke-dasharray="18,12"/>' +
-      '<line x1="200" y1="410" x2="200" y2="440" stroke="#333" stroke-width="3" stroke-dasharray="18,12"/>' +
-      '<line x1="200" y1="460" x2="200" y2="490" stroke="#333" stroke-width="3" stroke-dasharray="18,12"/>' +
-      '<rect data-region="car-body" x="100" y="310" width="200" height="90" rx="20" fill="#e0e0e0" stroke="#333" stroke-width="3"/>' +
-      '<rect data-region="car-roof" x="140" y="275" width="120" height="50" rx="15" fill="#e0e0e0" stroke="#333" stroke-width="2.5"/>' +
-      '<rect data-region="windshield" x="155" y="282" width="90" height="35" rx="8" fill="#e0e0e0" stroke="#333" stroke-width="2"/>' +
-      '<circle data-region="wheel-fl" cx="140" cy="405" r="22" fill="#e0e0e0" stroke="#333" stroke-width="3"/>' +
-      '<circle cx="140" cy="405" r="10" fill="none" stroke="#333" stroke-width="2"/>' +
-      '<circle data-region="wheel-fr" cx="260" cy="405" r="22" fill="#e0e0e0" stroke="#333" stroke-width="3"/>' +
-      '<circle cx="260" cy="405" r="10" fill="none" stroke="#333" stroke-width="2"/>' +
-      '<circle data-region="headlight-l" cx="108" cy="335" r="10" fill="#e0e0e0" stroke="#333" stroke-width="2"/>' +
-      '<circle data-region="headlight-r" cx="292" cy="335" r="10" fill="#e0e0e0" stroke="#333" stroke-width="2"/>' +
-      '<text x="200" y="365" text-anchor="middle" font-size="36" fill="#333">🦎</text>' +
-      '<ellipse data-region="hill1" cx="100" cy="250" rx="100" ry="40" fill="#e0e0e0" stroke="#333" stroke-width="2"/>' +
-      '<ellipse data-region="hill2" cx="330" cy="250" rx="80" ry="32" fill="#e0e0e0" stroke="#333" stroke-width="2"/>' +
-      '<ellipse data-region="cloud1" cx="250" cy="60" rx="50" ry="22" fill="#e0e0e0" stroke="#333" stroke-width="2"/>' +
-      '<ellipse data-region="cloud2" cx="350" cy="100" rx="40" ry="18" fill="#e0e0e0" stroke="#333" stroke-width="2"/>' +
-      '</svg>',
-
-    rain: '<svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">' +
-      '<rect data-region="sky" x="0" y="0" width="400" height="400" fill="#e0e0e0" stroke="#333" stroke-width="2"/>' +
-      '<ellipse data-region="cloud1" cx="120" cy="50" rx="70" ry="30" fill="#e0e0e0" stroke="#333" stroke-width="2.5"/>' +
-      '<ellipse data-region="cloud2" cx="300" cy="70" rx="65" ry="28" fill="#e0e0e0" stroke="#333" stroke-width="2.5"/>' +
-      '<ellipse data-region="cloud3" cx="200" cy="35" rx="55" ry="25" fill="#e0e0e0" stroke="#333" stroke-width="2.5"/>' +
-      '<line data-region="drop1" x1="80" y1="90" x2="75" y2="120" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>' +
-      '<line data-region="drop2" x1="150" y1="85" x2="145" y2="115" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>' +
-      '<line data-region="drop3" x1="250" y1="100" x2="245" y2="130" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>' +
-      '<line data-region="drop4" x1="330" y1="105" x2="325" y2="135" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>' +
-      '<line data-region="drop5" x1="60" y1="160" x2="55" y2="190" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>' +
-      '<line data-region="drop6" x1="180" y1="150" x2="175" y2="180" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>' +
-      '<line data-region="drop7" x1="350" y1="160" x2="345" y2="190" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>' +
-      '<line data-region="drop8" x1="110" y1="200" x2="105" y2="230" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>' +
-      '<line data-region="drop9" x1="290" y1="195" x2="285" y2="225" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>' +
-      '<path data-region="leaf-umbrella" d="M120,250 Q200,150 280,250 Q250,245 200,240 Q150,245 120,250 Z" fill="#e0e0e0" stroke="#333" stroke-width="3"/>' +
-      '<line x1="200" y1="240" x2="200" y2="380" stroke="#333" stroke-width="3"/>' +
-      '<path d="M200,380 Q190,395 180,385" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round"/>' +
-      '<ellipse data-region="cham-body" cx="200" cy="340" rx="45" ry="26" fill="#e0e0e0" stroke="#333" stroke-width="2.5"/>' +
-      '<ellipse data-region="cham-head" cx="255" cy="330" rx="24" ry="18" fill="#e0e0e0" stroke="#333" stroke-width="2.5"/>' +
-      '<circle data-region="cham-eye" cx="266" cy="325" r="6" fill="#e0e0e0" stroke="#333" stroke-width="2"/>' +
-      '<circle cx="268" cy="324" r="2.5" fill="#333"/>' +
-      '<path data-region="cham-tail" d="M155,340 Q130,315 140,295 Q150,280 160,300 Q165,320 155,340" fill="#e0e0e0" stroke="#333" stroke-width="2.5"/>' +
-      '<line data-region="cham-leg1" x1="180" y1="362" x2="175" y2="380" stroke="#333" stroke-width="3" stroke-linecap="round"/>' +
-      '<line data-region="cham-leg2" x1="220" y1="362" x2="225" y2="380" stroke="#333" stroke-width="3" stroke-linecap="round"/>' +
-      '<rect data-region="ground" x="0" y="400" width="400" height="100" fill="#e0e0e0" stroke="#333" stroke-width="2"/>' +
-      '<ellipse data-region="puddle1" cx="100" cy="440" rx="50" ry="12" fill="#e0e0e0" stroke="#333" stroke-width="2"/>' +
-      '<ellipse data-region="puddle2" cx="310" cy="450" rx="45" ry="10" fill="#e0e0e0" stroke="#333" stroke-width="2"/>' +
-      '</svg>'
-  };
-
-  function cbLoadScene(name) {
-    cbCurrentScene = name;
-    cbSvgWrap.innerHTML = cbScenes[name] || '';
-    // Restore saved colors
-    var saved = cbGetSaved(name);
-    if (saved) {
-      var regions = cbSvgWrap.querySelectorAll('[data-region]');
-      regions.forEach(function(r) {
-        if (saved[r.dataset.region]) {
-          r.setAttribute('fill', saved[r.dataset.region]);
-          r.setAttribute('stroke', saved[r.dataset.region + '_stroke'] || r.getAttribute('stroke'));
-        }
-      });
-    }
-    // Update thumbnail active state
-    document.querySelectorAll('.cb-scene-thumb').forEach(function(t) {
-      t.classList.toggle('active', t.dataset.scene === name);
-    });
-    // Tap to fill
-    cbSvgWrap.onclick = function(e) {
-      var region = e.target.closest('[data-region]');
-      if (!region) return;
-      var tag = region.tagName.toLowerCase();
-      if (tag === 'line') {
-        region.setAttribute('stroke', cbSelectedColor);
-      } else {
-        region.setAttribute('fill', cbSelectedColor);
-      }
-      cbSaveColors();
-    };
-  }
-
-  function cbGetSaved(name) {
-    try { return JSON.parse(localStorage.getItem('chameleon-coloring-' + name)); }
-    catch(e) { return null; }
-  }
-
-  function cbSaveColors() {
-    var data = {};
-    cbSvgWrap.querySelectorAll('[data-region]').forEach(function(r) {
-      var tag = r.tagName.toLowerCase();
-      if (tag === 'line') {
-        data[r.dataset.region + '_stroke'] = r.getAttribute('stroke');
-      } else {
-        data[r.dataset.region] = r.getAttribute('fill');
-      }
-    });
-    localStorage.setItem('chameleon-coloring-' + cbCurrentScene, JSON.stringify(data));
-  }
-
-  function startColoringBook() {
-    startScreen.style.display = 'none';
-    gameoverScreen.style.display = 'none';
-    if (carArea) carArea.style.display = 'none';
-    hidePauseBtn();
-    cbArea.style.display = 'flex';
-    cbLoadScene(cbCurrentScene);
-  }
-
-  // Scene thumbnails
-  document.querySelectorAll('.cb-scene-thumb').forEach(function(t) {
-    t.addEventListener('click', function() {
-      cbLoadScene(t.dataset.scene);
-    });
-  });
-
-  // Back button
-  cbBackBtn.addEventListener('click', function() {
-    cbArea.style.display = 'none';
-    startScreen.style.display = 'flex';
-  });
-
-  // Clear button
-  cbClearBtn.addEventListener('click', function() {
-    if (!confirm('Reset this scene to grey?')) return;
-    localStorage.removeItem('chameleon-coloring-' + cbCurrentScene);
-    cbLoadScene(cbCurrentScene);
-  });
-
-  // Save/Share as PNG
-  cbSaveBtn.addEventListener('click', function() {
-    var svgEl = cbSvgWrap.querySelector('svg');
-    if (!svgEl) return;
-    var svgData = new XMLSerializer().serializeToString(svgEl);
-    var canvas = document.createElement('canvas');
-    canvas.width = 800;
-    canvas.height = 1000;
-    var ctxC = canvas.getContext('2d');
-    ctxC.fillStyle = '#f5f0e8';
-    ctxC.fillRect(0, 0, 800, 1000);
-    var img = new Image();
-    var blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-    var url = URL.createObjectURL(blob);
-    img.onload = function() {
-      ctxC.drawImage(img, 0, 0, 800, 1000);
-      URL.revokeObjectURL(url);
-      canvas.toBlob(function(pngBlob) {
-        if (navigator.share && navigator.canShare && navigator.canShare({ files: [new File([pngBlob], 'chameleon-coloring.png', { type: 'image/png' })] })) {
-          navigator.share({
-            files: [new File([pngBlob], 'chameleon-coloring.png', { type: 'image/png' })],
-            title: 'Chameleon Coloring',
-            text: 'Check out my chameleon coloring!'
-          }).catch(function() {});
-        } else {
-          var a = document.createElement('a');
-          a.href = URL.createObjectURL(pngBlob);
-          a.download = 'chameleon-coloring-' + cbCurrentScene + '.png';
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-        }
-      }, 'image/png');
-    };
-    img.src = url;
-  });
-
-
-  // ── Dev mode hooks (exposed for Playwright tests) ──────────────────────
-  var DEV_MODE = window.location.search.indexOf('dev=1') !== -1;
-
+  // ── Dev/Test hooks ────────────────────────────────────────────────────────
   window.__gameState = {
-    get gameActive() { return gameActive; },
-    get carActive() { return typeof carActive !== 'undefined' ? carActive : false; },
-    get score() { return score; },
-    get catches() { return catches; },
-    get missed() { return missed; },
-    get level() { return level; },
-    get flies() { return flies ? flies.length : 0; },
-    get gamePaused() { return typeof gamePaused !== 'undefined' ? gamePaused : false; }
+    get gameActive() { return typeof gameActive !== 'undefined' ? gameActive : false; },
+    get carActive()  { return typeof carActive  !== 'undefined' ? carActive  : false; },
+    get gamePaused() { return typeof gamePaused !== 'undefined' ? gamePaused : false; },
+    get score()   { return typeof score   !== 'undefined' ? score   : 0; },
+    get catches() { return typeof catches !== 'undefined' ? catches : 0; },
+    get missed()  { return typeof missed  !== 'undefined' ? missed  : 0; },
+    get level()   { return typeof level   !== 'undefined' ? level   : 1; },
+    get flies()   { return flies ? flies.length : 0; }
   };
 
   window.__getFlies = function() {
-    if (!flies) return [];
-    return flies.map(function(f) {
-      var r = f.el ? f.el.getBoundingClientRect() : {left:0,top:0,width:0,height:0};
-      return { x: r.left + r.width/2, y: r.top + r.height/2, type: f.type, caught: f.caught };
-    }).filter(function(f) { return !f.caught; });
+    if (typeof flies === 'undefined' || !flies) return [];
+    return flies.filter(function(f) { return !f.caught && !f.escaped; }).map(function(f) {
+      if (!f.el) return null;
+      var r = f.el.getBoundingClientRect();
+      return { x: r.left + r.width/2, y: r.top + r.height/2, type: f.type };
+    }).filter(Boolean);
   };
 
   window.__botTap = function(x, y) {
-    var opts = {bubbles:true, cancelable:true, clientX:x, clientY:y, pointerId:1, isPrimary:true};
-    var container = document.getElementById("container");
-    var el = document.elementFromPoint(x, y) || container || document.body;
-    if (container) container.dispatchEvent(new PointerEvent("pointerdown", opts));
-    el.dispatchEvent(new PointerEvent("pointerdown", opts));
-    el.dispatchEvent(new PointerEvent("pointerup", opts));
-    if (container) container.dispatchEvent(new PointerEvent("pointerup", opts));
+    // Fly tongue is triggered by 'click' on fly element
+    var el = document.elementFromPoint(x, y);
+    if (el) {
+      var co = {bubbles:true, cancelable:true, clientX:x, clientY:y};
+      // Walk up DOM to find fly element
+      var node = el;
+      while (node && !node.classList.contains('fly')) node = node.parentElement;
+      var target = (node && node.classList.contains('fly')) ? node : el;
+      target.dispatchEvent(new MouseEvent('click', co));
+    }
+    // Pointerdown on container for water/other mechanics
+    var c = document.getElementById('container');
+    if (c) {
+      var po = {bubbles:true, cancelable:true, clientX:x, clientY:y, pointerId:1, isPrimary:true};
+      c.dispatchEvent(new PointerEvent('pointerdown', po));
+      setTimeout(function() { c.dispatchEvent(new PointerEvent('pointerup', po)); }, 50);
+    }
   };
 
   window.__forceEndGame = function() {
-    if (typeof endGame === 'function') endGame('test');
-    if (typeof endCarGame === 'function') endCarGame('test');
+    if (typeof endGame    === 'function') endGame('test');
+    if (typeof endCarGame === 'function') endCarGame('test', true);
   };
 
-  if (DEV_MODE) {
-    // Error overlay
-    window.addEventListener('error', function(e) {
+  // Dev mode error overlay
+  if (window.location.search.indexOf('dev=1') !== -1) {
+    function showDevError(msg) {
       var d = document.createElement('div');
-      d.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#e63946;color:#fff;padding:8px 12px;font-size:12px;z-index:99999;cursor:pointer;';
-      d.textContent = 'ERROR: ' + e.message + ' (' + (e.filename||'').split('/').pop() + ':' + e.lineno + ')';
-      d.onclick = function() { d.remove(); };
+      d.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#e63946;color:#fff;padding:8px 12px;font-size:11px;z-index:99999;cursor:pointer;word-break:break-all;';
+      d.textContent = msg; d.onclick = function() { d.remove(); };
       document.body.appendChild(d);
-    });
-    window.addEventListener('unhandledrejection', function(e) {
-      var d = document.createElement('div');
-      d.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#e63946;color:#fff;padding:8px 12px;font-size:12px;z-index:99999;cursor:pointer;';
-      d.textContent = 'UNHANDLED: ' + (e.reason && e.reason.message ? e.reason.message : String(e.reason));
-      d.onclick = function() { d.remove(); };
-      document.body.appendChild(d);
-    });
+    }
+    window.addEventListener('error', function(e) { showDevError('ERR: ' + e.message + ' ' + (e.filename||'').split('/').pop() + ':' + e.lineno); });
+    window.addEventListener('unhandledrejection', function(e) { showDevError('UNHANDLED: ' + (e.reason && e.reason.message ? e.reason.message : String(e.reason))); });
   }
 
 })();

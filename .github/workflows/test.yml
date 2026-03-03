@@ -1,0 +1,41 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install test dependencies
+        run: cd tests && npm ci
+
+      - name: Install Playwright browsers
+        run: cd tests && npx playwright install --with-deps chromium
+
+      - name: Start local server
+        run: npx serve ./ -p 8080 -s &
+
+      - name: Wait for server
+        run: npx wait-on http://localhost:8080
+
+      - name: Run tests
+        run: cd tests && npm test
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            tests/test-results/
+            tests/playwright-report/

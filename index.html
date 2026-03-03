@@ -1359,6 +1359,71 @@
     to   { transform: translateX(-50%) scaleX(1.1); }
   }
 
+  /* ─── Dev Mode Styles ─────────────────────────────────────────────────── */
+  #dev-badge {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 12px;
+    z-index: 60;
+    background: rgba(255, 60, 60, 0.5);
+    backdrop-filter: blur(4px);
+    border: 2px solid rgba(255, 60, 60, 0.85);
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 0.65rem;
+    color: #fff;
+    font-weight: bold;
+    letter-spacing: 1px;
+    pointer-events: none;
+    user-select: none;
+  }
+  #dev-state-monitor {
+    display: none;
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    z-index: 60;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-family: monospace;
+    font-size: 10px;
+    line-height: 1.4;
+    color: #0f0;
+    pointer-events: none;
+    user-select: none;
+    white-space: pre;
+    max-width: 220px;
+  }
+  #dev-error-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background: rgba(200, 0, 0, 0.92);
+    color: #fff;
+    font-family: monospace;
+    font-size: 12px;
+    padding: 10px 14px;
+    max-height: 30vh;
+    overflow-y: auto;
+    cursor: pointer;
+    word-break: break-all;
+  }
+  #dev-error-overlay .dev-err-title {
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+  #dev-error-overlay .dev-err-stack {
+    opacity: 0.85;
+    font-size: 10px;
+  }
+
 </style>
 </head>
 <body>
@@ -1410,6 +1475,11 @@
     <span>💧</span>
     <div id="thirst-bar-wrap"><div id="thirst-bar"></div></div>
   </div>
+
+  <!-- Dev Mode Elements -->
+  <div id="dev-badge">DEV</div>
+  <div id="dev-state-monitor"></div>
+  <div id="dev-error-overlay"></div>
 
   <!-- Mute Button -->
   <button id="mute-btn">🔊</button>
@@ -3827,6 +3897,141 @@
 
   // ─── Initial mouth pos after fonts/layout ────────────────────────────────
   window.addEventListener('load', updateMouthPos);
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // ═══════════ DEV MODE ═══════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════════════════════
+  var devMode = new URLSearchParams(window.location.search).get('dev') === '1';
+
+  // ─── window.__gameState — always available for external inspection ────
+  window.__gameState = {};
+  function updateExposedState() {
+    window.__gameState.gameActive = gameActive;
+    window.__gameState.carActive = carActive;
+    window.__gameState.gamePaused = gamePaused;
+    window.__gameState.selectedMode = selectedMode;
+    window.__gameState.difficulty = difficulty;
+    window.__gameState.score = gameActive ? score : (carActive ? carScore : 0);
+    window.__gameState.level = gameActive ? level : (carActive ? carLevel : 1);
+    window.__gameState.missed = gameActive ? missed : (carActive ? carMissed : 0);
+    window.__gameState.catches = gameActive ? catches : (carActive ? carCatches : 0);
+    window.__gameState.thirst = gameActive ? thirst : 100;
+    window.__gameState.fuel = carActive ? carFuel : 100;
+    window.__gameState.weather = currentWeather ? currentWeather.name : 'None';
+    window.__gameState.flyCount = gameActive ? flies.length : (carActive ? carFlies.length : 0);
+    window.__gameState.comboStreak = gameActive ? comboStreak : (carActive ? carComboStreak : 0);
+  }
+
+  // Poll state every frame via existing RAF loops — also patch with a fallback interval
+  setInterval(updateExposedState, 250);
+
+  // ─── window.__getFlies() — returns fly position data ────────────────────
+  window.__getFlies = function() {
+    if (gameActive) {
+      return flies.map(function(f) {
+        var rect = f.el.getBoundingClientRect();
+        return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, type: f.flyType, id: f.id };
+      });
+    }
+    if (carActive) {
+      return carFlies.map(function(f, i) {
+        var rect = f.el.getBoundingClientRect();
+        return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, type: f.type, id: i };
+      });
+    }
+    return [];
+  };
+
+  // ─── window.__botTap(x, y) — simulate a tap ────────────────────────────
+  window.__botTap = function(x, y) {
+    var el = document.elementFromPoint(x, y);
+    if (!el) return;
+    var opts = { clientX: x, clientY: y, bubbles: true, cancelable: true };
+    el.dispatchEvent(new PointerEvent('pointerdown', opts));
+    el.dispatchEvent(new PointerEvent('pointerup', opts));
+    el.dispatchEvent(new MouseEvent('click', opts));
+  };
+
+  // ─── window.__forceEndGame() — end game for test cleanup ────────────────
+  window.__forceEndGame = function() {
+    if (gameActive) { endGame('force', true); }
+    if (carActive) { endCarGame('force', true); }
+  };
+
+  // ─── Dev mode UI ───────────────────────────────────────────────────────
+  if (devMode) {
+    var devBadge = document.getElementById('dev-badge');
+    var devMonitor = document.getElementById('dev-state-monitor');
+    var devErrorOverlay = document.getElementById('dev-error-overlay');
+
+    // Show DEV badge
+    if (devBadge) devBadge.style.display = 'block';
+    if (devMonitor) devMonitor.style.display = 'block';
+
+    // ─── Error overlay ──────────────────────────────────────────────────
+    function showDevError(msg, stack) {
+      console.error('[DEV]', msg, stack);
+      if (!devErrorOverlay) return;
+      var stackLines = (stack || '').split('\n').slice(0, 3).join('\n');
+      devErrorOverlay.innerHTML = '<div class="dev-err-title">⚠ ' + msg + '</div><div class="dev-err-stack">' + stackLines + '</div><div style="font-size:9px;margin-top:4px;opacity:0.6">tap to dismiss</div>';
+      devErrorOverlay.style.display = 'block';
+    }
+
+    if (devErrorOverlay) {
+      devErrorOverlay.addEventListener('click', function() {
+        devErrorOverlay.style.display = 'none';
+      });
+    }
+
+    window.addEventListener('error', function(e) {
+      showDevError(e.message || 'Unknown error', e.error ? e.error.stack : '');
+    });
+
+    window.addEventListener('unhandledrejection', function(e) {
+      var reason = e.reason || {};
+      showDevError('Unhandled Promise: ' + (reason.message || String(reason)), reason.stack || '');
+    });
+
+    // ─── FPS + state monitor ────────────────────────────────────────────
+    var devFpsFrames = [];
+    var devLastMonitorUpdate = 0;
+
+    function devMonitorLoop(ts) {
+      devFpsFrames.push(ts);
+      // Keep last 60 frames
+      while (devFpsFrames.length > 60) devFpsFrames.shift();
+
+      // Update display ~4 times per second
+      if (ts - devLastMonitorUpdate > 250) {
+        devLastMonitorUpdate = ts;
+        updateExposedState();
+
+        var fps = 0;
+        if (devFpsFrames.length > 1) {
+          var elapsed = (devFpsFrames[devFpsFrames.length - 1] - devFpsFrames[0]) / 1000;
+          fps = elapsed > 0 ? Math.round((devFpsFrames.length - 1) / elapsed) : 0;
+        }
+
+        var state = 'idle';
+        if (gameActive || carActive) state = gamePaused ? 'paused' : 'active';
+        if (!gameActive && !carActive && document.getElementById('gameover-screen') && document.getElementById('gameover-screen').style.display === 'flex') state = 'over';
+
+        var gs = window.__gameState;
+        if (devMonitor) {
+          devMonitor.textContent =
+            'FPS: ' + fps + '\n' +
+            'flies: ' + gs.flyCount + '\n' +
+            'state: ' + state + '\n' +
+            'score: ' + gs.score + '  catches: ' + gs.catches + '  missed: ' + gs.missed + '\n' +
+            (gs.gameActive ? 'thirst: ' + Math.round(gs.thirst) + '%' : (gs.carActive ? 'fuel: ' + Math.round(gs.fuel) + '%' : '')) + '\n' +
+            'weather: ' + gs.weather;
+        }
+      }
+
+      requestAnimationFrame(devMonitorLoop);
+    }
+    requestAnimationFrame(devMonitorLoop);
+  }
 
 })();
 </script>

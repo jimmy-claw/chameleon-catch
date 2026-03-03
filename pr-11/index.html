@@ -4141,72 +4141,78 @@
     var edges = [];
 
     // Place nodes in a padded area
-    var padding = 60;
+    var padding = 50;
     var areaW = window.innerWidth || 360;
     var areaH = window.innerHeight || 640;
     var usableW = areaW - padding * 2;
-    var usableH = areaH - padding * 2 - 80; // top HUD space
+    var usableH = areaH - padding * 2 - 100; // top HUD space
 
     // Generate spanning tree first
+    // Divide area into grid cells, place one node per cell with jitter
+    // This guarantees spread across the whole screen
+    var cols = Math.ceil(Math.sqrt(nodeCount * (usableW / usableH)));
+    var rows = Math.ceil(nodeCount / cols);
+    var cellW = usableW / cols;
+    var cellH = usableH / rows;
+    var cellOrder = [];
+    for (var ci = 0; ci < cols * rows; ci++) cellOrder.push(ci);
+    // Shuffle cells
+    for (var si = cellOrder.length - 1; si > 0; si--) {
+      var sj = Math.floor(mazeRandom() * (si + 1));
+      var tmp = cellOrder[si]; cellOrder[si] = cellOrder[sj]; cellOrder[sj] = tmp;
+    }
     for (var i = 0; i < nodeCount; i++) {
-      var tries = 0;
-      var x, y, tooClose;
-      do {
-        x = padding + mazeRandom() * usableW;
-        y = padding + 60 + mazeRandom() * usableH;
-        tooClose = false;
-        for (var j = 0; j < nodes.length; j++) {
-          var dx = nodes[j].x - x;
-          var dy = nodes[j].y - y;
-          if (Math.sqrt(dx*dx + dy*dy) < 70) { tooClose = true; break; }
-        }
-        tries++;
-      } while (tooClose && tries < 50);
+      var cell = cellOrder[i];
+      var col = cell % cols;
+      var row = Math.floor(cell / cols);
+      // Place with jitter within cell, keep margin from edges
+      var jitterX = (mazeRandom() * 0.6 + 0.2) * cellW;
+      var jitterY = (mazeRandom() * 0.6 + 0.2) * cellH;
+      var x = padding + col * cellW + jitterX;
+      var y = padding + 70 + row * cellH + jitterY;
       nodes.push({ x: x, y: y });
     }
 
-    // Build tree with forced branching — each node connects to a random
-    // already-connected node (not always the nearest), creating real branches
+    // Helper: check if edge already exists
+    function edgeExists(a, b) {
+      for (var ei = 0; ei < edges.length; ei++) {
+        if ((edges[ei][0]===a && edges[ei][1]===b) || (edges[ei][0]===b && edges[ei][1]===a)) return true;
+      }
+      return false;
+    }
+
+    // Step 1: Build spanning tree first (guarantees connectivity)
     var connected = [0];
     var remaining = [];
     for (var i = 1; i < nodeCount; i++) remaining.push(i);
-    // Track how many children each node has
-    var childCount = new Array(nodeCount).fill(0);
-
     while (remaining.length > 0) {
-      // Pick random remaining node
       var ri = Math.floor(mazeRandom() * remaining.length);
       var toNode = remaining[ri];
-
-      // Pick a connected node with fewest children (forces branching)
-      // With some randomness so it's not always perfectly balanced
-      var candidates = connected.slice().sort(function(a, b) {
-        return (childCount[a] + mazeRandom() * 1.5) - (childCount[b] + mazeRandom() * 1.5);
-      });
-      var fromNode = candidates[0];
-
+      var fromNode = connected[Math.floor(mazeRandom() * connected.length)];
       edges.push([fromNode, toNode]);
-      childCount[fromNode]++;
       connected.push(toNode);
       remaining.splice(ri, 1);
     }
 
-    // Add cycles for level 6+
-    if (level >= 6) {
-      var extraEdges = Math.min(3, Math.floor(mazeRandom() * 3) + 1);
-      for (var e = 0; e < extraEdges; e++) {
-        var a = Math.floor(mazeRandom() * nodeCount);
-        var b = Math.floor(mazeRandom() * nodeCount);
-        if (a !== b) {
-          var exists = false;
-          for (var ei = 0; ei < edges.length; ei++) {
-            if ((edges[ei][0] === a && edges[ei][1] === b) || (edges[ei][0] === b && edges[ei][1] === a)) {
-              exists = true; break;
-            }
-          }
-          if (!exists) edges.push([a, b]);
-        }
-      }
+    // Step 2: Add extra edges to create CYCLES (this is what makes it a real maze)
+    // Cycles = multiple paths = real choices = actual maze feel
+    // More cycles on higher levels
+    var extraEdgeCount = level <= 2 ? 3 : (level <= 5 ? 5 : 7);
+    var attempts = 0;
+    var added = 0;
+    while (added < extraEdgeCount && attempts < 100) {
+      attempts++;
+      var a = Math.floor(mazeRandom() * nodeCount);
+      var b = Math.floor(mazeRandom() * nodeCount);
+      if (a === b) continue;
+      if (edgeExists(a, b)) continue;
+      // Check nodes aren't too far apart (avoid crossing lines)
+      var dx = nodes[a].x - nodes[b].x;
+      var dy = nodes[a].y - nodes[b].y;
+      var dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist > 250) continue;
+      edges.push([a, b]);
+      added++;
     }
 
     // Start = node 0, Exit = node furthest from start (by BFS depth)

@@ -4022,8 +4022,8 @@
   var mazeLevel = 1;
   var mazeMoves = 0;
   var mazeGrid = null;        // 2D array of cells
-  var mazeCols = 7;
-  var mazeRows = 9;
+  var mazeCols = 9;
+  var mazeRows = 11;
   var mazeChameleonR = 0;     // current row
   var mazeChameleonC = 0;     // current col
   var mazeMoving = false;
@@ -4630,9 +4630,9 @@
     var seed = mazeLevel * 1337 + 42;
 
     // Grid size based on level
-    if (mazeLevel <= 2) { mazeCols = 7; mazeRows = 9; }
-    else if (mazeLevel <= 5) { mazeCols = 9; mazeRows = 13; }
-    else { mazeCols = 11; mazeRows = 15; }
+    if (mazeLevel <= 2) { mazeCols = 9; mazeRows = 11; }
+    else if (mazeLevel <= 5) { mazeCols = 11; mazeRows = 15; }
+    else { mazeCols = 13; mazeRows = 19; }
 
     mazeGrid = generateGridMaze(mazeRows, mazeCols, seed);
 

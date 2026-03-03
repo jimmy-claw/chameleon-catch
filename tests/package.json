@@ -1,0 +1,10 @@
+{
+  "name": "chameleon-catch-tests",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.41.0"
+  }
+}

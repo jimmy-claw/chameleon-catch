@@ -5,11 +5,11 @@ const CACHE_NAME = 'chameleon-catch-v12';
 
 // All files that make up the app shell
 const PRECACHE_URLS = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icon-192.svg',
-  './icon-512.svg',
+  '../',
+  '../index.html',
+  '../manifest.json',
+  '../icon-192.svg',
+  '../icon-512.svg',
 ];
 
 // ─── Install: pre-cache all app shell files ─────────────────────────────────
@@ -88,7 +88,7 @@ self.addEventListener('fetch', function(event) {
           .catch(function() {
             // Network failed and no cache — for navigation requests return the app
             if (event.request.mode === 'navigate') {
-              return caches.match('./index.html');
+              return caches.match('../index.html');
             }
           });
       })

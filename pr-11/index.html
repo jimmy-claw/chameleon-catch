@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+PATCHED
+E html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -4144,6 +4145,24 @@
       for (var c = 0; c < cols; c++) {
         delete grid[r][c].visited;
       }
+    }
+
+    // Add extra passages to create more branching & dead ends.
+    // Knocking down additional walls breaks the long DFS corridors into
+    // a bushier maze with genuine junctions and more dead-end pockets.
+    var extraWalls = Math.floor(rows * cols * 0.18); // ~18% extra openings
+    for (var i = 0; i < extraWalls; i++) {
+      var r = Math.floor(mazeRandom() * rows);
+      var c = Math.floor(mazeRandom() * cols);
+      var dirs = [];
+      if (r > 0)        dirs.push(['n', 's', r-1, c]);
+      if (r < rows - 1) dirs.push(['s', 'n', r+1, c]);
+      if (c > 0)        dirs.push(['w', 'e', r, c-1]);
+      if (c < cols - 1) dirs.push(['e', 'w', r, c+1]);
+      if (dirs.length === 0) continue;
+      var d = dirs[Math.floor(mazeRandom() * dirs.length)];
+      grid[r][c][d[0]] = false;
+      grid[d[2]][d[3]][d[1]] = false;
     }
 
     return grid;

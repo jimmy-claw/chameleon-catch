@@ -1104,220 +1104,6 @@
   }
 
   /* ═══════════ V9: ACHIEVEMENTS ═══════════ */
-
-  /* ═══════════ V11: WEATHER WARNING TOAST ═══════════ */
-  #weather-warning-toast {
-    position: absolute;
-    top: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 31;
-    font-family: 'Fredoka One', cursive;
-    font-size: 0.85rem;
-    color: #fff;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(6px);
-    border-radius: 20px;
-    padding: 6px 18px;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    white-space: nowrap;
-  }
-  #weather-warning-toast.visible {
-    opacity: 1;
-  }
-
-  /* ═══════════ V11: CSS RAIN DROPS ═══════════ */
-  .rain-drop {
-    position: absolute;
-    width: 2px;
-    height: 18px;
-    background: linear-gradient(to bottom, rgba(174,194,224,0), rgba(174,194,224,0.6));
-    border-radius: 0 0 2px 2px;
-    pointer-events: none;
-    z-index: 1;
-    animation: rain-fall linear infinite;
-    transform: rotate(15deg);
-  }
-  @keyframes rain-fall {
-    0%   { top: -20px; opacity: 0.7; }
-    100% { top: 100%; opacity: 0; }
-  }
-
-  /* ═══════════ V11: GOOGLY EYES ═══════════ */
-  .googly-eye {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: white;
-    border: 1.5px solid #333;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 5;
-  }
-  .googly-pupil {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #1a1a1a;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transition: transform 0.1s ease;
-  }
-
-  /* ═══════════ V11: CONFETTI ═══════════ */
-  .confetti-piece {
-    position: fixed;
-    width: 10px;
-    height: 10px;
-    z-index: 9999;
-    pointer-events: none;
-    border-radius: 2px;
-    opacity: 1;
-    animation: confetti-fall 2s ease-in forwards;
-  }
-  @keyframes confetti-fall {
-    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-  }
-
-  /* ═══════════ V11: VICTORY DANCE ═══════════ */
-  @keyframes victory-dance {
-    0%   { transform: translateY(0) rotate(0deg); }
-    15%  { transform: translateY(-12px) rotate(0deg); }
-    30%  { transform: translateY(-12px) rotate(-8deg); }
-    50%  { transform: translateY(-12px) rotate(8deg); }
-    70%  { transform: translateY(4px) rotate(-3deg); }
-    85%  { transform: translateY(0) rotate(2deg); }
-    100% { transform: translateY(0) rotate(0deg); }
-  }
-  .victory-dance {
-    animation: victory-dance 0.8s ease-in-out;
-  }
-
-  /* ═══════════ V11: STATS BUTTON ═══════════ */
-  #stats-btn {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    background: rgba(0,0,0,0.3);
-    border: none;
-    font-size: 1.4rem;
-    cursor: pointer;
-    z-index: 50;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* ═══════════ V11: STATS + ACHIEVEMENTS OVERLAY (shared) ═══════════ */
-  .overlay-screen {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.85);
-    z-index: 9000;
-    align-items: center;
-    justify-content: center;
-  }
-  .overlay-screen.open {
-    display: flex;
-  }
-  .overlay-card {
-    background: var(--bg-dark);
-    border-radius: 18px;
-    padding: 20px;
-    max-width: 360px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-    animation: overlay-slide-in 0.35s ease-out;
-  }
-  @keyframes overlay-slide-in {
-    0%   { transform: translateY(40px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
-  }
-  .overlay-card h2 {
-    text-align: center;
-    color: #ffd700;
-    font-family: 'Fredoka One', cursive;
-    margin: 0 0 14px 0;
-  }
-  .overlay-close-btn {
-    display: block;
-    margin: 14px auto 0;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    padding: 8px 24px;
-    border-radius: 12px;
-    font-family: 'Fredoka One', cursive;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-
-  /* ═══════════ V11: ACHIEVEMENTS GALLERY (enhanced) ═══════════ */
-  .ach-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 10px;
-  }
-  .ach-card {
-    background: rgba(255,255,255,0.05);
-    border-radius: 12px;
-    padding: 12px 8px;
-    text-align: center;
-    transition: transform 0.2s ease;
-  }
-  .ach-card:hover { transform: scale(1.03); }
-  .ach-card.locked {
-    filter: grayscale(0.8);
-    opacity: 0.45;
-  }
-  .ach-card .ach-emoji { font-size: 2rem; display: block; margin-bottom: 4px; }
-  .ach-card .ach-name {
-    font-family: 'Fredoka One', cursive;
-    color: #ffd700;
-    font-size: 0.8rem;
-  }
-  .ach-card .ach-desc {
-    color: #a8d8b8;
-    font-size: 0.65rem;
-    margin-top: 2px;
-  }
-  .ach-card .ach-date {
-    color: #6b9e7a;
-    font-size: 0.55rem;
-    margin-top: 4px;
-  }
-
-  /* ═══════════ V11: STATS SCREEN ═══════════ */
-  .stat-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 10px;
-    border-radius: 8px;
-    margin-bottom: 4px;
-    background: rgba(255,255,255,0.05);
-  }
-  .stat-label {
-    color: #a8d8b8;
-    font-size: 0.85rem;
-  }
-  .stat-value {
-    color: #ffd700;
-    font-family: 'Fredoka One', cursive;
-    font-size: 0.9rem;
-  }
   .achievement-toast {
     position: fixed;
     bottom: -80px;
@@ -1573,71 +1359,6 @@
     to   { transform: translateX(-50%) scaleX(1.1); }
   }
 
-  /* ─── Dev Mode Styles ─────────────────────────────────────────────────── */
-  #dev-badge {
-    display: none;
-    position: absolute;
-    top: 60px;
-    right: 12px;
-    z-index: 60;
-    background: rgba(255, 60, 60, 0.5);
-    backdrop-filter: blur(4px);
-    border: 2px solid rgba(255, 60, 60, 0.85);
-    border-radius: 6px;
-    padding: 3px 8px;
-    font-size: 0.65rem;
-    color: #fff;
-    font-weight: bold;
-    letter-spacing: 1px;
-    pointer-events: none;
-    user-select: none;
-  }
-  #dev-state-monitor {
-    display: none;
-    position: absolute;
-    bottom: 8px;
-    left: 8px;
-    z-index: 60;
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(4px);
-    border-radius: 6px;
-    padding: 6px 10px;
-    font-family: monospace;
-    font-size: 10px;
-    line-height: 1.4;
-    color: #0f0;
-    pointer-events: none;
-    user-select: none;
-    white-space: pre;
-    max-width: 220px;
-  }
-  #dev-error-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 9999;
-    background: rgba(200, 0, 0, 0.92);
-    color: #fff;
-    font-family: monospace;
-    font-size: 12px;
-    padding: 10px 14px;
-    max-height: 30vh;
-    overflow-y: auto;
-    cursor: pointer;
-    word-break: break-all;
-  }
-  #dev-error-overlay .dev-err-title {
-    font-weight: bold;
-    font-size: 13px;
-    margin-bottom: 4px;
-  }
-  #dev-error-overlay .dev-err-stack {
-    opacity: 0.85;
-    font-size: 10px;
-  }
-
 </style>
 </head>
 <body>
@@ -1656,8 +1377,6 @@
 
   <!-- Chameleon -->
   <div id="chameleon">
-    <div class="googly-eye" id="googly-eye-l" style="top:28px;right:10px;"><div class="googly-pupil" id="googly-pupil-l"></div></div>
-    <div class="googly-eye" id="googly-eye-r" style="top:28px;right:-2px;"><div class="googly-pupil" id="googly-pupil-r"></div></div>
     <!-- SVG inserted by JS -->
   </div>
 
@@ -1692,11 +1411,6 @@
     <div id="thirst-bar-wrap"><div id="thirst-bar"></div></div>
   </div>
 
-  <!-- Dev Mode Elements -->
-  <div id="dev-badge">DEV</div>
-  <div id="dev-state-monitor"></div>
-  <div id="dev-error-overlay"></div>
-
   <!-- Mute Button -->
   <button id="mute-btn">🔊</button>
 
@@ -1706,8 +1420,6 @@
   <!-- Weather Badge (v9) -->
   <div id="weather-badge"></div>
   <div id="weather-overlay"></div>
-  <div id="weather-warning-toast"></div>
-  <div id="rain-container"></div>
 
   <!-- Combo HUD -->
   <div id="combo-hud">
@@ -1764,9 +1476,8 @@
 
       <button class="btn" id="start-btn" style="margin-top:14px;">🌿 Start Game!</button>
       <button id="achievements-btn" title="Achievements">🏅</button>
-      <button id="stats-btn" title="Stats">📊</button>
       <p style="margin-top:10px; font-size:0.7em; color:#6b9e7a;">
-        v11 &nbsp;·&nbsp; <button id="force-update-btn" style="background:none;border:none;color:#a8d8b8;font-size:1em;cursor:pointer;text-decoration:underline;padding:0;">Force Update</button>
+        v10 &nbsp;·&nbsp; <button id="force-update-btn" style="background:none;border:none;color:#a8d8b8;font-size:1em;cursor:pointer;text-decoration:underline;padding:0;">Force Update</button>
       </p>
     </div>
   </div>
@@ -1866,21 +1577,12 @@
   </div>
 
 
-  <!-- Achievements Overlay (v11 enhanced) -->
-  <div id="achievements-overlay" class="overlay-screen">
-    <div class="overlay-card">
+  <!-- Achievements Overlay (v9) -->
+  <div id="achievements-overlay">
+    <div class="achievements-card">
       <h2>🏆 Achievements</h2>
-      <div id="achievements-list" class="ach-grid"></div>
-      <button class="overlay-close-btn" id="ach-close-btn">Close</button>
-    </div>
-  </div>
-
-  <!-- Stats Overlay (v11) -->
-  <div id="stats-overlay" class="overlay-screen">
-    <div class="overlay-card">
-      <h2>📊 Lifetime Stats</h2>
-      <div id="stats-list"></div>
-      <button class="overlay-close-btn" id="stats-close-btn">Close</button>
+      <div id="achievements-list"></div>
+      <button class="ach-close-btn" id="ach-close-btn">Close</button>
     </div>
   </div>
 </div>
@@ -1916,91 +1618,53 @@
   }
 
   // ═══════════════════════════════════════════════════════════════════════
-  // ═══════════ V11: WEATHER EVENTS (tuned) ════════════════════════════
+  // ═══════════ V9: WEATHER EVENTS ═════════════════════════════════════
   // ═══════════════════════════════════════════════════════════════════════
   var WEATHER_TYPES = [
-    { id: 'rain',    emoji: '🌧️', name: 'Rain',      overlay: 'rgba(0,100,255,0.08)', warning: '🌧️ Rain coming...' },
-    { id: 'heat',    emoji: '☀️', name: 'Heat Wave', overlay: 'rgba(255,140,0,0.08)', warning: '☀️ Heat wave incoming...' },
-    { id: 'wind',    emoji: '💨', name: 'Wind',      overlay: 'rgba(200,200,200,0.06)', warning: '💨 Wind picking up...' },
+    { id: 'rain',    emoji: '☔', name: 'Rain',      overlay: 'rgba(0,100,255,0.08)' },
+    { id: 'heat',    emoji: '☀️', name: 'Heat Wave', overlay: 'rgba(255,140,0,0.08)' },
+    { id: 'wind',    emoji: '💨', name: 'Wind',      overlay: 'rgba(200,200,200,0.06)' },
   ];
   var currentWeather = null;
   var weatherTimer = null;
   var weatherEventTimer = null;
-  var weatherWarningTimer = null;
   var weatherBadgeEl = null;
   var weatherOverlayEl = null;
-  var weatherWarningToastEl = null;
-  var rainDropEls = [];
-  var WEATHER_SCORE_GATE = 30;
-  var WEATHER_MIN_GAP = 60000; // 60s minimum between events
-  var weatherCheckInterval = null;
 
   function startWeatherSystem() {
     weatherBadgeEl = document.getElementById('weather-badge');
     weatherOverlayEl = document.getElementById('weather-overlay');
-    weatherWarningToastEl = document.getElementById('weather-warning-toast');
     currentWeather = null;
     clearWeather();
-    // Poll for score gate instead of a fixed timer
-    weatherCheckInterval = setInterval(function() {
-      var currentScore = gameActive ? score : (carActive ? carScore : 0);
-      if (currentScore >= WEATHER_SCORE_GATE && !weatherEventTimer && !currentWeather) {
-        clearInterval(weatherCheckInterval);
-        weatherCheckInterval = null;
-        // Schedule first event after 10s once gate is passed
-        weatherEventTimer = setTimeout(function() {
-          weatherEventTimer = null;
-          triggerWeatherEvent();
-        }, 10000);
-      }
-    }, 1000);
+    // First event after 20s
+    weatherEventTimer = setTimeout(function() {
+      triggerWeatherEvent();
+    }, 20000);
   }
 
   function stopWeatherSystem() {
     currentWeather = null;
     if (weatherTimer) { clearTimeout(weatherTimer); weatherTimer = null; }
     if (weatherEventTimer) { clearTimeout(weatherEventTimer); weatherEventTimer = null; }
-    if (weatherWarningTimer) { clearTimeout(weatherWarningTimer); weatherWarningTimer = null; }
-    if (weatherCheckInterval) { clearInterval(weatherCheckInterval); weatherCheckInterval = null; }
     clearWeather();
-    removeRainDrops();
   }
 
   function triggerWeatherEvent() {
     if (!gameActive && !carActive) return;
     // Pick random weather
     var idx = Math.floor(gameRandom() * WEATHER_TYPES.length);
-    var nextWeather = WEATHER_TYPES[idx];
-    // Show 3s warning toast first
-    showWeatherWarning(nextWeather.warning);
-    weatherWarningTimer = setTimeout(function() {
-      weatherWarningTimer = null;
-      if (!gameActive && !carActive) return;
-      currentWeather = nextWeather;
-      showWeatherBadge();
-      if (currentWeather.id === 'rain') createRainDrops();
-      // Weather lasts ~30s
-      weatherTimer = setTimeout(function() {
-        clearWeather();
-        currentWeather = null;
-        removeRainDrops();
-        // Next event: minimum 60s gap
-        var nextDelay = WEATHER_MIN_GAP + gameRandom() * 15000;
-        weatherEventTimer = setTimeout(function() {
-          weatherEventTimer = null;
-          triggerWeatherEvent();
-        }, nextDelay);
-      }, 30000);
-    }, 3000);
-  }
-
-  function showWeatherWarning(text) {
-    if (!weatherWarningToastEl) return;
-    weatherWarningToastEl.textContent = text;
-    weatherWarningToastEl.classList.add('visible');
-    setTimeout(function() {
-      weatherWarningToastEl.classList.remove('visible');
-    }, 2800);
+    currentWeather = WEATHER_TYPES[idx];
+    showWeatherBadge();
+    // Weather lasts ~30s
+    weatherTimer = setTimeout(function() {
+      clearWeather();
+      currentWeather = null;
+      // Next event in 45-60s
+      var nextDelay = 45000 + gameRandom() * 15000;
+      weatherEventTimer = setTimeout(function() {
+        triggerWeatherEvent();
+      }, nextDelay);
+    }, 30000);
   }
 
   function showWeatherBadge() {
@@ -2016,28 +1680,6 @@
   function clearWeather() {
     if (weatherBadgeEl) weatherBadgeEl.classList.remove('visible');
     if (weatherOverlayEl) weatherOverlayEl.classList.remove('visible');
-    if (weatherWarningToastEl) weatherWarningToastEl.classList.remove('visible');
-  }
-
-  function createRainDrops() {
-    removeRainDrops();
-    var container = document.getElementById('rain-container');
-    if (!container) container = document.getElementById('game-container');
-    for (var i = 0; i < 40; i++) {
-      var drop = document.createElement('div');
-      drop.className = 'rain-drop';
-      drop.style.left = (Math.random() * 100) + '%';
-      drop.style.animationDuration = (0.4 + Math.random() * 0.4) + 's';
-      drop.style.animationDelay = (Math.random() * 1) + 's';
-      drop.style.opacity = 0.3 + Math.random() * 0.4;
-      container.appendChild(drop);
-      rainDropEls.push(drop);
-    }
-  }
-
-  function removeRainDrops() {
-    rainDropEls.forEach(function(d) { d.remove(); });
-    rainDropEls = [];
   }
 
   // Weather effect helpers — called from game loops
@@ -2050,7 +1692,7 @@
   }
   function getWeatherWindOffset(dt) {
     if (!currentWeather || currentWeather.id !== 'wind') return 0;
-    return 20 * dt;
+    return 20 * dt; // gentle wind drift on flies only
   }
   function getWeatherDrainMultiplier() {
     if (!currentWeather || currentWeather.id !== 'heat') return 1;
@@ -2061,14 +1703,14 @@
   // ═══════════ V9: ACHIEVEMENTS SYSTEM ═════════════════════════════════
   // ═══════════════════════════════════════════════════════════════════════
   var ACHIEVEMENTS = [
-    { id: 'first_blood', emoji: '🩸', name: 'First Blood',  desc: 'Catch your first fly ever', hint: 'Catch a fly' },
-    { id: 'poo_master',  emoji: '💩', name: 'Poo Master',   desc: 'Survive 3 poos in one game', hint: 'Survive the poo storm' },
-    { id: 'on_fire',     emoji: '🔥', name: 'On Fire',      desc: 'Reach 10x combo streak', hint: 'Build a big combo' },
-    { id: 'brave_fool',  emoji: '🐝', name: 'Brave Fool',   desc: 'Catch 5 bees total', hint: 'Bees are risky...' },
-    { id: 'gold_rush',   emoji: '⭐', name: 'Gold Rush',    desc: 'Catch 10 golden flies total', hint: 'Catch the shiny ones' },
-    { id: 'road_warrior', emoji: '🚗', name: 'Road Warrior', desc: 'Reach level 10 in car mode', hint: 'Drive far in car mode' },
-    { id: 'purist',      emoji: '🦎', name: 'Purist',       desc: 'Score 500+ in classic on Hard', hint: 'Hard mode challenge' },
-    { id: 'century',     emoji: '💯', name: 'Century',      desc: 'Score 100 in a single game', hint: 'Score big' },
+    { id: 'first_blood', emoji: '🩸', name: 'First Blood',  desc: 'Catch your first fly ever' },
+    { id: 'poo_master',  emoji: '💩', name: 'Poo Master',   desc: 'Survive 3 poos in one game' },
+    { id: 'on_fire',     emoji: '🔥', name: 'On Fire',      desc: 'Reach 10x combo streak' },
+    { id: 'brave_fool',  emoji: '🐝', name: 'Brave Fool',   desc: 'Catch 5 bees total' },
+    { id: 'gold_rush',   emoji: '⭐', name: 'Gold Rush',    desc: 'Catch 10 golden flies total' },
+    { id: 'road_warrior', emoji: '🚗', name: 'Road Warrior', desc: 'Reach level 10 in car mode' },
+    { id: 'purist',      emoji: '🦎', name: 'Purist',       desc: 'Score 500+ in classic on Hard' },
+    { id: 'century',     emoji: '💯', name: 'Century',      desc: 'Score 100 in a single game' },
   ];
 
   function getUnlockedAchievements() {
@@ -2086,23 +1728,10 @@
     localStorage.setItem('chameleon-stats', JSON.stringify(s));
   }
 
-  function getAchievementDates() {
-    try { return JSON.parse(localStorage.getItem('chameleon-ach-dates') || '{}'); }
-    catch(e) { return {}; }
-  }
-  function saveAchievementDate(id) {
-    var dates = getAchievementDates();
-    if (!dates[id]) {
-      dates[id] = new Date().toISOString().slice(0, 10);
-      localStorage.setItem('chameleon-ach-dates', JSON.stringify(dates));
-    }
-  }
-
   function unlockAchievement(id) {
     var unlocked = getUnlockedAchievements();
     if (unlocked.indexOf(id) !== -1) return; // already unlocked
     unlocked.push(id);
-    saveAchievementDate(id);
     saveUnlockedAchievements(unlocked);
     // Find achievement info
     var ach = null;
@@ -2145,194 +1774,19 @@
     var list = document.getElementById('achievements-list');
     if (!list) return;
     var unlocked = getUnlockedAchievements();
-    var dates = getAchievementDates();
     list.innerHTML = '';
     ACHIEVEMENTS.forEach(function(ach) {
       var isUnlocked = unlocked.indexOf(ach.id) !== -1;
-      var card = document.createElement('div');
-      card.className = 'ach-card' + (isUnlocked ? '' : ' locked');
-      var dateStr = '';
-      if (isUnlocked && dates[ach.id]) {
-        dateStr = '<div class="ach-date">Unlocked ' + dates[ach.id] + '</div>';
-      }
-      card.innerHTML = '<span class="ach-emoji">' + (isUnlocked ? ach.emoji : '🔒') + '</span>' +
-        '<div class="ach-name">' + (isUnlocked ? ach.name : '???') + '</div>' +
-        '<div class="ach-desc">' + (isUnlocked ? ach.desc : (ach.hint || '???')) + '</div>' +
-        dateStr;
-      list.appendChild(card);
-    });
-  }
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // ═══════════ V11: GOOGLY EYES ═══════════════════════════════════════
-  // ═══════════════════════════════════════════════════════════════════════
-  var googlyPupilL = null;
-  var googlyPupilR = null;
-  var googlyEyeL = null;
-  var googlyEyeR = null;
-
-  function initGooglyEyes() {
-    googlyEyeL = document.getElementById('googly-eye-l');
-    googlyEyeR = document.getElementById('googly-eye-r');
-    googlyPupilL = document.getElementById('googly-pupil-l');
-    googlyPupilR = document.getElementById('googly-pupil-r');
-  }
-
-  function updateGooglyEyes() {
-    if (!googlyPupilL || !googlyPupilR || !googlyEyeL) return;
-    var flyList = gameActive ? flies : (carActive ? carFlies : []);
-    if (!flyList || flyList.length === 0) {
-      // Relaxed: pupils centered
-      googlyPupilL.style.transform = 'translate(-50%, -50%)';
-      googlyPupilR.style.transform = 'translate(-50%, -50%)';
-      return;
-    }
-    // Find nearest fly to chameleon eyes
-    var eyeRect = googlyEyeL.getBoundingClientRect();
-    var eyeCX = eyeRect.left + eyeRect.width / 2;
-    var eyeCY = eyeRect.top + eyeRect.height / 2;
-    var nearestDist = Infinity;
-    var nearestX = 0, nearestY = 0;
-    for (var i = 0; i < flyList.length; i++) {
-      var f = flyList[i];
-      var fx, fy;
-      if (f.el) {
-        var rect = f.el.getBoundingClientRect();
-        fx = rect.left + rect.width / 2;
-        fy = rect.top + rect.height / 2;
-      } else {
-        continue;
-      }
-      var dx = fx - eyeCX;
-      var dy = fy - eyeCY;
-      var dist = dx * dx + dy * dy;
-      if (dist < nearestDist) {
-        nearestDist = dist;
-        nearestX = fx;
-        nearestY = fy;
-      }
-    }
-    // Calculate pupil offset (max 3px from center)
-    var maxOffset = 3;
-    var dxE = nearestX - eyeCX;
-    var dyE = nearestY - eyeCY;
-    var angle = Math.atan2(dyE, dxE);
-    var offsetX = Math.cos(angle) * maxOffset;
-    var offsetY = Math.sin(angle) * maxOffset;
-    googlyPupilL.style.transform = 'translate(calc(-50% + ' + offsetX.toFixed(1) + 'px), calc(-50% + ' + offsetY.toFixed(1) + 'px))';
-    googlyPupilR.style.transform = 'translate(calc(-50% + ' + offsetX.toFixed(1) + 'px), calc(-50% + ' + offsetY.toFixed(1) + 'px))';
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // ═══════════ V11: CONFETTI ON NEW HIGH SCORE ════════════════════════
-  // ═══════════════════════════════════════════════════════════════════════
-  var CONFETTI_COLORS = ['#5cb85c', '#3d8b3d', '#ffd700', '#ff69b4', '#74c69d', '#f4a261', '#4aaa4a'];
-
-  function burstConfetti() {
-    for (var i = 0; i < 30; i++) {
-      var piece = document.createElement('div');
-      piece.className = 'confetti-piece';
-      piece.style.left = (10 + Math.random() * 80) + 'vw';
-      piece.style.top = '-10px';
-      piece.style.width = (6 + Math.random() * 8) + 'px';
-      piece.style.height = (6 + Math.random() * 8) + 'px';
-      piece.style.background = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
-      piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-      piece.style.animationDuration = (1.5 + Math.random() * 1) + 's';
-      piece.style.animationDelay = (Math.random() * 0.5) + 's';
-      document.body.appendChild(piece);
-      (function(el) {
-        setTimeout(function() { el.remove(); }, 3000);
-      })(piece);
-    }
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // ═══════════ V11: VICTORY DANCE ═════════════════════════════════════
-  // ═══════════════════════════════════════════════════════════════════════
-  function triggerVictoryDance() {
-    var chameleon = document.getElementById('chameleon');
-    if (!chameleon) return;
-    chameleon.classList.remove('victory-dance');
-    void chameleon.offsetWidth; // reflow to restart animation
-    chameleon.classList.add('victory-dance');
-    setTimeout(function() { chameleon.classList.remove('victory-dance'); }, 850);
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // ═══════════ V11: STATS SCREEN ══════════════════════════════════════
-  // ═══════════════════════════════════════════════════════════════════════
-  function renderStatsOverlay() {
-    var list = document.getElementById('stats-list');
-    if (!list) return;
-    var stats = getStats();
-    var classicHS = parseInt(localStorage.getItem('chameleon_hs') || '0', 10);
-    var carHS = parseInt(localStorage.getItem('chameleon_car_hs') || '0', 10);
-    var daily = {};
-    try { daily = JSON.parse(localStorage.getItem('chameleon-daily') || '{}'); } catch(e) {}
-
-    var rows = [
-      { label: '🪰 Total Flies Caught', value: stats.totalCatches || 0 },
-      { label: '🎮 Total Games Played', value: stats.gamesPlayed || 0 },
-      { label: '🏆 Best Score (Classic)', value: classicHS },
-      { label: '🚗 Best Score (Car)', value: carHS },
-      { label: '📅 Best Score (Daily)', value: daily.score || 0 },
-      { label: '🔥 Longest Combo Streak', value: stats.longestCombo || 0 },
-      { label: '⚙️ Favourite Difficulty', value: stats.favDifficulty || 'N/A' },
-      { label: '🐝 Total Bees Caught', value: stats.beesTotal || 0 },
-      { label: '⭐ Total Golden Flies', value: stats.goldenTotal || 0 },
-      { label: '⏱️ Time Played', value: formatTimePlayed(stats.timePlayed || 0) },
-    ];
-
-    list.innerHTML = '';
-    rows.forEach(function(r) {
-      var row = document.createElement('div');
-      row.className = 'stat-row';
-      row.innerHTML = '<span class="stat-label">' + r.label + '</span><span class="stat-value">' + r.value + '</span>';
-      list.appendChild(row);
+      var item = document.createElement('div');
+      item.className = 'ach-item' + (isUnlocked ? '' : ' locked');
+      item.innerHTML = '<div class="ach-emoji">' + (isUnlocked ? ach.emoji : '🔒') + '</div>' +
+        '<div class="ach-info"><div class="ach-name">' + (isUnlocked ? ach.name : '????') + '</div>' +
+        '<div class="ach-desc">' + (isUnlocked ? ach.desc : '???') + '</div></div>';
+      list.appendChild(item);
     });
   }
 
-  function formatTimePlayed(seconds) {
-    if (seconds < 60) return seconds + 's';
-    var mins = Math.floor(seconds / 60);
-    if (mins < 60) return mins + 'm';
-    var hrs = Math.floor(mins / 60);
-    var remMins = mins % 60;
-    return hrs + 'h ' + remMins + 'm';
-  }
-
-  function trackGameStart() {
-    incrementStat('gamesPlayed');
-    // Track difficulty
-    var diffNames = { 1: 'Easy', 2: 'Normal', 3: 'Hard' };
-    var stats = getStats();
-    stats.diffCounts = stats.diffCounts || {};
-    var dName = diffNames[difficulty] || 'Normal';
-    stats.diffCounts[dName] = (stats.diffCounts[dName] || 0) + 1;
-    // Find favourite
-    var maxCount = 0; var fav = 'Normal';
-    for (var d in stats.diffCounts) {
-      if (stats.diffCounts[d] > maxCount) { maxCount = stats.diffCounts[d]; fav = d; }
-    }
-    stats.favDifficulty = fav;
-    saveStats(stats);
-  }
-
-  var _timePlayedInterval = null;
-  function startTimeTracking() {
-    stopTimeTracking();
-    _timePlayedInterval = setInterval(function() {
-      incrementStat('timePlayed', 1);
-    }, 1000);
-  }
-  function stopTimeTracking() {
-    if (_timePlayedInterval) { clearInterval(_timePlayedInterval); _timePlayedInterval = null; }
-  }
-
+  // ═══════════════════════════════════════════════════════════════════════
   // ═══════════ V9: DAILY CHALLENGE ═════════════════════════════════════
   // ═══════════════════════════════════════════════════════════════════════
   function getTodayDateStr() {
@@ -2869,7 +2323,6 @@
   window.addEventListener('resize', updateMouthPos);
   // Call after layout
   requestAnimationFrame(updateMouthPos);
-  initGooglyEyes();
 
   // ─── Fly factory ──────────────────────────────────────────────────────────
   let flyIdCounter = 0;
@@ -3106,7 +2559,6 @@
     }
 
     updateMouthPos();
-    updateGooglyEyes();
 
     // ── Move flies ──
     const W = window.innerWidth, H = window.innerHeight;
@@ -3262,8 +2714,6 @@
             // V9: Track stats for achievements
             if (ft === 'bee') incrementStat('beesTotal');
             if (ft === 'golden') incrementStat('goldenTotal');
-            incrementStat("totalCatches");
-            var _st = getStats(); if (comboStreak > (_st.longestCombo || 0)) { _st.longestCombo = comboStreak; saveStats(_st); }
 
             checkLevelUp();
             updateHUD();
@@ -3449,7 +2899,6 @@
   // ─── Start game ───────────────────────────────────────────────────────────
   function startGame() {
     // Apply difficulty settings
-    trackGameStart(); startTimeTracking();
     const diff = DIFFICULTIES[difficulty] || DIFFICULTIES[2];
     activeFlySpeed   = diff.flySpeed;
     activeMaxMissed  = diff.maxMissed;
@@ -3514,7 +2963,6 @@
   // ─── End game ─────────────────────────────────────────────────────────────
   function endGame(reason, silent) {
     gameActive = false;
-    stopTimeTracking();
     cancelAnimationFrame(rafId);
     hidePauseBtn();
     stopWeatherSystem();
@@ -3532,12 +2980,10 @@
 
     playSound('gameover');
 
-    var beatHighScore = score > highScore && highScore > 0;
     if (score > highScore) {
       highScore = score;
       localStorage.setItem('chameleon_hs', highScore);
     }
-    if (beatHighScore) { burstConfetti(); triggerVictoryDance(); }
 
     gameoverMsg.textContent   = reason || 'The flies got away... 🪰🪰🪰';
     finalScoreEl.textContent  = score;
@@ -4051,8 +3497,6 @@
         // V9: Track stats for achievements
         if (ft === 'bee') incrementStat('beesTotal');
         if (ft === 'golden') incrementStat('goldenTotal');
-        incrementStat("totalCatches");
-        var _cst = getStats(); if (carComboStreak > (_cst.longestCombo || 0)) { _cst.longestCombo = carComboStreak; saveStats(_cst); }
 
         checkCarLevelUp();
         updateCarHUD();
@@ -4137,7 +3581,6 @@
   // ─── Start Car Game ────────────────────────────────────────────────────
   function startCarGame() {
     const diff = DIFFICULTIES[difficulty] || DIFFICULTIES[2];
-    trackGameStart(); startTimeTracking();
     carActiveFlySpeed = diff.flySpeed;
     carActiveMaxMissed = diff.maxMissed;
     carActiveFuelDrain = 100 / (diff.fuelTime || diff.thirstTime * 3);
@@ -4213,7 +3656,6 @@
   // ─── End Car Game ──────────────────────────────────────────────────────
   function endCarGame(reason, silent) {
     carActive = false;
-    stopTimeTracking();
     cancelAnimationFrame(carRafId);
     hidePauseBtn();
     stopWeatherSystem();
@@ -4235,12 +3677,10 @@
 
     playSound('gameover');
 
-    var beatCarHS = carScore > carHighScore && carHighScore > 0;
     if (carScore > carHighScore) {
       carHighScore = carScore;
       localStorage.setItem('chameleon_car_hs', carHighScore);
     }
-    if (beatCarHS) { burstConfetti(); triggerVictoryDance(); }
 
     gameoverMsg.textContent = reason || 'The road ends here... 🚗💨';
     finalScoreEl.textContent = carScore;
@@ -4387,141 +3827,6 @@
 
   // ─── Initial mouth pos after fonts/layout ────────────────────────────────
   window.addEventListener('load', updateMouthPos);
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // ═══════════ DEV MODE ═══════════════════════════════════════════════
-  // ═══════════════════════════════════════════════════════════════════════
-  var devMode = new URLSearchParams(window.location.search).get('dev') === '1';
-
-  // ─── window.__gameState — always available for external inspection ────
-  window.__gameState = {};
-  function updateExposedState() {
-    window.__gameState.gameActive = gameActive;
-    window.__gameState.carActive = carActive;
-    window.__gameState.gamePaused = gamePaused;
-    window.__gameState.selectedMode = selectedMode;
-    window.__gameState.difficulty = difficulty;
-    window.__gameState.score = gameActive ? score : (carActive ? carScore : 0);
-    window.__gameState.level = gameActive ? level : (carActive ? carLevel : 1);
-    window.__gameState.missed = gameActive ? missed : (carActive ? carMissed : 0);
-    window.__gameState.catches = gameActive ? catches : (carActive ? carCatches : 0);
-    window.__gameState.thirst = gameActive ? thirst : 100;
-    window.__gameState.fuel = carActive ? carFuel : 100;
-    window.__gameState.weather = currentWeather ? currentWeather.name : 'None';
-    window.__gameState.flyCount = gameActive ? flies.length : (carActive ? carFlies.length : 0);
-    window.__gameState.comboStreak = gameActive ? comboStreak : (carActive ? carComboStreak : 0);
-  }
-
-  // Poll state every frame via existing RAF loops — also patch with a fallback interval
-  setInterval(updateExposedState, 250);
-
-  // ─── window.__getFlies() — returns fly position data ────────────────────
-  window.__getFlies = function() {
-    if (gameActive) {
-      return flies.map(function(f) {
-        var rect = f.el.getBoundingClientRect();
-        return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, type: f.flyType, id: f.id };
-      });
-    }
-    if (carActive) {
-      return carFlies.map(function(f, i) {
-        var rect = f.el.getBoundingClientRect();
-        return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, type: f.type, id: i };
-      });
-    }
-    return [];
-  };
-
-  // ─── window.__botTap(x, y) — simulate a tap ────────────────────────────
-  window.__botTap = function(x, y) {
-    var el = document.elementFromPoint(x, y);
-    if (!el) return;
-    var opts = { clientX: x, clientY: y, bubbles: true, cancelable: true };
-    el.dispatchEvent(new PointerEvent('pointerdown', opts));
-    el.dispatchEvent(new PointerEvent('pointerup', opts));
-    el.dispatchEvent(new MouseEvent('click', opts));
-  };
-
-  // ─── window.__forceEndGame() — end game for test cleanup ────────────────
-  window.__forceEndGame = function() {
-    if (gameActive) { endGame('force', true); }
-    if (carActive) { endCarGame('force', true); }
-  };
-
-  // ─── Dev mode UI ───────────────────────────────────────────────────────
-  if (devMode) {
-    var devBadge = document.getElementById('dev-badge');
-    var devMonitor = document.getElementById('dev-state-monitor');
-    var devErrorOverlay = document.getElementById('dev-error-overlay');
-
-    // Show DEV badge
-    if (devBadge) devBadge.style.display = 'block';
-    if (devMonitor) devMonitor.style.display = 'block';
-
-    // ─── Error overlay ──────────────────────────────────────────────────
-    function showDevError(msg, stack) {
-      console.error('[DEV]', msg, stack);
-      if (!devErrorOverlay) return;
-      var stackLines = (stack || '').split('\n').slice(0, 3).join('\n');
-      devErrorOverlay.innerHTML = '<div class="dev-err-title">⚠ ' + msg + '</div><div class="dev-err-stack">' + stackLines + '</div><div style="font-size:9px;margin-top:4px;opacity:0.6">tap to dismiss</div>';
-      devErrorOverlay.style.display = 'block';
-    }
-
-    if (devErrorOverlay) {
-      devErrorOverlay.addEventListener('click', function() {
-        devErrorOverlay.style.display = 'none';
-      });
-    }
-
-    window.addEventListener('error', function(e) {
-      showDevError(e.message || 'Unknown error', e.error ? e.error.stack : '');
-    });
-
-    window.addEventListener('unhandledrejection', function(e) {
-      var reason = e.reason || {};
-      showDevError('Unhandled Promise: ' + (reason.message || String(reason)), reason.stack || '');
-    });
-
-    // ─── FPS + state monitor ────────────────────────────────────────────
-    var devFpsFrames = [];
-    var devLastMonitorUpdate = 0;
-
-    function devMonitorLoop(ts) {
-      devFpsFrames.push(ts);
-      // Keep last 60 frames
-      while (devFpsFrames.length > 60) devFpsFrames.shift();
-
-      // Update display ~4 times per second
-      if (ts - devLastMonitorUpdate > 250) {
-        devLastMonitorUpdate = ts;
-        updateExposedState();
-
-        var fps = 0;
-        if (devFpsFrames.length > 1) {
-          var elapsed = (devFpsFrames[devFpsFrames.length - 1] - devFpsFrames[0]) / 1000;
-          fps = elapsed > 0 ? Math.round((devFpsFrames.length - 1) / elapsed) : 0;
-        }
-
-        var state = 'idle';
-        if (gameActive || carActive) state = gamePaused ? 'paused' : 'active';
-        if (!gameActive && !carActive && document.getElementById('gameover-screen') && document.getElementById('gameover-screen').style.display === 'flex') state = 'over';
-
-        var gs = window.__gameState;
-        if (devMonitor) {
-          devMonitor.textContent =
-            'FPS: ' + fps + '\n' +
-            'flies: ' + gs.flyCount + '\n' +
-            'state: ' + state + '\n' +
-            'score: ' + gs.score + '  catches: ' + gs.catches + '  missed: ' + gs.missed + '\n' +
-            (gs.gameActive ? 'thirst: ' + Math.round(gs.thirst) + '%' : (gs.carActive ? 'fuel: ' + Math.round(gs.fuel) + '%' : '')) + '\n' +
-            'weather: ' + gs.weather;
-        }
-      }
-
-      requestAnimationFrame(devMonitorLoop);
-    }
-    requestAnimationFrame(devMonitorLoop);
-  }
 
 })();
 </script>

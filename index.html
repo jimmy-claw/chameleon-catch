@@ -574,9 +574,19 @@
       <h1>🦎 Chameleon<br>Catch!</h1>
       <p>Tap a fly to shoot your<br>sticky tongue and catch it!</p>
       <p style="margin-top:12px; color:#a8d8b8;">Don't let <strong style="color:#e63946">5 flies</strong> escape! Catch 10 for a poo! 💩</p>
-      <button class="btn" id="start-btn">🌿 Start Game!</button>
-      <p style="margin-top:14px; font-size:0.7em; color:#6b9e7a;">
-        v4 &nbsp;·&nbsp; <button id="force-update-btn" style="background:none;border:none;color:#a8d8b8;font-size:1em;cursor:pointer;text-decoration:underline;padding:0;">Force Update</button>
+
+      <div style="margin-top:16px; background:rgba(0,0,0,0.25); border-radius:12px; padding:12px 16px; text-align:left;">
+        <label style="font-size:0.85em; color:#a8d8b8; display:block; margin-bottom:6px;">⚙️ Difficulty: <strong id="diff-label" style="color:#ffd700">Normal</strong></label>
+        <input type="range" id="diff-slider" min="1" max="3" step="1" value="2"
+          style="width:100%; accent-color:#ffd700; cursor:pointer;">
+        <div style="display:flex; justify-content:space-between; font-size:0.7em; color:#6b9e7a; margin-top:2px;">
+          <span>🐢 Easy</span><span>😐 Normal</span><span>🔥 Hard</span>
+        </div>
+      </div>
+
+      <button class="btn" id="start-btn" style="margin-top:14px;">🌿 Start Game!</button>
+      <p style="margin-top:10px; font-size:0.7em; color:#6b9e7a;">
+        v5 &nbsp;·&nbsp; <button id="force-update-btn" style="background:none;border:none;color:#a8d8b8;font-size:1em;cursor:pointer;text-decoration:underline;padding:0;">Force Update</button>
       </p>
     </div>
   </div>
@@ -599,9 +609,25 @@
 (function() {
   'use strict';
 
+  // ─── Difficulty ──────────────────────────────────────────────────────────
+  const DIFFICULTIES = {
+    1: { label:'Easy',   flySpeed:60,  thirstTime:35, maxMissed:7, poiInterval:8  },
+    2: { label:'Normal', flySpeed:90,  thirstTime:20, maxMissed:5, poiInterval:10 },
+    3: { label:'Hard',   flySpeed:130, thirstTime:12, maxMissed:3, poiInterval:15 },
+  };
+  let difficulty = 2;
+  const diffSlider = document.getElementById('diff-slider');
+  const diffLabel  = document.getElementById('diff-label');
+  if (diffSlider) {
+    diffSlider.addEventListener('input', () => {
+      difficulty = parseInt(diffSlider.value);
+      diffLabel.textContent = DIFFICULTIES[difficulty].label;
+    });
+  }
+
   // ─── Constants ───────────────────────────────────────────────────────────
-  const MAX_MISSED      = 5;
-  const BASE_FLY_SPEED  = 90;   // px/s
+  const MAX_MISSED      = 5;   // overridden per difficulty at startGame
+  const BASE_FLY_SPEED  = 90;  // overridden per difficulty at startGame
   const BASE_FLY_COUNT  = 3;
   const MAX_FLIES       = 7;
   const SCORE_PER_CATCH = 10;
@@ -615,6 +641,11 @@
 
   // ─── State ────────────────────────────────────────────────────────────────
   let score = 0, level = 1, missed = 0, catches = 0;
+  // Active difficulty params (set at startGame)
+  let activeFlySpeed    = 90;
+  let activeMaxMissed   = 5;
+  let activeThirstDrain = 100 / 20;
+  let activePooInterval = 10;
   let gameActive = false;
   let flies = [];
   let tongue = null;         // {x0,y0,x1,y1,phase,targetFly,progress}
@@ -765,7 +796,7 @@
 
     // random direction
     const angle = Math.random() * Math.PI * 2;
-    const speed = BASE_FLY_SPEED + (level - 1) * 20 + Math.random() * 30;
+    const speed = activeFlySpeed + (level - 1) * 20 + Math.random() * 30;
 
     el.innerHTML = `
       <div class="fly-wing left"></div>
@@ -909,7 +940,7 @@
     lastTime = timestamp;
 
     // ── Thirst drain ──
-    thirst -= THIRST_DRAIN * dt;
+    thirst -= activeThirstDrain * dt;
     if (thirst < 0) thirst = 0;
     updateThirstHUD();
 
@@ -943,7 +974,7 @@
 
       // clamp speed
       const spd = Math.sqrt(fly.vx*fly.vx + fly.vy*fly.vy);
-      const maxSpd = BASE_FLY_SPEED + (level - 1) * 25 + 40;
+      const maxSpd = activeFlySpeed + (level - 1) * 25 + 40;
       if (spd > maxSpd) { fly.vx = (fly.vx/spd)*maxSpd; fly.vy = (fly.vy/spd)*maxSpd; }
 
       fly.x += fly.vx * dt;
@@ -962,17 +993,17 @@
       if (fly.escapeTimer <= 0 && !fly.escaped) {
         fly.escaped = true;
         missed++;
-        if (missed <= MAX_MISSED) {
+        if (missed <= activeMaxMissed) {
           showFeedback('Missed! 😭', fly.x + 22, fly.y - 10, '#e63946');
         }
         updateHUD();
         if (tongue && tongue.targetFly === fly) tongue = null;
         removeFly(fly);
         // Spawn a replacement after delay
-        if (gameActive && missed < MAX_MISSED) {
+        if (gameActive && missed < activeMaxMissed) {
           setTimeout(() => { if (gameActive) createFly(); }, 1200);
         }
-        if (missed >= MAX_MISSED) {
+        if (missed >= activeMaxMissed) {
           endGame();
         }
         return;
@@ -1006,7 +1037,7 @@
 
             // spawn poo every POO_INTERVAL catches (only if game still active)
             if (catches >= nextPooAt && gameActive && poos.length < MAX_POO) {
-              nextPooAt = catches + POO_INTERVAL;
+              nextPooAt = catches + activePooInterval;
               setTimeout(() => { if (gameActive) spawnPoo(); }, 400);
             }
           }
@@ -1175,6 +1206,13 @@
 
   // ─── Start game ───────────────────────────────────────────────────────────
   function startGame() {
+    // Apply difficulty settings
+    const diff = DIFFICULTIES[difficulty] || DIFFICULTIES[2];
+    activeFlySpeed   = diff.flySpeed;
+    activeMaxMissed  = diff.maxMissed;
+    activeThirstDrain = 100 / diff.thirstTime;
+    activePooInterval = diff.poiInterval;
+
     score = 0; level = 1; missed = 0; catches = 0;
     flies.forEach(f => f.el.remove());
     flies = [];
@@ -1183,7 +1221,7 @@
     // clear poos
     poos.forEach(p => p.remove());
     poos = [];
-    nextPooAt = POO_INTERVAL;
+    nextPooAt = activePooInterval;
     updatePooHUD();
 
     // reset thirst

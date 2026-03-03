@@ -626,6 +626,67 @@
     justify-content: center;
   }
 
+  /* ===== PAUSE BUTTON ===== */
+  #pause-btn {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 55;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(4px);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    color: #fff;
+    touch-action: manipulation;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ===== PAUSE OVERLAY ===== */
+  #pause-overlay {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 60;
+    background: rgba(20,60,35,0.88);
+    backdrop-filter: blur(6px);
+  }
+  #pause-overlay .screen-card {
+    background: linear-gradient(135deg, #1e6b45, #124d30);
+    border: 3px solid var(--leaf-green);
+    border-radius: 28px;
+    padding: 36px 44px;
+    text-align: center;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    max-width: 90vw;
+  }
+  #pause-overlay h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 8vw, 3.2rem);
+    color: var(--gold);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    margin-bottom: 16px;
+  }
+  #pause-overlay .pause-btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  #pause-overlay .pause-btn-group .btn {
+    margin-top: 0;
+    font-size: clamp(0.95rem, 3.5vw, 1.2rem);
+    padding: 12px 28px;
+  }
+
   /* ===== SKIN PICKER ===== */
   .skin-picker {
     display: flex;
@@ -1077,6 +1138,9 @@
   <!-- Mute Button -->
   <button id="mute-btn">🔊</button>
 
+  <!-- Pause Button -->
+  <button id="pause-btn">⏸️</button>
+
   <!-- Combo HUD -->
   <div id="combo-hud">
     <span>🔥</span>
@@ -1131,7 +1195,7 @@
 
       <button class="btn" id="start-btn" style="margin-top:14px;">🌿 Start Game!</button>
       <p style="margin-top:10px; font-size:0.7em; color:#6b9e7a;">
-        v7 &nbsp;·&nbsp; <button id="force-update-btn" style="background:none;border:none;color:#a8d8b8;font-size:1em;cursor:pointer;text-decoration:underline;padding:0;">Force Update</button>
+        v8 &nbsp;·&nbsp; <button id="force-update-btn" style="background:none;border:none;color:#a8d8b8;font-size:1em;cursor:pointer;text-decoration:underline;padding:0;">Force Update</button>
       </p>
     </div>
   </div>
@@ -1201,6 +1265,18 @@
       </div>
 
       <button class="btn" id="restart-btn">🔄 Try Again!</button>
+    </div>
+  </div>
+
+  <!-- Pause Overlay -->
+  <div id="pause-overlay">
+    <div class="screen-card">
+      <h1>⏸️ Paused</h1>
+      <div class="pause-btn-group">
+        <button class="btn" id="pause-resume-btn">▶️ Resume</button>
+        <button class="btn" id="pause-switch-btn">🔄 Switch Mode</button>
+        <button class="btn" id="pause-quit-btn">🏠 Quit</button>
+      </div>
     </div>
   </div>
 
@@ -1520,6 +1596,90 @@
     isMuted = !isMuted;
     localStorage.setItem('chameleon-mute', isMuted);
     updateMuteBtn();
+  });
+
+  // ─── Pause menu ─────────────────────────────────────────────────────────
+  const pauseBtn      = document.getElementById('pause-btn');
+  const pauseOverlay  = document.getElementById('pause-overlay');
+  const pauseResumeBtn = document.getElementById('pause-resume-btn');
+  const pauseSwitchBtn = document.getElementById('pause-switch-btn');
+  const pauseQuitBtn   = document.getElementById('pause-quit-btn');
+  let gamePaused = false;
+
+  function showPauseBtn() {
+    pauseBtn.style.display = 'flex';
+  }
+  function hidePauseBtn() {
+    pauseBtn.style.display = 'none';
+  }
+
+  function pauseGame() {
+    if (gamePaused) return;
+    gamePaused = true;
+    if (gameActive) {
+      cancelAnimationFrame(rafId);
+    }
+    if (carActive) {
+      cancelAnimationFrame(carRafId);
+    }
+    pauseOverlay.style.display = 'flex';
+  }
+
+  function resumeGame() {
+    if (!gamePaused) return;
+    gamePaused = false;
+    pauseOverlay.style.display = 'none';
+    if (gameActive) {
+      lastTime = performance.now();
+      rafId = requestAnimationFrame(gameLoop);
+    }
+    if (carActive) {
+      carLastTime = performance.now();
+      carRafId = requestAnimationFrame(carGameLoop);
+    }
+  }
+
+  pauseBtn.addEventListener('click', function() {
+    pauseGame();
+  });
+
+  pauseResumeBtn.addEventListener('click', function() {
+    resumeGame();
+  });
+
+  pauseSwitchBtn.addEventListener('click', function() {
+    gamePaused = false;
+    pauseOverlay.style.display = 'none';
+    if (gameActive) {
+      endGame(null, true);
+      selectedMode = 'car';
+      localStorage.setItem('chameleon-mode', 'car');
+    } else if (carActive) {
+      endCarGame(null, true);
+      selectedMode = 'classic';
+      localStorage.setItem('chameleon-mode', 'classic');
+    }
+    updateModeUI();
+    renderStartLeaderboard();
+    startScreen.style.display = 'flex';
+  });
+
+  pauseQuitBtn.addEventListener('click', function() {
+    gamePaused = false;
+    pauseOverlay.style.display = 'none';
+    if (gameActive) {
+      endGame(null, true);
+    } else if (carActive) {
+      endCarGame(null, true);
+    }
+    startScreen.style.display = 'flex';
+  });
+
+  // Tap outside overlay card to resume
+  pauseOverlay.addEventListener('click', function(e) {
+    if (e.target === pauseOverlay) {
+      resumeGame();
+    }
   });
 
   // ─── Skin picker events ───────────────────────────────────────────────────
@@ -2213,6 +2373,7 @@
     gameActive = true;
     startScreen.style.display   = 'none';
     gameoverScreen.style.display= 'none';
+    showPauseBtn();
     // Ensure car mode area is hidden for classic
     if (carArea) carArea.style.display = 'none';
     // Show classic HUD
@@ -2233,9 +2394,10 @@
   }
 
   // ─── End game ─────────────────────────────────────────────────────────────
-  function endGame(reason) {
+  function endGame(reason, silent) {
     gameActive = false;
     cancelAnimationFrame(rafId);
+    hidePauseBtn();
     tongue = null;
     ctx.clearRect(0,0,tongueCanvas.width,tongueCanvas.height);
     flies.forEach(f => f.el.remove());
@@ -2245,6 +2407,8 @@
     thirstHud.style.display = 'none';
     comboHud.style.display = 'none';
     pointerDown = false;
+
+    if (silent) return;
 
     playSound('gameover');
 
@@ -2815,6 +2979,7 @@
     carArea.style.display = '';
     if (nitroLines) nitroLines.style.display = 'none';
     carTongue.classList.remove('active');
+    showPauseBtn();
 
     // Hide classic game elements
     document.getElementById('hud').style.display = 'none';
@@ -2827,9 +2992,10 @@
   }
 
   // ─── End Car Game ──────────────────────────────────────────────────────
-  function endCarGame(reason) {
+  function endCarGame(reason, silent) {
     carActive = false;
     cancelAnimationFrame(carRafId);
+    hidePauseBtn();
 
     // Clean up
     carFlies.forEach(function(f) { f.el.remove(); });
@@ -2843,6 +3009,8 @@
     carComboHud.style.display = 'none';
 
     carArea.style.display = 'none';
+
+    if (silent) return;
 
     playSound('gameover');
 

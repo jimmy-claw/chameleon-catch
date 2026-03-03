@@ -1,6 +1,4 @@
-PATCHED
-PATCHED
-E html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -4192,9 +4190,7 @@ E html>
     }
 
     // Add extra passages to create more branching & dead ends.
-    // Knocking down additional walls breaks the long DFS corridors into
-    // a bushier maze with genuine junctions and more dead-end pockets.
-    var extraWalls = Math.floor(rows * cols * 0.18); // ~18% extra openings
+    var extraWalls = Math.floor(rows * cols * 0.18);
     for (var i = 0; i < extraWalls; i++) {
       var r = Math.floor(mazeRandom() * rows);
       var c = Math.floor(mazeRandom() * cols);

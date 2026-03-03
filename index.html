@@ -1234,6 +1234,150 @@
     margin-top: 2px;
   }
 
+  /* ═══════════ V13: BRANCH MAZE MODE ═══════════ */
+  .mode-toggle-btn.maze-btn {
+    background: linear-gradient(135deg, #2d5a3d, #4a7c59);
+    border-color: #6b9e7a;
+  }
+  .mode-toggle-btn.maze-btn.selected {
+    background: linear-gradient(135deg, #1e6b45, #3d8b3d);
+    border-color: #ffd700;
+    box-shadow: 0 0 12px rgba(74,124,89,0.6);
+  }
+  #maze-mode-area {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 15;
+    background: linear-gradient(180deg, #87CEEB 0%, #98d5c1 50%, #5cb85c 100%);
+    display: none;
+  }
+  #maze-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+  .maze-branch-line {
+    stroke: #5c3d1e;
+    stroke-width: 6;
+    fill: none;
+    stroke-linecap: round;
+  }
+  .maze-node {
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .maze-node:hover { transform: scale(1.1); }
+  .maze-node-circle {
+    fill: #4a7c59;
+    stroke: #2d5a3d;
+    stroke-width: 3;
+  }
+  .maze-node-exit .maze-node-circle {
+    fill: #ffd700;
+    stroke: #b8860b;
+    stroke-width: 3;
+    filter: drop-shadow(0 0 8px rgba(255,215,0,0.7));
+  }
+  .maze-node-exit.maze-exit-active .maze-node-circle {
+    animation: maze-exit-pulse 1s ease infinite alternate;
+  }
+  @keyframes maze-exit-pulse {
+    0% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(255,215,0,0.7)); }
+    100% { transform: scale(1.15); filter: drop-shadow(0 0 16px rgba(255,215,0,1)); }
+  }
+  .maze-node-label {
+    font-size: 20px;
+    text-anchor: middle;
+    dominant-baseline: central;
+    pointer-events: none;
+  }
+  .maze-fly-ring {
+    fill: none;
+    stroke: rgba(255,255,255,0.4);
+    stroke-width: 2;
+    animation: maze-fly-buzz 0.3s ease infinite alternate;
+  }
+  @keyframes maze-fly-buzz {
+    0% { r: 28; opacity: 0.6; }
+    100% { r: 34; opacity: 0; }
+  }
+  .maze-water-label {
+    animation: maze-water-float 2s ease infinite alternate;
+  }
+  @keyframes maze-water-float {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-6px); }
+  }
+  #maze-chameleon {
+    position: absolute;
+    font-size: 32px;
+    z-index: 10;
+    transition: left 0.25s ease, top 0.25s ease;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    line-height: 1;
+  }
+  #maze-hud {
+    position: absolute;
+    top: 12px; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 12px;
+    z-index: 20;
+    pointer-events: none;
+    gap: 6px;
+  }
+  #maze-hud .hud-box { font-size: 0.9rem; padding: 5px 10px; }
+  #maze-hud .hud-box .value { font-size: 1.1rem; }
+  #maze-thirst-hud {
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+    background: var(--score-bg);
+    backdrop-filter: blur(4px);
+    border-radius: 14px;
+    padding: 7px 14px;
+    z-index: 20;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Fredoka One', cursive;
+    color: #fff;
+    font-size: 0.9rem;
+  }
+  #maze-thirst-bar-wrap {
+    width: 90px; height: 12px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  #maze-thirst-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #38bdf8, #7dd3fc);
+    border-radius: 8px;
+    transition: width 0.3s ease, background 0.5s;
+    width: 100%;
+  }
+  #maze-thirst-bar.low  { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+  #maze-thirst-bar.critical { background: linear-gradient(90deg, #e63946, #ff6b6b); animation: bar-pulse 0.5s ease infinite alternate; }
+  #maze-level-banner {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    color: #ffd700;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    z-index: 30;
+    pointer-events: none;
+    display: none;
+  }
+
   /* ═══════════ V9: IMPROVED CAR DESIGN ═══════════ */
   #car-player {
     --car-color: #4CAF50;
@@ -1445,6 +1589,7 @@
         <button class="mode-toggle-btn selected" id="mode-classic-btn" data-mode="classic">🦎 Classic</button>
         <button class="mode-toggle-btn" id="mode-car-btn" data-mode="car">🚗 Car Mode</button>
         <button class="mode-toggle-btn daily-btn" id="mode-daily-btn" data-mode="daily">📅 Daily<span id="daily-best-label"></span></button>
+        <button class="mode-toggle-btn maze-btn" id="mode-maze-btn" data-mode="maze">🌿 Maze</button>
       </div>
 
       <div style="margin-top:16px; background:rgba(0,0,0,0.25); border-radius:12px; padding:12px 16px; text-align:left;">
@@ -1477,7 +1622,7 @@
       <button class="btn" id="start-btn" style="margin-top:14px;">🌿 Start Game!</button>
       <button id="achievements-btn" title="Achievements">🏅</button>
       <p style="margin-top:10px; font-size:0.7em; color:#6b9e7a;">
-        v12 &nbsp;·&nbsp; <button id="force-update-btn" style="background:none;border:none;color:#a8d8b8;font-size:1em;cursor:pointer;text-decoration:underline;padding:0;">Force Update</button>
+        v13 &nbsp;·&nbsp; <button id="force-update-btn" style="background:none;border:none;color:#a8d8b8;font-size:1em;cursor:pointer;text-decoration:underline;padding:0;">Force Update</button>
       </p>
     </div>
   </div>
@@ -1535,6 +1680,35 @@
     <div id="car-level-banner" style="display:none;">🎉 Level Up!</div>
     <!-- Nitro lines -->
     <div id="nitro-lines" style="display:none;"></div>
+  </div>
+
+  <!-- ========== MAZE MODE AREA (v13) ========== -->
+  <div id="maze-mode-area">
+    <svg id="maze-svg"></svg>
+    <div id="maze-chameleon">🦎</div>
+    <div id="maze-hud">
+      <div class="hud-box">
+        <span class="label">🎯</span>
+        <span class="value" id="maze-score-display">0</span>
+      </div>
+      <div class="hud-box">
+        <span class="label">⚡</span>
+        <span class="value" id="maze-level-display">1</span>
+      </div>
+      <div class="hud-box">
+        <span class="label">🪰</span>
+        <span class="value" id="maze-flies-display">0/0</span>
+      </div>
+      <div class="hud-box">
+        <span class="label">👣</span>
+        <span class="value" id="maze-moves-display">0</span>
+      </div>
+    </div>
+    <div id="maze-thirst-hud">
+      <span>💧</span>
+      <div id="maze-thirst-bar-wrap"><div id="maze-thirst-bar"></div></div>
+    </div>
+    <div id="maze-level-banner">🎉 Level Up!</div>
   </div>
 
   <!-- Game Over Screen -->
@@ -1711,6 +1885,8 @@
     { id: 'road_warrior', emoji: '🚗', name: 'Road Warrior', desc: 'Reach level 10 in car mode' },
     { id: 'purist',      emoji: '🦎', name: 'Purist',       desc: 'Score 500+ in classic on Hard' },
     { id: 'century',     emoji: '💯', name: 'Century',      desc: 'Score 100 in a single game' },
+    { id: 'tree_hugger', emoji: '🌿', name: 'Tree Hugger',  desc: 'Complete maze level 1' },
+    { id: 'pathfinder',  emoji: '🗺️', name: 'Pathfinder',   desc: 'Complete 10 maze levels total' },
   ];
 
   function getUnlockedAchievements() {
@@ -1762,6 +1938,8 @@
     var stats = getStats();
     if ((stats.beesTotal || 0) >= 5) unlockAchievement('brave_fool');
     if ((stats.goldenTotal || 0) >= 10) unlockAchievement('gold_rush');
+    if (context.mode === 'maze' && context.level >= 2) unlockAchievement('tree_hugger');
+    if ((stats.mazeLevelsTotal || 0) >= 10) unlockAchievement('pathfinder');
   }
 
   function incrementStat(key, amount) {
@@ -2159,6 +2337,9 @@
     if (carActive) {
       cancelAnimationFrame(carRafId);
     }
+    if (mazeActive) {
+      clearMazeTimers();
+    }
     pauseOverlay.style.display = 'flex';
   }
 
@@ -2173,6 +2354,9 @@
     if (carActive) {
       carLastTime = performance.now();
       carRafId = requestAnimationFrame(carGameLoop);
+    }
+    if (mazeActive) {
+      restartMazeTimers();
     }
   }
 
@@ -2196,6 +2380,10 @@
       endCarGame(null, true);
       selectedMode = 'classic';
       localStorage.setItem('chameleon-mode', 'classic');
+    } else if (mazeActive) {
+      endMazeGame(null, true);
+      selectedMode = 'classic';
+      localStorage.setItem('chameleon-mode', 'classic');
     }
     updateModeUI();
     renderStartLeaderboard();
@@ -2210,6 +2398,8 @@
       endGame(null, true);
     } else if (carActive) {
       endCarGame(null, true);
+    } else if (mazeActive) {
+      endMazeGame(null, true);
     }
     startScreen.style.display = 'flex';
   });
@@ -3049,6 +3239,7 @@
   const modeClassicBtn = document.getElementById('mode-classic-btn');
   const modeCarBtn = document.getElementById('mode-car-btn');
   const modeDailyBtn = document.getElementById('mode-daily-btn');
+  const modeMazeBtn = document.getElementById('mode-maze-btn');
   const modeDescText = document.getElementById('mode-desc-text');
   const modeHintText = document.getElementById('mode-hint-text');
 
@@ -3056,12 +3247,16 @@
     modeClassicBtn.classList.toggle('selected', selectedMode === 'classic');
     modeCarBtn.classList.toggle('selected', selectedMode === 'car');
     modeDailyBtn.classList.toggle('selected', selectedMode === 'daily');
+    modeMazeBtn.classList.toggle('selected', selectedMode === 'maze');
     if (selectedMode === 'car') {
       modeDescText.innerHTML = 'Drive your chameleon car and<br>catch flies on the road!';
       modeHintText.innerHTML = 'Tap left/right to switch lanes. Don\'t run out of <strong style="color:#fbbf24">fuel</strong>! ⛽';
     } else if (selectedMode === 'daily') {
       modeDescText.innerHTML = 'Daily Challenge!<br>Same seed for everyone today.';
       modeHintText.innerHTML = 'Classic gameplay with a <strong style="color:#8b5cf6">seeded</strong> daily puzzle. Compare scores! 📅';
+    } else if (selectedMode === 'maze') {
+      modeDescText.innerHTML = 'Navigate the branch maze<br>and catch flies along the way!';
+      modeHintText.innerHTML = 'Tap nodes to move. Catch all <strong style="color:#ffd700">flies</strong> then reach the exit! 🌿';
     } else {
       modeDescText.innerHTML = 'Tap a fly to shoot your<br>sticky tongue and catch it!';
       modeHintText.innerHTML = 'Don\'t let <strong style="color:#e63946">5 flies</strong> escape! Catch 10 for a poo! 💩';
@@ -3086,6 +3281,11 @@
     localStorage.setItem('chameleon-mode', 'daily');
     updateModeUI();
   });
+  modeMazeBtn.addEventListener('click', function() {
+    selectedMode = 'maze';
+    localStorage.setItem('chameleon-mode', 'maze');
+    updateModeUI();
+  });
 
   function handleStart() {
     if (selectedMode === 'car') {
@@ -3097,6 +3297,10 @@
       var seed = hashDateString(getTodayDateStr());
       dailyRng = mulberry32(seed);
       startGame();
+    } else if (selectedMode === 'maze') {
+      dailyMode = false;
+      dailyRng = null;
+      startMazeGame();
     } else {
       dailyMode = false;
       dailyRng = null;
@@ -3765,6 +3969,8 @@
   function renderStartLeaderboard() {
     if (selectedMode === 'car') {
       renderCarLeaderboard(startLeaderboardTable, startLeaderboard);
+    } else if (selectedMode === 'maze') {
+      renderMazeLeaderboard(startLeaderboardTable, startLeaderboard);
     } else {
       renderLeaderboard(startLeaderboardTable, startLeaderboard);
     }
@@ -3774,6 +3980,7 @@
   // Update leaderboard when mode changes
   modeClassicBtn.addEventListener('click', renderStartLeaderboard);
   modeCarBtn.addEventListener('click', renderStartLeaderboard);
+  modeMazeBtn.addEventListener('click', renderStartLeaderboard);
 
   // V9: Achievements overlay
   var achBtn = document.getElementById('achievements-btn');
@@ -3825,6 +4032,738 @@
     });
   }
 
+  // ═══════════════════════════════════════════════════════════════════════
+  // ═══════════ V13: BRANCH MAZE MODE ═════════════════════════════════════
+  // ═══════════════════════════════════════════════════════════════════════
+
+  var mazeActive = false;
+  var mazeScore = 0;
+  var mazeLevel = 1;
+  var mazeMoves = 0;
+  var mazeGraph = null;       // { nodes: [], edges: [] }
+  var mazeChameleonNode = 0;  // current node index
+  var mazeMoving = false;     // prevent input during animation
+  var mazeFlies = [];         // { nodeIdx, type, caught, timerId }
+  var mazeFliesToCatch = 0;
+  var mazeFlysCaught = 0;
+  var mazeThirst = 100;
+  var mazeMovesSinceThirst = 0;
+  var mazeWaterNodes = [];    // indices with water drops
+  var mazeTimerIds = [];      // intervals to clear on pause/end
+  var mazeRng = null;         // seeded RNG for graph generation
+
+  var mazeArea = document.getElementById('maze-mode-area');
+  var mazeSvg = document.getElementById('maze-svg');
+  var mazeChameleonEl = document.getElementById('maze-chameleon');
+  var mazeScoreEl = document.getElementById('maze-score-display');
+  var mazeLevelEl = document.getElementById('maze-level-display');
+  var mazeFliesEl = document.getElementById('maze-flies-display');
+  var mazeMovesEl = document.getElementById('maze-moves-display');
+  var mazeThirstBar = document.getElementById('maze-thirst-bar');
+  var mazeLevelBanner = document.getElementById('maze-level-banner');
+
+  // ─── Maze Leaderboard ──────────────────────────────────────────────────
+  function getMazeLeaderboard() {
+    try { return JSON.parse(localStorage.getItem('chameleon-maze-leaderboard') || '[]'); }
+    catch(e) { return []; }
+  }
+  function saveMazeLeaderboard(board) {
+    localStorage.setItem('chameleon-maze-leaderboard', JSON.stringify(board));
+  }
+  function isMazeTopScore(sc) {
+    var board = getMazeLeaderboard();
+    return board.length < 5 || sc > (board[board.length - 1] || {}).score;
+  }
+  function addToMazeLeaderboard(name, sc, lvl) {
+    var board = getMazeLeaderboard();
+    board.push({ name: (name || 'You').substring(0, 8), score: sc, level: lvl });
+    board.sort(function(a, b) { return b.score - a.score; });
+    if (board.length > 5) board.length = 5;
+    saveMazeLeaderboard(board);
+    return board;
+  }
+  function renderMazeLeaderboard(tableEl, containerEl) {
+    var board = getMazeLeaderboard();
+    if (board.length === 0) {
+      if (containerEl) containerEl.style.display = 'none';
+      return;
+    }
+    if (containerEl) containerEl.style.display = '';
+    var ranks = ['🥇', '🥈', '🥉'];
+    var tbody = tableEl.querySelector('tbody') || tableEl;
+    tbody.innerHTML = '<tr><th></th><th>Name</th><th>Score</th><th>Lvl</th></tr>' +
+      board.map(function(entry, i) {
+        return '<tr><td>' + (ranks[i] || (i+1)) + '</td><td>🌿 ' + entry.name + '</td><td>' + entry.score + '</td><td>' + entry.level + '</td></tr>';
+      }).join('');
+  }
+
+  // ─── Maze RNG ──────────────────────────────────────────────────────────
+  function mazeRandom() {
+    if (mazeRng) return mazeRng();
+    return Math.random();
+  }
+
+  // ─── BFS Pathfinding ────────────────────────────────────────────────────
+  function mazeBFS(graph, startIdx, endIdx) {
+    var visited = {};
+    var queue = [[startIdx]];
+    visited[startIdx] = true;
+    while (queue.length > 0) {
+      var path = queue.shift();
+      var current = path[path.length - 1];
+      if (current === endIdx) return path;
+      var neighbors = mazeGetNeighbors(graph, current);
+      for (var i = 0; i < neighbors.length; i++) {
+        if (!visited[neighbors[i]]) {
+          visited[neighbors[i]] = true;
+          queue.push(path.concat([neighbors[i]]));
+        }
+      }
+    }
+    return null; // unreachable
+  }
+
+  function mazeGetNeighbors(graph, nodeIdx) {
+    var result = [];
+    for (var i = 0; i < graph.edges.length; i++) {
+      var e = graph.edges[i];
+      if (e[0] === nodeIdx) result.push(e[1]);
+      else if (e[1] === nodeIdx) result.push(e[0]);
+    }
+    return result;
+  }
+
+  // ─── Graph Generation ──────────────────────────────────────────────────
+  function generateMazeGraph(level, seed) {
+    mazeRng = mulberry32(seed);
+    var nodeCount = level <= 2 ? 5 : (level <= 5 ? 7 : 10);
+    var nodes = [];
+    var edges = [];
+
+    // Place nodes in a padded area
+    var padding = 60;
+    var areaW = window.innerWidth || 360;
+    var areaH = window.innerHeight || 640;
+    var usableW = areaW - padding * 2;
+    var usableH = areaH - padding * 2 - 80; // top HUD space
+
+    // Generate spanning tree first
+    for (var i = 0; i < nodeCount; i++) {
+      var tries = 0;
+      var x, y, tooClose;
+      do {
+        x = padding + mazeRandom() * usableW;
+        y = padding + 60 + mazeRandom() * usableH;
+        tooClose = false;
+        for (var j = 0; j < nodes.length; j++) {
+          var dx = nodes[j].x - x;
+          var dy = nodes[j].y - y;
+          if (Math.sqrt(dx*dx + dy*dy) < 70) { tooClose = true; break; }
+        }
+        tries++;
+      } while (tooClose && tries < 50);
+      nodes.push({ x: x, y: y });
+    }
+
+    // Build spanning tree using nearest-neighbor approach
+    var connected = [0];
+    var remaining = [];
+    for (var i = 1; i < nodeCount; i++) remaining.push(i);
+
+    while (remaining.length > 0) {
+      var bestDist = Infinity;
+      var bestFrom = -1;
+      var bestTo = -1;
+      for (var ci = 0; ci < connected.length; ci++) {
+        for (var ri = 0; ri < remaining.length; ri++) {
+          var dx = nodes[connected[ci]].x - nodes[remaining[ri]].x;
+          var dy = nodes[connected[ci]].y - nodes[remaining[ri]].y;
+          var dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < bestDist) {
+            bestDist = dist;
+            bestFrom = connected[ci];
+            bestTo = remaining[ri];
+          }
+        }
+      }
+      edges.push([bestFrom, bestTo]);
+      connected.push(bestTo);
+      remaining.splice(remaining.indexOf(bestTo), 1);
+    }
+
+    // Add cycles for level 6+
+    if (level >= 6) {
+      var extraEdges = Math.min(3, Math.floor(mazeRandom() * 3) + 1);
+      for (var e = 0; e < extraEdges; e++) {
+        var a = Math.floor(mazeRandom() * nodeCount);
+        var b = Math.floor(mazeRandom() * nodeCount);
+        if (a !== b) {
+          var exists = false;
+          for (var ei = 0; ei < edges.length; ei++) {
+            if ((edges[ei][0] === a && edges[ei][1] === b) || (edges[ei][0] === b && edges[ei][1] === a)) {
+              exists = true; break;
+            }
+          }
+          if (!exists) edges.push([a, b]);
+        }
+      }
+    }
+
+    // Start = node 0, Exit = node furthest from start (by BFS depth)
+    var exitNode = 0;
+    var maxDist = 0;
+    for (var i = 1; i < nodeCount; i++) {
+      var p = mazeBFS({ nodes: nodes, edges: edges }, 0, i);
+      if (p && p.length > maxDist) {
+        maxDist = p.length;
+        exitNode = i;
+      }
+    }
+
+    return { nodes: nodes, edges: edges, startNode: 0, exitNode: exitNode };
+  }
+
+  // ─── Render Graph ──────────────────────────────────────────────────────
+  function renderMazeGraph() {
+    var svgNS = 'http://www.w3.org/2000/svg';
+    mazeSvg.innerHTML = '';
+    var graph = mazeGraph;
+
+    // Draw edges (bezier curves)
+    for (var i = 0; i < graph.edges.length; i++) {
+      var e = graph.edges[i];
+      var n1 = graph.nodes[e[0]];
+      var n2 = graph.nodes[e[1]];
+      var mx = (n1.x + n2.x) / 2;
+      var my = (n1.y + n2.y) / 2;
+      // Slight curve offset
+      var dx = n2.x - n1.x;
+      var dy = n2.y - n1.y;
+      var cpx = mx + dy * 0.15;
+      var cpy = my - dx * 0.15;
+      var path = document.createElementNS(svgNS, 'path');
+      path.setAttribute('d', 'M ' + n1.x + ' ' + n1.y + ' Q ' + cpx + ' ' + cpy + ' ' + n2.x + ' ' + n2.y);
+      path.setAttribute('class', 'maze-branch-line');
+      mazeSvg.appendChild(path);
+    }
+
+    // Draw nodes
+    for (var i = 0; i < graph.nodes.length; i++) {
+      var n = graph.nodes[i];
+      var g = document.createElementNS(svgNS, 'g');
+      g.setAttribute('class', 'maze-node' + (i === graph.exitNode ? ' maze-node-exit' : ''));
+      g.setAttribute('data-node-idx', i);
+      g.setAttribute('transform', 'translate(' + n.x + ',' + n.y + ')');
+
+      var circle = document.createElementNS(svgNS, 'circle');
+      circle.setAttribute('class', 'maze-node-circle');
+      circle.setAttribute('cx', 0);
+      circle.setAttribute('cy', 0);
+      circle.setAttribute('r', i === graph.exitNode ? 28 : 24);
+      g.appendChild(circle);
+
+      // Exit label
+      if (i === graph.exitNode) {
+        var label = document.createElementNS(svgNS, 'text');
+        label.setAttribute('class', 'maze-node-label');
+        label.setAttribute('x', 0);
+        label.setAttribute('y', 0);
+        label.textContent = '🚪';
+        g.appendChild(label);
+      }
+
+      mazeSvg.appendChild(g);
+    }
+
+    updateMazeNodeVisuals();
+  }
+
+  function updateMazeNodeVisuals() {
+    // Update fly/water labels on nodes
+    var svgNS = 'http://www.w3.org/2000/svg';
+    // Remove old labels
+    var oldLabels = mazeSvg.querySelectorAll('.maze-fly-label, .maze-fly-ring, .maze-water-label');
+    for (var i = 0; i < oldLabels.length; i++) oldLabels[i].remove();
+
+    // Add fly labels
+    for (var i = 0; i < mazeFlies.length; i++) {
+      var f = mazeFlies[i];
+      if (f.caught) continue;
+      var n = mazeGraph.nodes[f.nodeIdx];
+      var nodeG = mazeSvg.querySelector('[data-node-idx="' + f.nodeIdx + '"]');
+      if (!nodeG) continue;
+
+      // Buzz ring
+      var ring = document.createElementNS(svgNS, 'circle');
+      ring.setAttribute('class', 'maze-fly-ring');
+      ring.setAttribute('cx', 0);
+      ring.setAttribute('cy', 0);
+      ring.setAttribute('r', 30);
+      nodeG.appendChild(ring);
+
+      var emojis = { normal: '🪰', golden: '⭐', red: '🔴', bee: '🐝' };
+      var label = document.createElementNS(svgNS, 'text');
+      label.setAttribute('class', 'maze-fly-label maze-node-label');
+      label.setAttribute('x', 0);
+      label.setAttribute('y', -2);
+      label.textContent = emojis[f.type] || '🪰';
+      nodeG.appendChild(label);
+    }
+
+    // Add water drop labels
+    for (var i = 0; i < mazeWaterNodes.length; i++) {
+      var wIdx = mazeWaterNodes[i];
+      var nodeG = mazeSvg.querySelector('[data-node-idx="' + wIdx + '"]');
+      if (!nodeG) continue;
+      var label = document.createElementNS(svgNS, 'text');
+      label.setAttribute('class', 'maze-water-label maze-node-label');
+      label.setAttribute('x', 0);
+      label.setAttribute('y', -30);
+      label.textContent = '💧';
+      nodeG.appendChild(label);
+    }
+
+    // Update exit node glow
+    var exitG = mazeSvg.querySelector('.maze-node-exit');
+    if (exitG) {
+      var allCaught = mazeFlysCaught >= mazeFliesToCatch;
+      exitG.classList.toggle('maze-exit-active', allCaught);
+    }
+  }
+
+  // ─── Maze HUD ──────────────────────────────────────────────────────────
+  function updateMazeHUD() {
+    mazeScoreEl.textContent = mazeScore;
+    mazeLevelEl.textContent = mazeLevel;
+    mazeFliesEl.textContent = mazeFlysCaught + '/' + mazeFliesToCatch;
+    mazeMovesEl.textContent = mazeMoves;
+    // Thirst bar
+    mazeThirstBar.style.width = mazeThirst + '%';
+    mazeThirstBar.className = mazeThirst <= 15 ? 'critical' : (mazeThirst <= 30 ? 'low' : '');
+  }
+
+  // ─── Position Chameleon ────────────────────────────────────────────────
+  function positionMazeChameleon(nodeIdx, animate) {
+    var n = mazeGraph.nodes[nodeIdx];
+    if (animate) {
+      mazeChameleonEl.style.transition = 'left 0.25s ease, top 0.25s ease';
+    } else {
+      mazeChameleonEl.style.transition = 'none';
+    }
+    mazeChameleonEl.style.left = n.x + 'px';
+    mazeChameleonEl.style.top = n.y + 'px';
+  }
+
+  // ─── Apply skin to maze chameleon ──────────────────────────────────────
+  function applyMazeSkin() {
+    var skinName = currentSkin;
+    if (skinName === 'rainbow') {
+      mazeChameleonEl.style.filter = '';
+      mazeChameleonEl.style.animation = 'chameleon-rainbow 2s linear infinite';
+    } else {
+      mazeChameleonEl.style.animation = '';
+      mazeChameleonEl.style.filter = SKIN_FILTERS[skinName] || '';
+    }
+  }
+
+  // ─── Walk path step by step ────────────────────────────────────────────
+  function mazeWalkPath(path, onDone) {
+    if (path.length <= 1) { if (onDone) onDone(); return; }
+    mazeMoving = true;
+    var stepIdx = 1;
+    function stepNext() {
+      if (stepIdx >= path.length) {
+        mazeMoving = false;
+        if (onDone) onDone();
+        return;
+      }
+      mazeChameleonNode = path[stepIdx];
+      mazeMoves++;
+      mazeMovesSinceThirst++;
+      positionMazeChameleon(mazeChameleonNode, true);
+
+      // Thirst drain every 8 moves
+      if (mazeMovesSinceThirst >= 8) {
+        mazeMovesSinceThirst = 0;
+        var drainAmount = 10;
+        var diff = DIFFICULTIES[difficulty] || DIFFICULTIES[2];
+        if (difficulty === 3) drainAmount = 15;
+        if (difficulty === 1) drainAmount = 5;
+        mazeThirst = Math.max(0, mazeThirst - drainAmount);
+        if (mazeThirst <= 0) {
+          updateMazeHUD();
+          mazeMoving = false;
+          endMazeGame('He dried out! 💧');
+          return;
+        }
+      }
+
+      // Check water on node
+      var wIdx = mazeWaterNodes.indexOf(mazeChameleonNode);
+      if (wIdx !== -1) {
+        mazeThirst = Math.min(100, mazeThirst + 30);
+        mazeWaterNodes.splice(wIdx, 1);
+        playSound('catch');
+        showMazeFeedback(mazeGraph.nodes[mazeChameleonNode], '+💧 30%');
+        updateMazeNodeVisuals();
+      }
+
+      updateMazeHUD();
+      stepIdx++;
+      setTimeout(stepNext, 250);
+    }
+    stepNext();
+  }
+
+  // ─── Show feedback popup ────────────────────────────────────────────────
+  function showMazeFeedback(node, text) {
+    var popup = document.createElement('div');
+    popup.className = 'feedback-popup';
+    popup.style.left = node.x + 'px';
+    popup.style.top = (node.y - 40) + 'px';
+    popup.textContent = text;
+    mazeArea.appendChild(popup);
+    setTimeout(function() { popup.remove(); }, 1000);
+  }
+
+  // ─── Handle node tap ────────────────────────────────────────────────────
+  function handleMazeNodeTap(nodeIdx) {
+    if (!mazeActive || mazeMoving || gamePaused) return;
+
+    var neighbors = mazeGetNeighbors(mazeGraph, mazeChameleonNode);
+    var isAdjacent = neighbors.indexOf(nodeIdx) !== -1;
+
+    // Check if tapping a fly node (even non-adjacent) → BFS pathfind
+    var flyOnNode = null;
+    for (var i = 0; i < mazeFlies.length; i++) {
+      if (mazeFlies[i].nodeIdx === nodeIdx && !mazeFlies[i].caught) {
+        flyOnNode = mazeFlies[i];
+        break;
+      }
+    }
+
+    if (flyOnNode) {
+      // BFS pathfind to fly
+      var path = mazeBFS(mazeGraph, mazeChameleonNode, nodeIdx);
+      if (!path) return;
+      var optimalLen = path.length;
+      mazeWalkPath(path, function() {
+        // Catch the fly
+        catchMazeFly(flyOnNode, optimalLen);
+      });
+      return;
+    }
+
+    // If tapping exit node and all flies caught
+    if (nodeIdx === mazeGraph.exitNode && mazeFlysCaught >= mazeFliesToCatch) {
+      var path = mazeBFS(mazeGraph, mazeChameleonNode, nodeIdx);
+      if (!path) return;
+      mazeWalkPath(path, function() {
+        // Level complete!
+        completeMazeLevel();
+      });
+      return;
+    }
+
+    // Otherwise, only allow adjacent moves
+    if (isAdjacent) {
+      mazeMoving = true;
+      mazeChameleonNode = nodeIdx;
+      mazeMoves++;
+      mazeMovesSinceThirst++;
+      positionMazeChameleon(nodeIdx, true);
+
+      // Thirst drain every 8 moves
+      if (mazeMovesSinceThirst >= 8) {
+        mazeMovesSinceThirst = 0;
+        var drainAmount = 10;
+        if (difficulty === 3) drainAmount = 15;
+        if (difficulty === 1) drainAmount = 5;
+        mazeThirst = Math.max(0, mazeThirst - drainAmount);
+        if (mazeThirst <= 0) {
+          updateMazeHUD();
+          mazeMoving = false;
+          endMazeGame('He dried out! 💧');
+          return;
+        }
+      }
+
+      // Check water on node
+      var wIdx = mazeWaterNodes.indexOf(nodeIdx);
+      if (wIdx !== -1) {
+        mazeThirst = Math.min(100, mazeThirst + 30);
+        mazeWaterNodes.splice(wIdx, 1);
+        playSound('catch');
+        showMazeFeedback(mazeGraph.nodes[nodeIdx], '+💧 30%');
+      }
+
+      updateMazeHUD();
+      updateMazeNodeVisuals();
+
+      setTimeout(function() {
+        mazeMoving = false;
+        // Check if landed on fly
+        var flyHere = null;
+        for (var i = 0; i < mazeFlies.length; i++) {
+          if (mazeFlies[i].nodeIdx === nodeIdx && !mazeFlies[i].caught) {
+            flyHere = mazeFlies[i];
+            break;
+          }
+        }
+        if (flyHere) {
+          catchMazeFly(flyHere, 1);
+        }
+      }, 260);
+    }
+  }
+
+  // ─── Catch maze fly ──────────────────────────────────────────────────
+  function catchMazeFly(fly, pathLen) {
+    fly.caught = true;
+    if (fly.timerId) clearInterval(fly.timerId);
+    mazeFlysCaught++;
+
+    var pts = SCORE_PER_CATCH + (mazeLevel - 1) * 2;
+    var multiplier = 1;
+    if (fly.type === 'golden') { multiplier = 3; playSound('golden'); }
+    else if (fly.type === 'red') { multiplier = 2; playSound('catch'); }
+    else if (fly.type === 'bee') {
+      multiplier = 5;
+      mazeThirst = Math.max(0, mazeThirst - 20);
+      playSound('bee');
+      showMazeFeedback(mazeGraph.nodes[fly.nodeIdx], 'Ouch! 🐝 -20%💧');
+      if (mazeThirst <= 0) {
+        updateMazeHUD();
+        updateMazeNodeVisuals();
+        endMazeGame('He dried out! 💧');
+        return;
+      }
+      incrementStat('beesTotal');
+    } else {
+      playSound('catch');
+    }
+
+    if (fly.type === 'golden') incrementStat('goldenTotal');
+
+    // Efficiency bonus: if moves < optimal * 2
+    var optimalMoves = pathLen - 1;
+    if (optimalMoves > 0 && mazeMoves <= optimalMoves * 2) {
+      pts = Math.floor(pts * 1.5);
+    }
+
+    pts *= multiplier;
+    mazeScore += pts;
+
+    showMazeFeedback(mazeGraph.nodes[fly.nodeIdx], '+' + pts);
+    updateMazeHUD();
+    updateMazeNodeVisuals();
+
+    checkAchievements({
+      score: mazeScore, catches: mazeFlysCaught, combo: 0,
+      poos: 0, level: mazeLevel, mode: 'maze', difficulty: difficulty
+    });
+  }
+
+  // ─── Level complete ──────────────────────────────────────────────────
+  function completeMazeLevel() {
+    playSound('combo');
+    incrementStat('mazeLevelsTotal');
+
+    checkAchievements({
+      score: mazeScore, catches: mazeFlysCaught, combo: 0,
+      poos: 0, level: mazeLevel + 1, mode: 'maze', difficulty: difficulty
+    });
+
+    // Show level banner
+    mazeLevelBanner.textContent = '🎉 Level ' + mazeLevel + ' Complete!';
+    mazeLevelBanner.style.display = 'block';
+    mazeLevelBanner.style.transform = 'translate(-50%, -50%) scale(1)';
+    mazeLevelBanner.style.opacity = '1';
+
+    clearMazeTimers();
+
+    setTimeout(function() {
+      mazeLevelBanner.style.display = 'none';
+      mazeLevel++;
+      mazeMoves = 0;
+      mazeMovesSinceThirst = 0;
+      initMazeLevel();
+    }, 1500);
+  }
+
+  // ─── Determine fly type for maze ──────────────────────────────────────
+  function determineMazeFlyType() {
+    var r = mazeRandom();
+    if (mazeLevel >= 5 && r < 0.10) return 'bee';
+    if (mazeLevel >= 3 && r < 0.25) return 'red';
+    if (r < 0.12) return 'golden';
+    return 'normal';
+  }
+
+  // ─── Init maze level ──────────────────────────────────────────────────
+  function initMazeLevel() {
+    var seed = mazeLevel * 1337 + 42;
+    mazeGraph = generateMazeGraph(mazeLevel, seed);
+    mazeChameleonNode = mazeGraph.startNode;
+    mazeMoving = false;
+    mazeFlysCaught = 0;
+    mazeWaterNodes = [];
+
+    // Place flies
+    var numFlies = Math.min(5, mazeLevel + 1);
+    mazeFliesToCatch = numFlies;
+    mazeFlies = [];
+    var candidateNodes = [];
+    for (var i = 0; i < mazeGraph.nodes.length; i++) {
+      if (i !== mazeGraph.startNode && i !== mazeGraph.exitNode) {
+        candidateNodes.push(i);
+      }
+    }
+    // Shuffle candidate nodes
+    for (var i = candidateNodes.length - 1; i > 0; i--) {
+      var j = Math.floor(mazeRandom() * (i + 1));
+      var tmp = candidateNodes[i]; candidateNodes[i] = candidateNodes[j]; candidateNodes[j] = tmp;
+    }
+    for (var i = 0; i < numFlies && i < candidateNodes.length; i++) {
+      var fType = determineMazeFlyType();
+      mazeFlies.push({ nodeIdx: candidateNodes[i], type: fType, caught: false, timerId: null });
+    }
+
+    // Place water drops (1 per level, more on higher levels)
+    var waterCount = mazeLevel >= 4 ? 2 : 1;
+    for (var w = 0; w < waterCount && numFlies + w < candidateNodes.length; w++) {
+      mazeWaterNodes.push(candidateNodes[numFlies + w]);
+    }
+
+    renderMazeGraph();
+    positionMazeChameleon(mazeChameleonNode, false);
+    applyMazeSkin();
+    updateMazeHUD();
+
+    // Start fly movement timers
+    startMazeFlyTimers();
+  }
+
+  // ─── Fly movement timers ──────────────────────────────────────────────
+  function startMazeFlyTimers() {
+    for (var i = 0; i < mazeFlies.length; i++) {
+      (function(fly) {
+        if (fly.type === 'golden') {
+          fly.timerId = setInterval(function() { moveMazeFly(fly); }, 4000);
+          mazeTimerIds.push(fly.timerId);
+        } else if (fly.type === 'red') {
+          fly.timerId = setInterval(function() { moveMazeFly(fly); }, 2000);
+          mazeTimerIds.push(fly.timerId);
+        }
+      })(mazeFlies[i]);
+    }
+  }
+
+  function moveMazeFly(fly) {
+    if (fly.caught || !mazeActive || gamePaused) return;
+    var neighbors = mazeGetNeighbors(mazeGraph, fly.nodeIdx);
+    if (neighbors.length === 0) return;
+    // Move to random adjacent node (avoid chameleon's node)
+    var choices = neighbors.filter(function(n) { return n !== mazeChameleonNode; });
+    if (choices.length === 0) choices = neighbors;
+    fly.nodeIdx = choices[Math.floor(mazeRandom() * choices.length)];
+    updateMazeNodeVisuals();
+  }
+
+  function clearMazeTimers() {
+    for (var i = 0; i < mazeTimerIds.length; i++) {
+      clearInterval(mazeTimerIds[i]);
+    }
+    mazeTimerIds = [];
+    for (var i = 0; i < mazeFlies.length; i++) {
+      if (mazeFlies[i].timerId) {
+        clearInterval(mazeFlies[i].timerId);
+        mazeFlies[i].timerId = null;
+      }
+    }
+  }
+
+  function restartMazeTimers() {
+    clearMazeTimers();
+    if (mazeActive) startMazeFlyTimers();
+  }
+
+  // ─── Start Maze Game ──────────────────────────────────────────────────
+  function startMazeGame() {
+    initAudio();
+    mazeActive = true;
+    mazeScore = 0;
+    mazeLevel = 1;
+    mazeMoves = 0;
+    mazeMovesSinceThirst = 0;
+    mazeThirst = 100;
+
+    startScreen.style.display = 'none';
+    gameoverScreen.style.display = 'none';
+    if (carArea) carArea.style.display = 'none';
+    document.getElementById('hud').style.display = 'none';
+    mazeArea.style.display = 'block';
+    showPauseBtn();
+    applyMazeSkin();
+
+    initMazeLevel();
+  }
+
+  // ─── End Maze Game ────────────────────────────────────────────────────
+  function endMazeGame(reason, silent) {
+    mazeActive = false;
+    clearMazeTimers();
+    hidePauseBtn();
+    mazeArea.style.display = 'none';
+
+    if (silent) return;
+
+    playSound('gameover');
+
+    if (mazeScore > highScore) {
+      highScore = mazeScore;
+      localStorage.setItem('chameleon_hs', highScore);
+    }
+
+    gameoverMsg.textContent = reason || 'Game Over! 🌿';
+    finalScoreEl.textContent = mazeScore;
+    finalLevelEl.textContent = 'Reached Maze Level ' + mazeLevel + ' 🌿';
+    highScoreEl.textContent = highScore > 0 ? '🏆 Best: ' + highScore : '';
+
+    // Leaderboard
+    var isTop = isMazeTopScore(mazeScore);
+    if (isTop && mazeScore > 0) {
+      nameEntrySection.style.display = '';
+      nameInput.value = '';
+      var newSaveBtn = saveScoreBtn.cloneNode(true);
+      saveScoreBtn.parentNode.replaceChild(newSaveBtn, saveScoreBtn);
+      var currentSaveBtn = document.getElementById('save-score-btn');
+      currentSaveBtn.addEventListener('click', function() {
+        var name = (document.getElementById('name-input').value || 'You').substring(0, 8);
+        addToMazeLeaderboard(name, mazeScore, mazeLevel);
+        document.getElementById('name-entry-section').style.display = 'none';
+        renderMazeLeaderboard(
+          document.getElementById('gameover-leaderboard-table'),
+          document.getElementById('gameover-leaderboard')
+        );
+      });
+    } else {
+      nameEntrySection.style.display = 'none';
+    }
+
+    renderMazeLeaderboard(gameoverLeaderboardTable, gameoverLeaderboard);
+    gameoverScreen.style.display = 'flex';
+  }
+
+  // ─── SVG click handler ────────────────────────────────────────────────
+  mazeSvg.addEventListener('click', function(e) {
+    if (!mazeActive) return;
+    var target = e.target.closest('.maze-node');
+    if (!target) return;
+    var idx = parseInt(target.getAttribute('data-node-idx'));
+    if (!isNaN(idx)) handleMazeNodeTap(idx);
+  });
+
   // ─── Initial mouth pos after fonts/layout ────────────────────────────────
   window.addEventListener('load', updateMouthPos);
 
@@ -3832,6 +4771,7 @@
   window.__gameState = {
     get gameActive() { return typeof gameActive !== 'undefined' ? gameActive : false; },
     get carActive()  { return typeof carActive  !== 'undefined' ? carActive  : false; },
+    get mazeActive() { return typeof mazeActive !== 'undefined' ? mazeActive : false; },
     get gamePaused() { return typeof gamePaused !== 'undefined' ? gamePaused : false; },
     get score()   { return typeof score   !== 'undefined' ? score   : 0; },
     get catches() { return typeof catches !== 'undefined' ? catches : 0; },
@@ -3872,6 +4812,7 @@
   window.__forceEndGame = function() {
     if (typeof endGame    === 'function') endGame('test');
     if (typeof endCarGame === 'function') endCarGame('test', true);
+    if (typeof endMazeGame === 'function') endMazeGame('test', true);
   };
 
   // Dev mode error overlay

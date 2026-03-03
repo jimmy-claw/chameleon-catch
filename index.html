@@ -575,6 +575,9 @@
       <p>Tap a fly to shoot your<br>sticky tongue and catch it!</p>
       <p style="margin-top:12px; color:#a8d8b8;">Don't let <strong style="color:#e63946">5 flies</strong> escape! Catch 10 for a poo! 💩</p>
       <button class="btn" id="start-btn">🌿 Start Game!</button>
+      <p style="margin-top:14px; font-size:0.7em; color:#6b9e7a;">
+        v4 &nbsp;·&nbsp; <button id="force-update-btn" style="background:none;border:none;color:#a8d8b8;font-size:1em;cursor:pointer;text-decoration:underline;padding:0;">Force Update</button>
+      </p>
     </div>
   </div>
 
@@ -1241,6 +1244,23 @@
   startBtn.addEventListener('touchend', e => { e.preventDefault(); startGame(); });
   restartBtn.addEventListener('click',  startGame);
   restartBtn.addEventListener('touchend', e => { e.preventDefault(); startGame(); });
+
+  // Force update button — unregisters SW and clears caches, then reloads
+  const forceUpdateBtn = document.getElementById('force-update-btn');
+  if (forceUpdateBtn) {
+    forceUpdateBtn.addEventListener('click', async () => {
+      forceUpdateBtn.textContent = 'Updating…';
+      try {
+        if ('serviceWorker' in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map(r => r.unregister()));
+        }
+        const keys = await caches.keys();
+        await Promise.all(keys.map(k => caches.delete(k)));
+      } catch(e) { /* ignore */ }
+      location.reload(true);
+    });
+  }
 
   // ─── Initial mouth pos after fonts/layout ────────────────────────────────
   window.addEventListener('load', updateMouthPos);

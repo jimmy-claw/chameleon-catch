@@ -15,41 +15,41 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy PR preview to gh-pages
+      - name: Copy game files to preview subfolder
+        run: |
+          mkdir -p preview
+          cp index.html sw.js manifest.json icon-192.svg icon-512.svg preview/
+          # Fix sw.js scope and asset paths for subfolder
+          sed -i "s|'./|'../|g" preview/sw.js
+          sed -i "s|\"./ |\"./ |g" preview/sw.js
+
+      - name: Deploy to gh-pages/pr-N
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: ./preview
           destination_dir: pr-${{ github.event.pull_request.number }}
-          exclude_assets: '.github,tests,node_modules,*.md'
 
-      - name: Comment preview URL on PR
+      - name: Comment preview URL
         uses: actions/github-script@v7
         with:
           script: |
             const prNum = context.payload.pull_request.number;
             const url = `https://jimmy-claw.github.io/chameleon-catch/pr-${prNum}/`;
-            const body = `🦎 **Preview deployed!**\n\n${url}\n\n*(updates on every push to this PR)*`;
-            // Check if we already commented
+            const body = `🦎 **Preview:** ${url}\n*(updates on every push)*`;
             const comments = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: prNum
+              owner: context.repo.owner, repo: context.repo.repo, issue_number: prNum
             });
-            const existing = comments.data.find(c => c.body.includes('Preview deployed'));
+            const existing = comments.data.find(c => c.body.includes('Preview:'));
             if (existing) {
               await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: existing.id,
-                body
+                owner: context.repo.owner, repo: context.repo.repo,
+                comment_id: existing.id, body
               });
             } else {
               await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: prNum,
-                body
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: prNum, body
               });
             }
 
@@ -60,14 +60,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: gh-pages
-
-      - name: Remove PR preview folder
+      - name: Remove preview folder
         run: |
-          PR_DIR="pr-${{ github.event.pull_request.number }}"
-          if [ -d "$PR_DIR" ]; then
+          DIR="pr-${{ github.event.pull_request.number }}"
+          if [ -d "$DIR" ]; then
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git config user.name "github-actions[bot]"
-            git rm -rf "$PR_DIR"
-            git commit -m "chore: remove preview for PR #${{ github.event.pull_request.number }}"
+            git rm -rf "$DIR"
+            git commit -m "chore: cleanup preview PR #${{ github.event.pull_request.number }}"
             git push
           fi

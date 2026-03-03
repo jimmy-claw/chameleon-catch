@@ -658,6 +658,10 @@
     from { filter: hue-rotate(0deg); }
     to   { filter: hue-rotate(360deg); }
   }
+  @keyframes rainbow-hue {
+    from { filter: hue-rotate(0deg); }
+    to   { filter: hue-rotate(360deg); }
+  }
 
   /* ===== LEADERBOARD TABLE ===== */
   .leaderboard-table {
@@ -734,6 +738,290 @@
     #branch { bottom: 18%; }
     #chameleon { bottom: calc(18% + 20px); }
   }
+
+  /* ===== MODE TOGGLE BUTTONS ===== */
+  .mode-toggle-btn {
+    flex: 1;
+    max-width: 160px;
+    padding: 10px 14px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 16px;
+    background: rgba(0,0,0,0.3);
+    color: #c8f5d8;
+    cursor: pointer;
+    transition: all 0.2s;
+    touch-action: manipulation;
+  }
+  .mode-toggle-btn.selected {
+    background: linear-gradient(135deg, #5cb85c, #3d8b3d);
+    border-color: var(--gold);
+    color: #fff;
+    box-shadow: 0 0 12px rgba(92,184,92,0.5);
+  }
+
+  /* ===== CAR MODE STYLES ===== */
+  #car-mode-area {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 15;
+    background: #2d6a4f;
+  }
+
+  #car-road {
+    position: absolute;
+    inset: 0;
+    background: #3a3a3a;
+  }
+
+  /* Road edges */
+  #car-road::before, #car-road::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 6px;
+    background: #fff;
+    z-index: 1;
+  }
+  #car-road::before { left: calc(15% - 3px); }
+  #car-road::after { right: calc(15% - 3px); }
+
+  /* Lane markings container */
+  #car-lane-marks {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 15%; right: 15%;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  /* Dashed lane lines via repeating background */
+  #car-lane-marks::before, #car-lane-marks::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 4px;
+    background: repeating-linear-gradient(
+      to bottom,
+      #ffd700 0px,
+      #ffd700 40px,
+      transparent 40px,
+      transparent 80px
+    );
+    animation: car-road-scroll var(--car-scroll-speed, 0.4s) linear infinite;
+  }
+  #car-lane-marks::before { left: calc(33.33% - 2px); }
+  #car-lane-marks::after { left: calc(66.66% - 2px); }
+
+  @keyframes car-road-scroll {
+    from { background-position-y: 0; }
+    to   { background-position-y: 80px; }
+  }
+
+  /* Grass on sides */
+  #car-road::before { box-shadow: -30px 0 0 24px #2d6a4f; }
+  #car-road::after { box-shadow: 30px 0 0 24px #2d6a4f; }
+
+  /* Player car */
+  #car-player {
+    position: absolute;
+    bottom: 18%;
+    width: 60px;
+    height: 80px;
+    z-index: 10;
+    transition: left 0.15s ease-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #car-player::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #5cb85c 0%, #3d8b3d 100%);
+    border-radius: 12px 12px 6px 6px;
+    border: 2px solid #2d6a4f;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  }
+
+  #car-emoji {
+    position: relative;
+    z-index: 2;
+    font-size: 2rem;
+  }
+
+  /* Wobble animation for bee catch */
+  @keyframes car-wobble {
+    0%, 100% { transform: rotate(0deg); }
+    20% { transform: rotate(-8deg); }
+    40% { transform: rotate(8deg); }
+    60% { transform: rotate(-5deg); }
+    80% { transform: rotate(5deg); }
+  }
+  #car-player.wobble {
+    animation: car-wobble 0.5s ease-out;
+  }
+
+  /* Car tongue flash */
+  #car-tongue {
+    position: absolute;
+    width: 6px;
+    height: 0;
+    background: #e63946;
+    border-radius: 3px;
+    z-index: 9;
+    opacity: 0;
+    transition: height 0.08s, opacity 0.1s;
+    transform: translateX(-50%);
+  }
+  #car-tongue.active {
+    height: 40px;
+    opacity: 1;
+  }
+
+  /* Car mode fly */
+  .car-fly {
+    position: absolute;
+    font-size: 1.8rem;
+    z-index: 8;
+    pointer-events: none;
+    transition: none;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+  }
+  .car-fly.caught {
+    animation: car-fly-catch 0.3s ease-out forwards;
+  }
+  @keyframes car-fly-catch {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0); opacity: 0; }
+  }
+
+  /* Fuel drops on road */
+  .car-fuel-drop {
+    position: absolute;
+    font-size: 1.5rem;
+    z-index: 7;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+  }
+
+  /* Poo on road */
+  .car-poo {
+    position: absolute;
+    font-size: 1.6rem;
+    z-index: 6;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+  }
+
+  /* Fuel HUD */
+  #fuel-hud {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 20;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.85rem;
+    color: #fff;
+    background: var(--score-bg);
+    backdrop-filter: blur(4px);
+    border-radius: 14px;
+    padding: 6px 16px;
+  }
+  #fuel-bar-wrap {
+    width: 120px;
+    height: 14px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 7px;
+    overflow: hidden;
+  }
+  #fuel-bar {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #5cb85c, #74c69d);
+    border-radius: 7px;
+    transition: width 0.3s;
+  }
+  #fuel-bar.low { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+  #fuel-bar.critical { background: linear-gradient(90deg, #e63946, #ff6b6b); animation: bar-pulse 0.5s ease infinite alternate; }
+
+  /* Car HUD */
+  #car-hud {
+    position: absolute;
+    top: 12px; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    z-index: 20;
+    pointer-events: none;
+  }
+
+  /* Car combo HUD */
+  #car-combo-hud {
+    position: absolute;
+    top: 60px; right: 16px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    border-radius: 14px;
+    padding: 4px 14px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    color: #ff6b35;
+    z-index: 20;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    animation: combo-pulse 0.5s ease infinite alternate;
+  }
+  @keyframes combo-pulse {
+    from { transform: scale(1); }
+    to   { transform: scale(1.08); }
+  }
+
+  /* Car level banner */
+  #car-level-banner {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    color: var(--gold);
+    text-shadow: 0 0 30px rgba(255,215,0,0.8), 2px 2px 6px rgba(0,0,0,0.6);
+    z-index: 40;
+    pointer-events: none;
+    animation: level-pop 1.6s ease-out forwards;
+  }
+
+  /* Nitro visual */
+  #nitro-lines {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 200px;
+    z-index: 5;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255,200,0,0) 0px,
+      rgba(255,200,0,0.3) 4px,
+      rgba(255,200,0,0) 8px
+    );
+    animation: nitro-flash 0.15s linear infinite;
+  }
+  @keyframes nitro-flash {
+    from { opacity: 0.8; }
+    to   { opacity: 0.3; }
+  }
 </style>
 </head>
 <body>
@@ -805,8 +1093,14 @@
   <div class="screen" id="start-screen">
     <div class="screen-card">
       <h1>🦎 Chameleon<br>Catch!</h1>
-      <p>Tap a fly to shoot your<br>sticky tongue and catch it!</p>
-      <p style="margin-top:12px; color:#a8d8b8;">Don't let <strong style="color:#e63946">5 flies</strong> escape! Catch 10 for a poo! 💩</p>
+      <p id="mode-desc-text">Tap a fly to shoot your<br>sticky tongue and catch it!</p>
+      <p id="mode-hint-text" style="margin-top:12px; color:#a8d8b8;">Don't let <strong style="color:#e63946">5 flies</strong> escape! Catch 10 for a poo! 💩</p>
+
+      <!-- Mode Toggle -->
+      <div style="margin-top:14px; display:flex; gap:8px; justify-content:center;">
+        <button class="mode-toggle-btn selected" id="mode-classic-btn" data-mode="classic">🦎 Classic</button>
+        <button class="mode-toggle-btn" id="mode-car-btn" data-mode="car">🚗 Car Mode</button>
+      </div>
 
       <div style="margin-top:16px; background:rgba(0,0,0,0.25); border-radius:12px; padding:12px 16px; text-align:left;">
         <label style="font-size:0.85em; color:#a8d8b8; display:block; margin-bottom:6px;">⚙️ Difficulty: <strong id="diff-label" style="color:#ffd700">Normal</strong></label>
@@ -837,9 +1131,50 @@
 
       <button class="btn" id="start-btn" style="margin-top:14px;">🌿 Start Game!</button>
       <p style="margin-top:10px; font-size:0.7em; color:#6b9e7a;">
-        v6 &nbsp;·&nbsp; <button id="force-update-btn" style="background:none;border:none;color:#a8d8b8;font-size:1em;cursor:pointer;text-decoration:underline;padding:0;">Force Update</button>
+        v7 &nbsp;·&nbsp; <button id="force-update-btn" style="background:none;border:none;color:#a8d8b8;font-size:1em;cursor:pointer;text-decoration:underline;padding:0;">Force Update</button>
       </p>
     </div>
+  </div>
+
+  <!-- ========== CAR MODE AREA ========== -->
+  <div id="car-mode-area" style="display:none;">
+    <!-- Road background - scrolling -->
+    <div id="car-road"></div>
+    <!-- Lane markings -->
+    <div id="car-lane-marks"></div>
+    <!-- Player car -->
+    <div id="car-player"><span id="car-emoji">🦎</span></div>
+    <!-- Car tongue (brief animation on catch) -->
+    <div id="car-tongue"></div>
+    <!-- Fuel HUD -->
+    <div id="fuel-hud">
+      <span>⛽ Fuel</span>
+      <div id="fuel-bar-wrap"><div id="fuel-bar"></div></div>
+    </div>
+    <!-- Car HUD -->
+    <div id="car-hud">
+      <div class="hud-box">
+        <span class="label">🎯 Score</span>
+        <span class="value" id="car-score-display">0</span>
+      </div>
+      <div class="hud-box">
+        <span class="label">⚡ Level</span>
+        <span class="value" id="car-level-display">1</span>
+      </div>
+      <div class="hud-box">
+        <span class="label">💀 Missed</span>
+        <span class="value" id="car-missed-display">0</span>
+      </div>
+    </div>
+    <!-- Car Combo HUD -->
+    <div id="car-combo-hud" style="display:none;">
+      <span>🔥</span>
+      <span id="car-combo-display">x3</span>
+    </div>
+    <!-- Level banner for car mode -->
+    <div id="car-level-banner" style="display:none;">🎉 Level Up!</div>
+    <!-- Nitro lines -->
+    <div id="nitro-lines" style="display:none;"></div>
   </div>
 
   <!-- Game Over Screen -->
@@ -1199,7 +1534,7 @@
   requestAnimationFrame(() => applySkin(currentSkin));
 
   // ─── Show start screen leaderboard ────────────────────────────────────────
-  renderLeaderboard(startLeaderboardTable, startLeaderboard);
+  // (handled by renderStartLeaderboard() below, after mode selection is set up)
 
   // ─── Resize canvas ────────────────────────────────────────────────────────
   function resizeCanvas() {
@@ -1878,6 +2213,10 @@
     gameActive = true;
     startScreen.style.display   = 'none';
     gameoverScreen.style.display= 'none';
+    // Ensure car mode area is hidden for classic
+    if (carArea) carArea.style.display = 'none';
+    // Show classic HUD
+    document.getElementById('hud').style.display = 'flex';
 
     // Restore skin (it gets cleared during thirst/game over)
     applySkin(currentSkin);
@@ -1947,10 +2286,10 @@
   }
 
   // ─── Buttons ──────────────────────────────────────────────────────────────
-  startBtn.addEventListener('click',   startGame);
-  startBtn.addEventListener('touchend', e => { e.preventDefault(); startGame(); });
-  restartBtn.addEventListener('click',  startGame);
-  restartBtn.addEventListener('touchend', e => { e.preventDefault(); startGame(); });
+  startBtn.addEventListener('click',   handleStart);
+  startBtn.addEventListener('touchend', e => { e.preventDefault(); handleStart(); });
+  restartBtn.addEventListener('click',  handleStart);
+  restartBtn.addEventListener('touchend', e => { e.preventDefault(); handleStart(); });
 
   // ─── Save score on pressing Enter ─────────────────────────────────────────
   document.addEventListener('keydown', function(e) {
@@ -1959,6 +2298,651 @@
       if (btn) btn.click();
     }
   });
+
+  // ─── Mode selection ──────────────────────────────────────────────────────
+  let selectedMode = localStorage.getItem('chameleon-mode') || 'classic';
+  const modeClassicBtn = document.getElementById('mode-classic-btn');
+  const modeCarBtn = document.getElementById('mode-car-btn');
+  const modeDescText = document.getElementById('mode-desc-text');
+  const modeHintText = document.getElementById('mode-hint-text');
+
+  function updateModeUI() {
+    modeClassicBtn.classList.toggle('selected', selectedMode === 'classic');
+    modeCarBtn.classList.toggle('selected', selectedMode === 'car');
+    if (selectedMode === 'car') {
+      modeDescText.innerHTML = 'Drive your chameleon car and<br>catch flies on the road!';
+      modeHintText.innerHTML = 'Tap left/right to switch lanes. Don\'t run out of <strong style="color:#fbbf24">fuel</strong>! ⛽';
+    } else {
+      modeDescText.innerHTML = 'Tap a fly to shoot your<br>sticky tongue and catch it!';
+      modeHintText.innerHTML = 'Don\'t let <strong style="color:#e63946">5 flies</strong> escape! Catch 10 for a poo! 💩';
+    }
+  }
+  updateModeUI();
+
+  modeClassicBtn.addEventListener('click', function() {
+    selectedMode = 'classic';
+    localStorage.setItem('chameleon-mode', 'classic');
+    updateModeUI();
+  });
+  modeCarBtn.addEventListener('click', function() {
+    selectedMode = 'car';
+    localStorage.setItem('chameleon-mode', 'car');
+    updateModeUI();
+  });
+
+  function handleStart() {
+    if (selectedMode === 'car') {
+      startCarGame();
+    } else {
+      startGame();
+    }
+  }
+
+  // ─── Car Mode Leaderboard ──────────────────────────────────────────────
+  function getCarLeaderboard() {
+    try { return JSON.parse(localStorage.getItem('chameleon-car-leaderboard') || '[]'); }
+    catch(e) { return []; }
+  }
+  function saveCarLeaderboard(board) {
+    localStorage.setItem('chameleon-car-leaderboard', JSON.stringify(board));
+  }
+  function isCarTopScore(sc) {
+    const board = getCarLeaderboard();
+    return board.length < 5 || sc > (board[board.length - 1] || {}).score;
+  }
+  function addToCarLeaderboard(name, sc, lvl) {
+    const board = getCarLeaderboard();
+    board.push({ name: name, score: sc, level: lvl });
+    board.sort(function(a,b) { return b.score - a.score; });
+    if (board.length > 5) board.length = 5;
+    saveCarLeaderboard(board);
+  }
+  function renderCarLeaderboard(tableEl, containerEl) {
+    const board = getCarLeaderboard();
+    if (board.length === 0) { containerEl.style.display = 'none'; return; }
+    containerEl.style.display = '';
+    const ranks = ['🥇', '🥈', '🥉'];
+    const tbody = tableEl.querySelector('tbody') || tableEl;
+    tbody.innerHTML = '';
+    board.forEach(function(entry, i) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + (ranks[i] || (i+1)) + '</td><td>🚗 ' + entry.name + '</td><td>' + entry.score + '</td><td>Lv' + entry.level + '</td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // ═══════════ CAR MODE GAME ENGINE ═════════════════════════════════════
+  // ═══════════════════════════════════════════════════════════════════════
+
+  const carArea        = document.getElementById('car-mode-area');
+  const carPlayer      = document.getElementById('car-player');
+  const carEmoji       = document.getElementById('car-emoji');
+  const carTongue      = document.getElementById('car-tongue');
+  const carScoreEl     = document.getElementById('car-score-display');
+  const carLevelEl     = document.getElementById('car-level-display');
+  const carMissedEl    = document.getElementById('car-missed-display');
+  const carComboHud    = document.getElementById('car-combo-hud');
+  const carComboDisplay= document.getElementById('car-combo-display');
+  const carLevelBanner = document.getElementById('car-level-banner');
+  const fuelBar        = document.getElementById('fuel-bar');
+  const nitroLines     = document.getElementById('car-mode-area') ? document.getElementById('nitro-lines') : null;
+  const carLaneMarks   = document.getElementById('car-lane-marks');
+
+  // Car mode state — completely separate from classic
+  let carActive = false;
+  let carRafId = null;
+  let carLastTime = 0;
+  let carScore = 0;
+  let carLevel = 1;
+  let carMissed = 0;
+  let carCatches = 0;
+  let carLane = 1; // 0=left, 1=center, 2=right
+  let carFuel = 100;
+  let carComboStreak = 0;
+  let carComboMultiplier = 1;
+  let carTotalNormalCatches = 0;
+  let carRoadSpeed = 200; // px/s base
+  let carFlies = [];      // {el, x, y, lane, type, speed}
+  let carFuelDrops = [];  // {el, x, y, speed}
+  let carPoos = [];       // {el, x, y, speed}
+  let carNextPoo = POO_INTERVAL;
+  let carFlySpawnTimer = 0;
+  let carFuelSpawnTimer = 0;
+  let carNitroTimer = 0;
+  let carHighScore = parseInt(localStorage.getItem('chameleon_car_hs') || '0', 10);
+  let carActiveFlySpeed = 90;
+  let carActiveMaxMissed = 5;
+  let carActiveFuelDrain = 100 / 20;
+  let carActivePooInterval = 10;
+
+  // Lane positions (percentages of road width)
+  function getCarLaneX(lane) {
+    // Road occupies 15%-85% of screen width
+    const W = window.innerWidth;
+    const roadLeft = W * 0.15;
+    const roadWidth = W * 0.70;
+    const laneWidth = roadWidth / 3;
+    return roadLeft + laneWidth * lane + laneWidth / 2 - 30; // center car (60px wide)
+  }
+
+  function updateCarPlayerPos() {
+    carPlayer.style.left = getCarLaneX(carLane) + 'px';
+  }
+
+  function updateCarHUD() {
+    carScoreEl.textContent = carScore;
+    carLevelEl.textContent = carLevel;
+    carMissedEl.textContent = carMissed;
+    carMissedEl.style.color = carMissed > 0 ? '#e63946' : '#ffd700';
+  }
+
+  function updateFuelHUD() {
+    const pct = Math.max(0, carFuel);
+    fuelBar.style.width = pct + '%';
+    fuelBar.className = pct <= 15 ? 'critical' : pct <= 30 ? 'low' : '';
+  }
+
+  function updateCarComboHUD() {
+    if (carComboStreak >= 3) {
+      carComboHud.style.display = 'flex';
+      carComboDisplay.textContent = 'x' + carComboStreak + ' (' + carComboMultiplier + 'x)';
+    } else {
+      carComboHud.style.display = 'none';
+    }
+  }
+
+  function showCarFeedback(text, x, y, color) {
+    const el = document.createElement('div');
+    el.className = 'feedback-popup';
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    el.style.color = color;
+    el.textContent = text;
+    carArea.appendChild(el);
+    setTimeout(function() { el.remove(); }, 1100);
+  }
+
+  function showCarTongue() {
+    const playerRect = carPlayer.getBoundingClientRect();
+    carTongue.style.left = (playerRect.left + playerRect.width / 2) + 'px';
+    carTongue.style.top = (playerRect.top - 40) + 'px';
+    carTongue.classList.add('active');
+    setTimeout(function() { carTongue.classList.remove('active'); }, 200);
+  }
+
+  // Determine fly type (same rules as classic)
+  function determineCarFlyType() {
+    if (carTotalNormalCatches > 0 && carTotalNormalCatches % 15 === 0) return 'golden';
+    if (carLevel >= 5 && Math.random() < 0.10) return 'bee';
+    if (carLevel >= 3 && Math.random() < 0.20) return 'red';
+    return 'normal';
+  }
+
+  function spawnCarFly(forceType) {
+    const flyType = forceType || determineCarFlyType();
+    const lane = Math.floor(Math.random() * 3);
+    const emojis = { normal: '🪰', golden: '⭐', red: '🔴', bee: '🐝' };
+    const el = document.createElement('div');
+    el.className = 'car-fly';
+    el.textContent = emojis[flyType] || '🪰';
+    if (flyType === 'golden') el.style.fontSize = '2.2rem';
+
+    const x = getCarLaneX(lane) + 15; // center in lane
+    el.style.left = x + 'px';
+    el.style.top = '-40px';
+    carArea.appendChild(el);
+
+    let speedMult = 1;
+    if (flyType === 'red') speedMult = 1.5;
+    if (flyType === 'golden') speedMult = 0.8;
+    if (flyType === 'bee') speedMult = 1.2;
+
+    const fly = {
+      el: el,
+      x: x,
+      y: -40,
+      lane: lane,
+      type: flyType,
+      speed: (carRoadSpeed + Math.random() * 60) * speedMult,
+      caught: false,
+    };
+    carFlies.push(fly);
+  }
+
+  function spawnFuelDrop() {
+    const lane = Math.floor(Math.random() * 3);
+    const el = document.createElement('div');
+    el.className = 'car-fuel-drop';
+    el.textContent = '⛽';
+    const x = getCarLaneX(lane) + 15;
+    el.style.left = x + 'px';
+    el.style.top = '-40px';
+    carArea.appendChild(el);
+    carFuelDrops.push({
+      el: el,
+      x: x,
+      y: -40,
+      lane: lane,
+      speed: carRoadSpeed,
+    });
+  }
+
+  function spawnCarPoo() {
+    // Poo appears behind the car and scrolls away
+    const playerRect = carPlayer.getBoundingClientRect();
+    const el = document.createElement('div');
+    el.className = 'car-poo';
+    el.textContent = '💩';
+    el.style.left = (playerRect.left + playerRect.width / 2 - 12) + 'px';
+    el.style.top = (playerRect.bottom + 5) + 'px';
+    carArea.appendChild(el);
+    playSound('poo');
+    carPoos.push({
+      el: el,
+      x: playerRect.left + playerRect.width / 2 - 12,
+      y: playerRect.bottom + 5,
+      speed: carRoadSpeed * 0.8,
+    });
+  }
+
+  function checkCarLevelUp() {
+    const newLevel = Math.floor(carCatches / CATCHES_PER_LVL) + 1;
+    if (newLevel > carLevel && newLevel <= 10) {
+      carLevel = newLevel;
+      carLevelEl.textContent = carLevel;
+      // Increase road speed by 15%
+      carRoadSpeed = 200 * Math.pow(1.15, carLevel - 1);
+      // Update lane mark animation speed
+      const duration = Math.max(0.2, 80 / carRoadSpeed);
+      if (carLaneMarks) {
+        carLaneMarks.style.setProperty('--scroll-dur', duration + 's');
+      }
+      // Show banner
+      carLevelBanner.style.display = 'block';
+      carLevelBanner.style.animation = 'none';
+      void carLevelBanner.offsetWidth;
+      carLevelBanner.style.animation = '';
+      carLevelBanner.textContent = '🎉 Level ' + carLevel + '!';
+      setTimeout(function() { carLevelBanner.style.display = 'none'; }, 1700);
+    }
+  }
+
+  // Car mode collision detection
+  function checkCarCollision(objLane, objY, objH) {
+    if (objLane !== carLane) return false;
+    const playerBottom = window.innerHeight * 0.82;
+    const playerTop = playerBottom - 80;
+    return objY + objH > playerTop && objY < playerBottom;
+  }
+
+  // ─── Car Mode Game Loop ────────────────────────────────────────────────
+  function carGameLoop(timestamp) {
+    if (!carActive) return;
+    const dt = Math.min((timestamp - carLastTime) / 1000, 0.1);
+    carLastTime = timestamp;
+
+    const H = window.innerHeight;
+
+    // ── Fuel drain ──
+    carFuel -= carActiveFuelDrain * dt;
+    if (carFuel < 0) carFuel = 0;
+    updateFuelHUD();
+
+    if (carFuel <= 0 && carActive) {
+      endCarGame('Out of fuel! ⛽');
+      return;
+    }
+
+    // ── Nitro timer ──
+    if (carNitroTimer > 0) {
+      carNitroTimer -= dt;
+      if (carNitroTimer <= 0) {
+        if (nitroLines) nitroLines.style.display = 'none';
+      }
+    }
+
+    // ── Update lane mark scroll speed ──
+    const scrollDur = Math.max(0.15, 80 / carRoadSpeed);
+    if (carLaneMarks) {
+      const pseudoStyle = carLaneMarks.style;
+      // Update animation duration via CSS variable
+      pseudoStyle.animationDuration = scrollDur + 's';
+    }
+
+    // ── Spawn flies ──
+    carFlySpawnTimer -= dt;
+    if (carFlySpawnTimer <= 0) {
+      spawnCarFly();
+      // Spawn interval decreases with level
+      carFlySpawnTimer = Math.max(0.4, 1.8 - carLevel * 0.12) + Math.random() * 0.5;
+    }
+
+    // ── Spawn fuel drops ──
+    carFuelSpawnTimer -= dt;
+    if (carFuelSpawnTimer <= 0) {
+      spawnFuelDrop();
+      carFuelSpawnTimer = 6 + Math.random() * 4;
+    }
+
+    // ── Move flies ──
+    for (let i = carFlies.length - 1; i >= 0; i--) {
+      const fly = carFlies[i];
+      if (fly.caught) continue;
+      fly.y += fly.speed * dt;
+      fly.el.style.top = fly.y + 'px';
+
+      // Check collision with player car
+      if (checkCarCollision(fly.lane, fly.y, 30)) {
+        fly.caught = true;
+        fly.el.classList.add('caught');
+        showCarTongue();
+
+        // Score calculation
+        const basePoints = SCORE_PER_CATCH + (carLevel - 1) * 2;
+        let pointsMult = 1;
+        let catchSound = 'catch';
+        const ft = fly.type;
+
+        if (ft === 'golden') {
+          pointsMult = 3;
+          catchSound = 'golden';
+          // Nitro burst!
+          carNitroTimer = 1.5;
+          if (nitroLines) nitroLines.style.display = '';
+        } else if (ft === 'red') {
+          pointsMult = 2;
+        } else if (ft === 'bee') {
+          pointsMult = 5;
+          catchSound = 'bee';
+          // Wobble + lose 30% fuel
+          carPlayer.classList.remove('wobble');
+          void carPlayer.offsetWidth;
+          carPlayer.classList.add('wobble');
+          carFuel = Math.max(0, carFuel - 30);
+          updateFuelHUD();
+          showCarFeedback('Ouch! 🐝', fly.x, fly.y - 30, '#ffd700');
+          setTimeout(function() { carPlayer.classList.remove('wobble'); }, 500);
+        }
+
+        // Combo
+        carComboStreak++;
+        if (ft !== 'bee') carTotalNormalCatches++;
+
+        if (carComboStreak === 3 || carComboStreak === 5 || carComboStreak === 10) {
+          playSound('combo');
+        }
+        if (carComboStreak >= 10) {
+          carComboMultiplier = 3;
+        } else if (carComboStreak >= 5) {
+          carComboMultiplier = 2;
+        } else if (carComboStreak >= 3) {
+          carComboMultiplier = 1.5;
+        } else {
+          carComboMultiplier = 1;
+        }
+        updateCarComboHUD();
+
+        const totalPoints = Math.round(basePoints * pointsMult * carComboMultiplier);
+        carScore += totalPoints;
+        carCatches++;
+
+        playSound(catchSound);
+
+        let feedbackText = '+' + totalPoints + ' 🎯';
+        if (carComboStreak >= 10) feedbackText = '+' + totalPoints + ' 🔥🔥🔥';
+        else if (carComboStreak >= 3) feedbackText = '+' + totalPoints + ' +COMBO x' + carComboStreak + ' 🔥';
+        showCarFeedback(feedbackText, fly.x, fly.y - 20, ft === 'golden' ? '#ffd700' : '#ffd700');
+
+        checkCarLevelUp();
+        updateCarHUD();
+
+        // Poo mechanic
+        if (carCatches >= carNextPoo && carActive) {
+          carNextPoo = carCatches + carActivePooInterval;
+          setTimeout(function() { if (carActive) spawnCarPoo(); }, 400);
+        }
+
+        setTimeout(function() { fly.el.remove(); }, 300);
+        carFlies.splice(i, 1);
+        continue;
+      }
+
+      // Fly passed the bottom = miss
+      if (fly.y > H + 40) {
+        fly.el.remove();
+        carFlies.splice(i, 1);
+        // Bees escaping = no penalty
+        if (fly.type === 'bee') continue;
+        carMissed++;
+        carComboStreak = 0;
+        carComboMultiplier = 1;
+        updateCarComboHUD();
+        playSound('miss');
+        updateCarHUD();
+        if (carMissed >= carActiveMaxMissed) {
+          endCarGame('Too many flies escaped! 🪰🪰🪰');
+          return;
+        }
+      }
+    }
+
+    // ── Move fuel drops ──
+    for (let i = carFuelDrops.length - 1; i >= 0; i--) {
+      const drop = carFuelDrops[i];
+      drop.y += drop.speed * dt;
+      drop.el.style.top = drop.y + 'px';
+
+      if (checkCarCollision(drop.lane, drop.y, 25)) {
+        carFuel = Math.min(100, carFuel + 30);
+        updateFuelHUD();
+        showCarFeedback('+Fuel! ⛽', drop.x, drop.y - 20, '#5cb85c');
+        playSound('catch');
+        drop.el.remove();
+        carFuelDrops.splice(i, 1);
+        continue;
+      }
+
+      if (drop.y > H + 40) {
+        drop.el.remove();
+        carFuelDrops.splice(i, 1);
+      }
+    }
+
+    // ── Move poos ──
+    for (let i = carPoos.length - 1; i >= 0; i--) {
+      const poo = carPoos[i];
+      poo.y += poo.speed * dt;
+      poo.el.style.top = poo.y + 'px';
+      if (poo.y > H + 40) {
+        poo.el.remove();
+        carPoos.splice(i, 1);
+      }
+    }
+
+    // ── Update lane mark animation ──
+    const markStyle = document.documentElement.style;
+    markStyle.setProperty('--car-scroll-speed', scrollDur + 's');
+
+    carRafId = requestAnimationFrame(carGameLoop);
+  }
+
+  // ─── Start Car Game ────────────────────────────────────────────────────
+  function startCarGame() {
+    const diff = DIFFICULTIES[difficulty] || DIFFICULTIES[2];
+    carActiveFlySpeed = diff.flySpeed;
+    carActiveMaxMissed = diff.maxMissed;
+    carActiveFuelDrain = 100 / diff.thirstTime;
+    carActivePooInterval = diff.poiInterval;
+
+    initAudio();
+
+    carScore = 0; carLevel = 1; carMissed = 0; carCatches = 0;
+    carComboStreak = 0; carComboMultiplier = 1; carTotalNormalCatches = 0;
+    carLane = 1;
+    carFuel = 100;
+    carRoadSpeed = 200;
+    carNextPoo = carActivePooInterval;
+    carFlySpawnTimer = 1;
+    carFuelSpawnTimer = 5;
+    carNitroTimer = 0;
+
+    // Clear old elements
+    carFlies.forEach(function(f) { f.el.remove(); });
+    carFlies = [];
+    carFuelDrops.forEach(function(f) { f.el.remove(); });
+    carFuelDrops = [];
+    carPoos.forEach(function(p) { p.el.remove(); });
+    carPoos = [];
+
+    // Apply skin to car emoji
+    if (currentSkin === 'rainbow') {
+      carPlayer.style.filter = 'none';
+      carPlayer.style.animation = 'rainbow-hue 2s linear infinite';
+    } else {
+      carPlayer.style.filter = SKIN_FILTERS[currentSkin] || '';
+      carPlayer.style.animation = '';
+    }
+
+    updateCarHUD();
+    updateFuelHUD();
+    updateCarComboHUD();
+    updateCarPlayerPos();
+
+    // Hide classic elements, show car area
+    startScreen.style.display = 'none';
+    gameoverScreen.style.display = 'none';
+    carArea.style.display = '';
+    if (nitroLines) nitroLines.style.display = 'none';
+    carTongue.classList.remove('active');
+
+    // Hide classic game elements
+    document.getElementById('hud').style.display = 'none';
+    thirstHud.style.display = 'none';
+    comboHud.style.display = 'none';
+
+    carActive = true;
+    carLastTime = performance.now();
+    carRafId = requestAnimationFrame(carGameLoop);
+  }
+
+  // ─── End Car Game ──────────────────────────────────────────────────────
+  function endCarGame(reason) {
+    carActive = false;
+    cancelAnimationFrame(carRafId);
+
+    // Clean up
+    carFlies.forEach(function(f) { f.el.remove(); });
+    carFlies = [];
+    carFuelDrops.forEach(function(f) { f.el.remove(); });
+    carFuelDrops = [];
+    carPoos.forEach(function(p) { p.el.remove(); });
+    carPoos = [];
+    carTongue.classList.remove('active');
+    if (nitroLines) nitroLines.style.display = 'none';
+    carComboHud.style.display = 'none';
+
+    carArea.style.display = 'none';
+
+    playSound('gameover');
+
+    if (carScore > carHighScore) {
+      carHighScore = carScore;
+      localStorage.setItem('chameleon_car_hs', carHighScore);
+    }
+
+    gameoverMsg.textContent = reason || 'The road ends here... 🚗💨';
+    finalScoreEl.textContent = carScore;
+    finalLevelEl.textContent = 'Reached Level ' + carLevel + ' 🚗';
+    highScoreEl.textContent = carHighScore > 0 ? '🏆 Best (Car): ' + carHighScore : '';
+
+    // Name entry for car leaderboard
+    const isTop = isCarTopScore(carScore);
+    if (isTop && carScore > 0) {
+      nameEntrySection.style.display = '';
+      nameInput.value = '';
+      const newSaveBtn = document.getElementById('save-score-btn').cloneNode(true);
+      document.getElementById('save-score-btn').parentNode.replaceChild(newSaveBtn, document.getElementById('save-score-btn'));
+      const currentSaveBtn = document.getElementById('save-score-btn');
+      currentSaveBtn.addEventListener('click', function() {
+        const name = (document.getElementById('name-input').value || 'You').substring(0, 8);
+        addToCarLeaderboard(name, carScore, carLevel);
+        document.getElementById('name-entry-section').style.display = 'none';
+        renderCarLeaderboard(
+          document.getElementById('gameover-leaderboard-table'),
+          document.getElementById('gameover-leaderboard')
+        );
+      });
+    } else {
+      nameEntrySection.style.display = 'none';
+    }
+
+    // Render car leaderboard on game over
+    renderCarLeaderboard(gameoverLeaderboardTable, gameoverLeaderboard);
+    gameoverScreen.style.display = 'flex';
+  }
+
+  // ─── Car Mode Controls ─────────────────────────────────────────────────
+  let carTouchStartX = null;
+
+  document.addEventListener('touchstart', function(e) {
+    if (!carActive) return;
+    carTouchStartX = e.touches[0].clientX;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    if (!carActive) return;
+    const endX = e.changedTouches[0].clientX;
+    const W = window.innerWidth;
+
+    // Check for swipe
+    if (carTouchStartX !== null) {
+      const dx = endX - carTouchStartX;
+      if (Math.abs(dx) > 40) {
+        // Swipe
+        if (dx < 0 && carLane > 0) { carLane--; updateCarPlayerPos(); }
+        else if (dx > 0 && carLane < 2) { carLane++; updateCarPlayerPos(); }
+        carTouchStartX = null;
+        return;
+      }
+    }
+
+    // Tap: left half = move left, right half = move right
+    if (endX < W / 2 && carLane > 0) {
+      carLane--;
+      updateCarPlayerPos();
+    } else if (endX >= W / 2 && carLane < 2) {
+      carLane++;
+      updateCarPlayerPos();
+    }
+    carTouchStartX = null;
+  }, { passive: true });
+
+  // Keyboard controls for car mode
+  document.addEventListener('keydown', function(e) {
+    if (!carActive) return;
+    if ((e.key === 'ArrowLeft' || e.key === 'a') && carLane > 0) {
+      carLane--;
+      updateCarPlayerPos();
+    } else if ((e.key === 'ArrowRight' || e.key === 'd') && carLane < 2) {
+      carLane++;
+      updateCarPlayerPos();
+    }
+  });
+
+  // ─── Render appropriate leaderboard on start ───────────────────────────
+  function renderStartLeaderboard() {
+    if (selectedMode === 'car') {
+      renderCarLeaderboard(startLeaderboardTable, startLeaderboard);
+    } else {
+      renderLeaderboard(startLeaderboardTable, startLeaderboard);
+    }
+  }
+  renderStartLeaderboard();
+
+  // Update leaderboard when mode changes
+  modeClassicBtn.addEventListener('click', renderStartLeaderboard);
+  modeCarBtn.addEventListener('click', renderStartLeaderboard);
 
   // Force update button — unregisters SW and clears caches, then reloads
   const forceUpdateBtn = document.getElementById('force-update-btn');

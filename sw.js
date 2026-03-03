@@ -1,7 +1,7 @@
 // Chameleon Catch - Service Worker
 // Cache-first strategy: everything works offline after first load.
 
-const CACHE_NAME = 'chameleon-catch-v6';
+const CACHE_NAME = 'chameleon-catch-v7';
 
 // All files that make up the app shell
 const PRECACHE_URLS = [

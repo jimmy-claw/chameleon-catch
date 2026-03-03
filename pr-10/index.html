@@ -4216,7 +4216,8 @@
     get catches() { return catches; },
     get missed() { return missed; },
     get level() { return level; },
-    get flies() { return flies ? flies.length : 0; }
+    get flies() { return flies ? flies.length : 0; },
+    get gamePaused() { return typeof gamePaused !== 'undefined' ? gamePaused : false; }
   };
 
   window.__getFlies = function() {
@@ -4229,9 +4230,11 @@
 
   window.__botTap = function(x, y) {
     var el = document.elementFromPoint(x, y) || document.body;
-    ['pointerdown','pointerup'].forEach(function(type) {
-      el.dispatchEvent(new PointerEvent(type, {bubbles:true, clientX:x, clientY:y, pointerId:1}));
-    });
+    var opts = {bubbles:true, cancelable:true, clientX:x, clientY:y, pointerId:1, isPrimary:true};
+    document.body.dispatchEvent(new PointerEvent('pointerdown', opts));
+    el.dispatchEvent(new PointerEvent('pointerdown', opts));
+    el.dispatchEvent(new PointerEvent('pointerup', opts));
+    document.body.dispatchEvent(new PointerEvent('pointerup', opts));
   };
 
   window.__forceEndGame = function() {

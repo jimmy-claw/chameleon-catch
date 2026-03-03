@@ -508,6 +508,227 @@
     animation: cleanup-flash 2s ease-out forwards;
   }
 
+
+  /* ===== GOLDEN FLY GLOW ===== */
+  .fly.golden-fly {
+    filter: drop-shadow(0 0 8px rgba(255,215,0,0.8));
+    animation: golden-pulse 0.6s ease-in-out infinite alternate;
+  }
+  .fly.golden-fly .fly-body {
+    background: radial-gradient(ellipse, #ffd700 30%, #b8860b 100%);
+  }
+  .fly.golden-fly .fly-head {
+    background: #daa520;
+  }
+  @keyframes golden-pulse {
+    from { filter: drop-shadow(0 0 6px rgba(255,215,0,0.6)); transform: scale(1); }
+    to   { filter: drop-shadow(0 0 14px rgba(255,215,0,1)); transform: scale(1.08); }
+  }
+
+  /* ===== RED FLY ===== */
+  .fly.red-fly .fly-body {
+    background: radial-gradient(ellipse, #e63946 30%, #9d0208 100%);
+  }
+  .fly.red-fly .fly-head {
+    background: #c1121f;
+  }
+  .fly.red-fly .fly-eye.left, .fly.red-fly .fly-eye.right {
+    background: #ffba08;
+  }
+
+  /* ===== BEE FLY ===== */
+  .fly.bee-fly .fly-body {
+    background: repeating-linear-gradient(0deg, #ffd700 0px, #ffd700 4px, #1a1a1a 4px, #1a1a1a 8px);
+    border-radius: 50%;
+  }
+  .fly.bee-fly .fly-head {
+    background: #1a1a1a;
+  }
+  .fly.bee-fly .fly-wing {
+    background: rgba(255,255,255,0.5);
+    border-color: rgba(200,200,200,0.7);
+  }
+
+  /* ===== FLY TYPE EMOJI ===== */
+  .fly-type-emoji {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.65rem;
+    pointer-events: none;
+    z-index: 11;
+  }
+
+  /* ===== CHAMELEON GOLD FLASH (combo 5) ===== */
+  @keyframes chameleon-gold-flash {
+    0%   { filter: brightness(1) saturate(1); }
+    25%  { filter: brightness(1.8) saturate(0.3) sepia(1) hue-rotate(10deg); }
+    75%  { filter: brightness(1.8) saturate(0.3) sepia(1) hue-rotate(10deg); }
+    100% { filter: brightness(1) saturate(1); }
+  }
+  .chameleon-gold {
+    animation: chameleon-gold-flash 0.8s ease-out;
+  }
+
+  /* ===== COMBO HUD ===== */
+  #combo-hud {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    background: rgba(255,100,0,0.85);
+    backdrop-filter: blur(4px);
+    border-radius: 14px;
+    padding: 7px 14px;
+    z-index: 20;
+    pointer-events: none;
+    display: none;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Fredoka One', cursive;
+    color: #fff;
+    font-size: 1rem;
+  }
+
+  /* ===== ON FIRE BANNER ===== */
+  #fire-banner {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.8rem, 7vw, 3rem);
+    color: #ff6b35;
+    text-shadow: 0 0 30px rgba(255,107,53,0.8), 2px 2px 6px rgba(0,0,0,0.6);
+    z-index: 40;
+    pointer-events: none;
+    display: none;
+    animation: level-pop 1.6s ease-out forwards;
+  }
+
+  /* ===== MUTE BUTTON ===== */
+  #mute-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 55;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(4px);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    color: #fff;
+    touch-action: manipulation;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ===== SKIN PICKER ===== */
+  .skin-picker {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 12px;
+  }
+  .skin-swatch {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: border-color 0.2s, transform 0.15s;
+    touch-action: manipulation;
+  }
+  .skin-swatch.selected {
+    border-color: #fff;
+    transform: scale(1.15);
+  }
+  .skin-swatch.rainbow {
+    background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
+    animation: rainbow-spin 2s linear infinite;
+  }
+  @keyframes rainbow-spin {
+    from { filter: hue-rotate(0deg); }
+    to   { filter: hue-rotate(360deg); }
+  }
+  @keyframes chameleon-rainbow {
+    from { filter: hue-rotate(0deg); }
+    to   { filter: hue-rotate(360deg); }
+  }
+
+  /* ===== LEADERBOARD TABLE ===== */
+  .leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-family: 'Fredoka One', cursive;
+  }
+  .leaderboard-table th {
+    color: var(--gold);
+    font-size: 0.75rem;
+    text-align: left;
+    padding: 4px 8px;
+    border-bottom: 1px solid rgba(255,215,0,0.3);
+  }
+  .leaderboard-table td {
+    color: #c8f5d8;
+    font-size: 0.8rem;
+    padding: 4px 8px;
+  }
+  .leaderboard-table tr:nth-child(1) td { color: #ffd700; }
+  .leaderboard-table tr:nth-child(2) td { color: #c0c0c0; }
+  .leaderboard-table tr:nth-child(3) td { color: #cd7f32; }
+
+  .leaderboard-section {
+    margin-top: 12px;
+    background: rgba(0,0,0,0.25);
+    border-radius: 12px;
+    padding: 10px 14px;
+  }
+  .leaderboard-section h3 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.9rem;
+    color: var(--gold);
+    margin: 0 0 4px 0;
+  }
+
+  /* ===== NAME ENTRY ===== */
+  .name-entry {
+    margin: 12px 0;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+  }
+  .name-entry input {
+    background: rgba(255,255,255,0.15);
+    border: 2px solid var(--gold);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #fff;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    width: 120px;
+    outline: none;
+  }
+  .name-entry input::placeholder {
+    color: rgba(255,255,255,0.4);
+  }
+  .name-entry button {
+    background: linear-gradient(135deg, #ffd700, #daa520);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: #1a1a1a;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.9rem;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
   /* mobile helpers */
   @media (max-width: 480px) {
     #branch { bottom: 18%; }
@@ -565,6 +786,18 @@
     <div id="thirst-bar-wrap"><div id="thirst-bar"></div></div>
   </div>
 
+  <!-- Mute Button -->
+  <button id="mute-btn">🔊</button>
+
+  <!-- Combo HUD -->
+  <div id="combo-hud">
+    <span>🔥</span>
+    <span id="combo-display">x3</span>
+  </div>
+
+  <!-- Fire Banner (combo 10+) -->
+  <div id="fire-banner">ON FIRE! 🔥🔥🔥</div>
+
   <!-- Level Up Banner -->
   <div id="level-banner">🎉 Level Up!</div>
 
@@ -584,9 +817,27 @@
         </div>
       </div>
 
+      <!-- Skin Picker -->
+      <div style="margin-top:12px; background:rgba(0,0,0,0.25); border-radius:12px; padding:10px 14px; text-align:center;">
+        <label style="font-size:0.85em; color:#a8d8b8; display:block; margin-bottom:6px;">🎨 Chameleon Skin</label>
+        <div class="skin-picker" id="skin-picker">
+          <div class="skin-swatch selected" data-skin="green" style="background:#5cb85c;" title="Green"></div>
+          <div class="skin-swatch" data-skin="purple" style="background:#9b59b6;" title="Purple"></div>
+          <div class="skin-swatch" data-skin="blue" style="background:#3498db;" title="Blue"></div>
+          <div class="skin-swatch" data-skin="orange" style="background:#e67e22;" title="Orange"></div>
+          <div class="skin-swatch rainbow" data-skin="rainbow" title="Rainbow"></div>
+        </div>
+      </div>
+
+      <!-- Leaderboard on Start Screen -->
+      <div class="leaderboard-section" id="start-leaderboard" style="display:none;">
+        <h3>🏆 Best Scores</h3>
+        <table class="leaderboard-table" id="start-leaderboard-table"><tbody></tbody></table>
+      </div>
+
       <button class="btn" id="start-btn" style="margin-top:14px;">🌿 Start Game!</button>
       <p style="margin-top:10px; font-size:0.7em; color:#6b9e7a;">
-        v5 &nbsp;·&nbsp; <button id="force-update-btn" style="background:none;border:none;color:#a8d8b8;font-size:1em;cursor:pointer;text-decoration:underline;padding:0;">Force Update</button>
+        v6 &nbsp;·&nbsp; <button id="force-update-btn" style="background:none;border:none;color:#a8d8b8;font-size:1em;cursor:pointer;text-decoration:underline;padding:0;">Force Update</button>
       </p>
     </div>
   </div>
@@ -599,6 +850,21 @@
       <div class="big-score" id="final-score">0</div>
       <p id="final-level-text" style="color:var(--gold)">Reached Level 1</p>
       <p id="high-score-text" style="margin-top:8px;"></p>
+      <!-- Name Entry (shown if new high score) -->
+      <div id="name-entry-section" style="display:none;">
+        <p style="color:#ffd700; font-size:0.9rem; margin-bottom:4px;">🏆 New Top Score!</p>
+        <div class="name-entry">
+          <input type="text" id="name-input" maxlength="8" placeholder="Your name">
+          <button id="save-score-btn">Save</button>
+        </div>
+      </div>
+
+      <!-- Leaderboard on Game Over Screen -->
+      <div class="leaderboard-section" id="gameover-leaderboard" style="display:none;">
+        <h3>🏆 Best Scores</h3>
+        <table class="leaderboard-table" id="gameover-leaderboard-table"><tbody></tbody></table>
+      </div>
+
       <button class="btn" id="restart-btn">🔄 Try Again!</button>
     </div>
   </div>
@@ -608,6 +874,209 @@
 <script>
 (function() {
   'use strict';
+
+
+  // ─── Sound Effects (Web Audio API) ──────────────────────────────────────
+  let audioCtx = null;
+  let isMuted = localStorage.getItem('chameleon-mute') === 'true';
+
+  function initAudio() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  }
+
+  function playSound(type) {
+    if (isMuted || !audioCtx) return;
+    try {
+      const now = audioCtx.currentTime;
+      switch(type) {
+        case 'tongue': {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain); gain.connect(audioCtx.destination);
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(200, now);
+          osc.frequency.linearRampToValueAtTime(800, now + 0.05);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.linearRampToValueAtTime(0, now + 0.06);
+          osc.start(now); osc.stop(now + 0.06);
+          break;
+        }
+        case 'catch': {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain); gain.connect(audioCtx.destination);
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(600, now);
+          osc.frequency.linearRampToValueAtTime(900, now + 0.03);
+          osc.frequency.linearRampToValueAtTime(400, now + 0.08);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.linearRampToValueAtTime(0, now + 0.1);
+          osc.start(now); osc.stop(now + 0.1);
+          break;
+        }
+        case 'miss': {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain); gain.connect(audioCtx.destination);
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(400, now);
+          osc.frequency.linearRampToValueAtTime(150, now + 0.15);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.linearRampToValueAtTime(0, now + 0.18);
+          osc.start(now); osc.stop(now + 0.18);
+          break;
+        }
+        case 'poo': {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain); gain.connect(audioCtx.destination);
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(120, now);
+          osc.frequency.linearRampToValueAtTime(60, now + 0.08);
+          osc.frequency.linearRampToValueAtTime(100, now + 0.12);
+          gain.gain.setValueAtTime(0.1, now);
+          gain.gain.linearRampToValueAtTime(0, now + 0.15);
+          osc.start(now); osc.stop(now + 0.15);
+          break;
+        }
+        case 'combo': {
+          // ascending arpeggio
+          [0, 0.08, 0.16].forEach((delay, i) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime([523, 659, 784][i], now + delay);
+            gain.gain.setValueAtTime(0.12, now + delay);
+            gain.gain.linearRampToValueAtTime(0, now + delay + 0.12);
+            osc.start(now + delay); osc.stop(now + delay + 0.12);
+          });
+          break;
+        }
+        case 'golden': {
+          // sparkly ding ding
+          [0, 0.1].forEach((delay) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(1200 + delay * 400, now + delay);
+            gain.gain.setValueAtTime(0.15, now + delay);
+            gain.gain.linearRampToValueAtTime(0, now + delay + 0.15);
+            osc.start(now + delay); osc.stop(now + delay + 0.15);
+          });
+          break;
+        }
+        case 'bee': {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain); gain.connect(audioCtx.destination);
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(150, now);
+          osc.frequency.linearRampToValueAtTime(80, now + 0.2);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.linearRampToValueAtTime(0, now + 0.25);
+          osc.start(now); osc.stop(now + 0.25);
+          break;
+        }
+        case 'gameover': {
+          // descending sad trombone
+          const notes = [392, 370, 349, 294];
+          notes.forEach((freq, i) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.type = 'sawtooth';
+            const t = now + i * 0.25;
+            osc.frequency.setValueAtTime(freq, t);
+            osc.frequency.linearRampToValueAtTime(freq * 0.95, t + 0.22);
+            gain.gain.setValueAtTime(0.1, t);
+            gain.gain.linearRampToValueAtTime(0, t + 0.24);
+            osc.start(t); osc.stop(t + 0.24);
+          });
+          break;
+        }
+      }
+    } catch(e) { /* ignore audio errors */ }
+  }
+
+  // ─── Leaderboard ────────────────────────────────────────────────────────
+  function getLeaderboard() {
+    try {
+      return JSON.parse(localStorage.getItem('chameleon-leaderboard') || '[]');
+    } catch(e) { return []; }
+  }
+
+  function saveLeaderboard(board) {
+    localStorage.setItem('chameleon-leaderboard', JSON.stringify(board));
+  }
+
+  function isTopScore(score) {
+    const board = getLeaderboard();
+    if (board.length < 3) return true;
+    return score > board[board.length - 1].score;
+  }
+
+  function addToLeaderboard(name, score, level) {
+    const board = getLeaderboard();
+    board.push({
+      name: (name || 'You').substring(0, 8),
+      score: score,
+      level: level,
+      date: new Date().toLocaleDateString()
+    });
+    board.sort((a, b) => b.score - a.score);
+    if (board.length > 3) board.length = 3;
+    saveLeaderboard(board);
+    return board;
+  }
+
+  function renderLeaderboard(tableEl, containerEl) {
+    const board = getLeaderboard();
+    if (board.length === 0) {
+      if (containerEl) containerEl.style.display = 'none';
+      return;
+    }
+    if (containerEl) containerEl.style.display = '';
+    const ranks = ['🥇', '🥈', '🥉'];
+    const tbody = tableEl.querySelector('tbody') || tableEl;
+    tbody.innerHTML = '<tr><th></th><th>Name</th><th>Score</th><th>Lvl</th></tr>' +
+      board.map((entry, i) =>
+        '<tr><td>' + ranks[i] + '</td><td>' + entry.name + '</td><td>' + entry.score + '</td><td>' + entry.level + '</td></tr>'
+      ).join('');
+  }
+
+  // ─── Skin Customization ─────────────────────────────────────────────────
+  const SKIN_FILTERS = {
+    green: '',
+    purple: 'hue-rotate(270deg)',
+    blue: 'hue-rotate(180deg)',
+    orange: 'hue-rotate(35deg) saturate(1.5)',
+    rainbow: ''
+  };
+  let currentSkin = localStorage.getItem('chameleon-skin') || 'green';
+
+  function applySkin(skinName) {
+    currentSkin = skinName;
+    localStorage.setItem('chameleon-skin', skinName);
+    const svgEl = document.getElementById('chameleon-svg');
+    if (!svgEl) return;
+    if (skinName === 'rainbow') {
+      svgEl.style.filter = '';
+      svgEl.style.animation = 'chameleon-rainbow 2s linear infinite';
+    } else {
+      svgEl.style.animation = '';
+      svgEl.style.filter = SKIN_FILTERS[skinName] || '';
+    }
+    // Update swatches
+    document.querySelectorAll('.skin-swatch').forEach(sw => {
+      sw.classList.toggle('selected', sw.dataset.skin === skinName);
+    });
+  }
+
 
   // ─── Difficulty ──────────────────────────────────────────────────────────
   const DIFFICULTIES = {
@@ -658,6 +1127,11 @@
   let poos = [];             // array of poo DOM elements
   let nextPooAt = POO_INTERVAL; // catches count threshold for next poo
 
+  // Combo/streak state
+  let comboStreak = 0;
+  let comboMultiplier = 1;
+  let totalNormalCatches = 0;  // for golden fly spawn tracking
+
   // Thirst state
   let thirst = 100;          // 0-100, 100=full
   let isThirsty = false;
@@ -687,6 +1161,45 @@
   const leavesContainer = document.getElementById('leaves-container');
   const thirstHud   = document.getElementById('thirst-hud');
   const thirstBarEl = document.getElementById('thirst-bar');
+
+  const comboHud     = document.getElementById('combo-hud');
+  const comboDisplay = document.getElementById('combo-display');
+  const fireBanner   = document.getElementById('fire-banner');
+  const muteBtn      = document.getElementById('mute-btn');
+  const skinPicker   = document.getElementById('skin-picker');
+  const startLeaderboard     = document.getElementById('start-leaderboard');
+  const startLeaderboardTable= document.getElementById('start-leaderboard-table');
+  const gameoverLeaderboard  = document.getElementById('gameover-leaderboard');
+  const gameoverLeaderboardTable = document.getElementById('gameover-leaderboard-table');
+  const nameEntrySection = document.getElementById('name-entry-section');
+  const nameInput    = document.getElementById('name-input');
+  const saveScoreBtn = document.getElementById('save-score-btn');
+
+  // ─── Mute toggle ──────────────────────────────────────────────────────────
+  function updateMuteBtn() {
+    muteBtn.textContent = isMuted ? '🔇' : '🔊';
+  }
+  updateMuteBtn();
+  muteBtn.addEventListener('click', function() {
+    initAudio();
+    isMuted = !isMuted;
+    localStorage.setItem('chameleon-mute', isMuted);
+    updateMuteBtn();
+  });
+
+  // ─── Skin picker events ───────────────────────────────────────────────────
+  if (skinPicker) {
+    skinPicker.addEventListener('click', function(e) {
+      const swatch = e.target.closest('.skin-swatch');
+      if (!swatch) return;
+      applySkin(swatch.dataset.skin);
+    });
+  }
+  // Restore saved skin on load
+  requestAnimationFrame(() => applySkin(currentSkin));
+
+  // ─── Show start screen leaderboard ────────────────────────────────────────
+  renderLeaderboard(startLeaderboardTable, startLeaderboard);
 
   // ─── Resize canvas ────────────────────────────────────────────────────────
   function resizeCanvas() {
@@ -779,10 +1292,30 @@
 
   // ─── Fly factory ──────────────────────────────────────────────────────────
   let flyIdCounter = 0;
-  function createFly() {
+  function determineFlyType() {
+    // Golden fly: every ~15 normal catches
+    if (totalNormalCatches > 0 && totalNormalCatches % 15 === 0) {
+      return 'golden';
+    }
+    // Bee: ~10% after level 5
+    if (level >= 5 && Math.random() < 0.10) {
+      return 'bee';
+    }
+    // Red (speed demon): ~20% after level 3
+    if (level >= 3 && Math.random() < 0.20) {
+      return 'red';
+    }
+    return 'normal';
+  }
+
+  function createFly(forceType) {
     const id = ++flyIdCounter;
+    const flyType = forceType || determineFlyType();
     const el = document.createElement('div');
     el.className = 'fly';
+    if (flyType === 'golden') el.classList.add('golden-fly');
+    if (flyType === 'red') el.classList.add('red-fly');
+    if (flyType === 'bee') el.classList.add('bee-fly');
     el.dataset.id = id;
 
     // Random start pos — keep away from chameleon zone (left 20%)
@@ -794,11 +1327,26 @@
     el.style.left = x + 'px';
     el.style.top  = y + 'px';
 
+    // Golden flies are slightly bigger
+    if (flyType === 'golden') {
+      el.style.transform = 'scale(1.25)';
+    }
+
+    // speed multiplier based on type
+    let speedMult = 1;
+    if (flyType === 'golden') speedMult = 1.4;
+    if (flyType === 'red') speedMult = 2;
+    if (flyType === 'bee') speedMult = 1.3;
+
     // random direction
     const angle = Math.random() * Math.PI * 2;
-    const speed = activeFlySpeed + (level - 1) * 20 + Math.random() * 30;
+    const speed = (activeFlySpeed + (level - 1) * 20 + Math.random() * 30) * speedMult;
 
-    el.innerHTML = `
+    // Fly type emoji
+    const typeEmojis = { normal: '', golden: '⭐', red: '🔴', bee: '🐝' };
+    const emojiHtml = typeEmojis[flyType] ? '<div class="fly-type-emoji">' + typeEmojis[flyType] + '</div>' : '';
+
+    el.innerHTML = emojiHtml + `
       <div class="fly-wing left"></div>
       <div class="fly-wing right"></div>
       <div class="fly-head">
@@ -823,9 +1371,10 @@
       vy: Math.sin(angle) * speed,
       caught: false,
       escaped: false,
-      escapeTimer: 8 + Math.random() * 6, // secs before fly leaves
+      escapeTimer: flyType === 'golden' ? 6 + Math.random() * 4 : 8 + Math.random() * 6,
       age: 0,
       wobble: Math.random() * Math.PI * 2,
+      flyType: flyType,
     };
 
     container.appendChild(el);
@@ -841,6 +1390,8 @@
 
   // ─── Tongue ───────────────────────────────────────────────────────────────
   function shootTongue(targetFly) {
+    initAudio();
+    playSound('tongue');
     updateMouthPos();
     // Center of fly
     const flyRect = targetFly.el.getBoundingClientRect();
@@ -933,6 +1484,16 @@
     missedEl.style.color = missed > 0 ? '#e63946' : '#ffd700';
   }
 
+  // ─── Combo HUD ──────────────────────────────────────────────────────────
+  function updateComboHUD() {
+    if (comboStreak >= 3) {
+      comboHud.style.display = 'flex';
+      comboDisplay.textContent = 'x' + comboStreak + ' (' + comboMultiplier + 'x)';
+    } else {
+      comboHud.style.display = 'none';
+    }
+  }
+
   // ─── Game loop ────────────────────────────────────────────────────────────
   function gameLoop(timestamp) {
     if (!gameActive) return;
@@ -992,7 +1553,20 @@
       // escape timer
       if (fly.escapeTimer <= 0 && !fly.escaped) {
         fly.escaped = true;
+        // Bees escaping = no penalty
+        if ((fly.flyType || 'normal') === 'bee') {
+          // Bee just flies away, no miss
+          if (tongue && tongue.targetFly === fly) tongue = null;
+          removeFly(fly);
+          if (gameActive) setTimeout(() => { if (gameActive) createFly(); }, 1200);
+          return;
+        }
         missed++;
+        // Break combo streak on miss
+        comboStreak = 0;
+        comboMultiplier = 1;
+        updateComboHUD();
+        playSound('miss');
         if (missed <= activeMaxMissed) {
           showFeedback('Missed! 😭', fly.x + 22, fly.y - 10, '#e63946');
         }
@@ -1027,11 +1601,71 @@
             fly.caught = true;
             fly.el.style.opacity = '0';
             tongue.caught = true;
-            score += SCORE_PER_CATCH + (level - 1) * 2;
+
+            // Determine points based on fly type
+            const basePoints = SCORE_PER_CATCH + (level - 1) * 2;
+            let pointsMult = 1;
+            let catchSound = 'catch';
+            const ft = fly.flyType || 'normal';
+
+            if (ft === 'golden') { pointsMult = 3; catchSound = 'golden'; }
+            else if (ft === 'red') { pointsMult = 2; }
+            else if (ft === 'bee') {
+              pointsMult = 5;
+              catchSound = 'bee';
+              // Bee sting: lose 30% thirst
+              thirst = Math.max(0, thirst - 30);
+              updateThirstHUD();
+              showFeedback('Ouch! 🐝', parseFloat(fly.el.style.left), parseFloat(fly.el.style.top) - 40, '#ffd700');
+            }
+
+            // Combo streak
+            comboStreak++;
+            if (ft !== 'bee') {
+              totalNormalCatches++;
+            }
+
+            // Check combo milestones
+            if (comboStreak === 3 || comboStreak === 5 || comboStreak === 10) {
+              playSound('combo');
+            }
+            if (comboStreak >= 10) {
+              comboMultiplier = 3;
+              // Show ON FIRE banner
+              fireBanner.style.display = 'block';
+              fireBanner.style.animation = 'none';
+              void fireBanner.offsetWidth;
+              fireBanner.style.animation = '';
+              setTimeout(() => { fireBanner.style.display = 'none'; }, 1700);
+            } else if (comboStreak >= 5) {
+              comboMultiplier = 2;
+              // Flash chameleon gold
+              const svgEl = chameleonEl.querySelector('#chameleon-svg');
+              if (svgEl) {
+                svgEl.classList.add('chameleon-gold');
+                setTimeout(() => svgEl.classList.remove('chameleon-gold'), 800);
+              }
+            } else if (comboStreak >= 3) {
+              comboMultiplier = 1.5;
+            } else {
+              comboMultiplier = 1;
+            }
+
+            // Update combo HUD
+            updateComboHUD();
+
+            const totalPoints = Math.round(basePoints * pointsMult * comboMultiplier);
+            score += totalPoints;
             catches++;
+
+            playSound(catchSound);
+
             const fx = parseFloat(fly.el.style.left);
             const fy = parseFloat(fly.el.style.top);
-            showFeedback('+' + (SCORE_PER_CATCH + (level-1)*2) + ' 🎯', fx, fy - 20, '#ffd700');
+            let feedbackText = '+' + totalPoints + ' 🎯';
+            if (comboStreak >= 10) feedbackText = '+' + totalPoints + ' 🔥🔥🔥';
+            else if (comboStreak >= 3) feedbackText = '+' + totalPoints + ' +COMBO x' + comboStreak + ' 🔥';
+            showFeedback(feedbackText, fx, fy - 20, ft === 'golden' ? '#ffd700' : ft === 'bee' ? '#ff6b35' : '#ffd700');
             checkLevelUp();
             updateHUD();
 
@@ -1071,6 +1705,7 @@
 
   function spawnPoo() {
     if (!gameActive) return;
+    playSound('poo');
 
     // blush the chameleon briefly
     const blush = document.createElement('div');
@@ -1213,7 +1848,10 @@
     activeThirstDrain = 100 / diff.thirstTime;
     activePooInterval = diff.poiInterval;
 
+    initAudio();
     score = 0; level = 1; missed = 0; catches = 0;
+    comboStreak = 0; comboMultiplier = 1; totalNormalCatches = 0;
+    updateComboHUD();
     flies.forEach(f => f.el.remove());
     flies = [];
     tongue = null;
@@ -1241,6 +1879,9 @@
     startScreen.style.display   = 'none';
     gameoverScreen.style.display= 'none';
 
+    // Restore skin (it gets cleared during thirst/game over)
+    applySkin(currentSkin);
+
     updateHUD();
     updateMouthPos();
 
@@ -1263,7 +1904,10 @@
     poos.forEach(p => p.remove());
     poos = [];
     thirstHud.style.display = 'none';
+    comboHud.style.display = 'none';
     pointerDown = false;
+
+    playSound('gameover');
 
     if (score > highScore) {
       highScore = score;
@@ -1274,6 +1918,31 @@
     finalScoreEl.textContent  = score;
     finalLevelEl.textContent  = `Reached Level ${level} 🦎`;
     highScoreEl.textContent   = highScore > 0 ? `🏆 Best: ${highScore}` : '';
+
+    // Show leaderboard and name entry if top score
+    const isTop = isTopScore(score);
+    if (isTop && score > 0) {
+      nameEntrySection.style.display = '';
+      nameInput.value = '';
+      // Wire up save button (remove old listeners by replacing element)
+      const newSaveBtn = saveScoreBtn.cloneNode(true);
+      saveScoreBtn.parentNode.replaceChild(newSaveBtn, saveScoreBtn);
+      // Re-get reference
+      const currentSaveBtn = document.getElementById('save-score-btn');
+      currentSaveBtn.addEventListener('click', function() {
+        const name = (document.getElementById('name-input').value || 'You').substring(0, 8);
+        addToLeaderboard(name, score, level);
+        document.getElementById('name-entry-section').style.display = 'none';
+        renderLeaderboard(
+          document.getElementById('gameover-leaderboard-table'),
+          document.getElementById('gameover-leaderboard')
+        );
+      });
+    } else {
+      nameEntrySection.style.display = 'none';
+    }
+
+    renderLeaderboard(gameoverLeaderboardTable, gameoverLeaderboard);
     gameoverScreen.style.display = 'flex';
   }
 
@@ -1282,6 +1951,14 @@
   startBtn.addEventListener('touchend', e => { e.preventDefault(); startGame(); });
   restartBtn.addEventListener('click',  startGame);
   restartBtn.addEventListener('touchend', e => { e.preventDefault(); startGame(); });
+
+  // ─── Save score on pressing Enter ─────────────────────────────────────────
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && nameEntrySection.style.display !== 'none') {
+      const btn = document.getElementById('save-score-btn');
+      if (btn) btn.click();
+    }
+  });
 
   // Force update button — unregisters SW and clears caches, then reloads
   const forceUpdateBtn = document.getElementById('force-update-btn');

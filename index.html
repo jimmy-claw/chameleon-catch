@@ -1638,6 +1638,184 @@
     font-size: 10px;
   }
 
+  /* ═══════════ V12: COLORING BOOK MODE ═══════════ */
+  .mode-toggle-btn.color-btn {
+    background: linear-gradient(135deg, #f472b6, #a855f7);
+    border-color: #e879f9;
+  }
+  .mode-toggle-btn.color-btn.selected {
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    border-color: #f0abfc;
+    box-shadow: 0 0 12px rgba(168,85,247,0.5);
+  }
+
+  #coloring-area {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 50%, #f5f3ff 100%);
+    display: none;
+    flex-direction: column;
+    z-index: 100;
+    overflow: hidden;
+  }
+  #coloring-area.active { display: flex; }
+
+  #coloring-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(8px);
+    border-bottom: 2px solid #e2e8f0;
+    z-index: 2;
+  }
+  #coloring-top-bar button {
+    background: none;
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 6px 12px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.85em;
+    cursor: pointer;
+    color: #475569;
+    touch-action: manipulation;
+  }
+  #coloring-top-bar button:active {
+    background: #e2e8f0;
+  }
+  .coloring-scene-thumbs {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .scene-thumb {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    border: 3px solid #cbd5e1;
+    background: #f8fafc;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3em;
+    transition: all 0.2s;
+    touch-action: manipulation;
+  }
+  .scene-thumb.active {
+    border-color: #8b5cf6;
+    background: #f3e8ff;
+    box-shadow: 0 0 8px rgba(139,92,246,0.4);
+  }
+  .coloring-actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  #coloring-svg-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 8px;
+    position: relative;
+  }
+  #coloring-svg-wrap svg {
+    max-width: 100%;
+    max-height: 100%;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
+  }
+  #coloring-svg-wrap svg [data-region] {
+    cursor: crosshair;
+    transition: opacity 0.1s;
+  }
+  #coloring-svg-wrap svg [data-region].cb-outline {
+    stroke: #444;
+    stroke-width: 2;
+    stroke-linejoin: round;
+  }
+  #coloring-svg-wrap svg line[data-region] {
+    stroke-linecap: round;
+  }
+  #coloring-svg-wrap svg [data-region]:hover {
+    opacity: 0.85;
+  }
+
+  #coloring-palette {
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(8px);
+    border-top: 2px solid #e2e8f0;
+    z-index: 2;
+  }
+  .palette-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .palette-row:last-child { margin-bottom: 0; }
+  .palette-swatch {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 3px solid #e2e8f0;
+    cursor: pointer;
+    transition: all 0.15s;
+    touch-action: manipulation;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .palette-swatch.selected {
+    border-color: #fff;
+    box-shadow: 0 0 0 3px #8b5cf6, 0 2px 8px rgba(139,92,246,0.4);
+    transform: scale(1.15);
+  }
+  .palette-swatch.locked {
+    background: #d1d5db !important;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  .palette-swatch.locked::after {
+    content: '?';
+    font-size: 16px;
+    font-weight: bold;
+    color: #9ca3af;
+  }
+  .palette-swatch.eraser {
+    background: repeating-conic-gradient(#e5e7eb 0% 25%, #fff 0% 50%) 50% / 12px 12px;
+    position: relative;
+  }
+  .palette-swatch.eraser::after {
+    content: '✕';
+    font-size: 14px;
+    color: #ef4444;
+    font-weight: bold;
+  }
+
+  /* Fill pop animation */
+  @keyframes colorPop {
+    0% { transform: scale(0.85); opacity: 0.6; }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .color-pop-anim {
+    animation: colorPop 0.3s ease-out;
+  }
+
+  /* Rainbow hue-rotate */
+  @keyframes rainbowShift {
+    0% { filter: hue-rotate(0deg) saturate(1.5) brightness(1.1); }
+    100% { filter: hue-rotate(360deg) saturate(1.5) brightness(1.1); }
+  }
+  .rainbow-fill {
+    animation: rainbowShift 3s linear infinite;
+  }
+
 </style>
 </head>
 <body>
@@ -1729,13 +1907,14 @@
       <p id="mode-hint-text" style="margin-top:12px; color:#a8d8b8;">Don't let <strong style="color:#e63946">5 flies</strong> escape! Catch 10 for a poo! 💩</p>
 
       <!-- Mode Toggle -->
-      <div style="margin-top:14px; display:flex; gap:8px; justify-content:center;">
+      <div style="margin-top:14px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
         <button class="mode-toggle-btn selected" id="mode-classic-btn" data-mode="classic">🦎 Classic</button>
         <button class="mode-toggle-btn" id="mode-car-btn" data-mode="car">🚗 Car Mode</button>
         <button class="mode-toggle-btn daily-btn" id="mode-daily-btn" data-mode="daily">📅 Daily<span id="daily-best-label"></span></button>
+        <button class="mode-toggle-btn color-btn" id="mode-color-btn" data-mode="color">🎨 Color</button>
       </div>
 
-      <div style="margin-top:16px; background:rgba(0,0,0,0.25); border-radius:12px; padding:12px 16px; text-align:left;">
+      <div id="diff-section" style="margin-top:16px; background:rgba(0,0,0,0.25); border-radius:12px; padding:12px 16px; text-align:left;">
         <label style="font-size:0.85em; color:#a8d8b8; display:block; margin-bottom:6px;">⚙️ Difficulty: <strong id="diff-label" style="color:#ffd700">Normal</strong></label>
         <input type="range" id="diff-slider" min="1" max="3" step="1" value="2"
           style="width:100%; accent-color:#ffd700; cursor:pointer;">
@@ -1745,7 +1924,7 @@
       </div>
 
       <!-- Skin Picker -->
-      <div style="margin-top:12px; background:rgba(0,0,0,0.25); border-radius:12px; padding:10px 14px; text-align:center;">
+      <div id="skin-section" style="margin-top:12px; background:rgba(0,0,0,0.25); border-radius:12px; padding:10px 14px; text-align:center;">
         <label style="font-size:0.85em; color:#a8d8b8; display:block; margin-bottom:6px;">🎨 Chameleon Skin</label>
         <div class="skin-picker" id="skin-picker">
           <div class="skin-swatch selected" data-skin="green" style="background:#5cb85c;" title="Green"></div>
@@ -1766,7 +1945,7 @@
       <button id="achievements-btn" title="Achievements">🏅</button>
       <button id="stats-btn" title="Stats">📊</button>
       <p style="margin-top:10px; font-size:0.7em; color:#6b9e7a;">
-        v11 &nbsp;·&nbsp; <button id="force-update-btn" style="background:none;border:none;color:#a8d8b8;font-size:1em;cursor:pointer;text-decoration:underline;padding:0;">Force Update</button>
+        v12 &nbsp;·&nbsp; <button id="force-update-btn" style="background:none;border:none;color:#a8d8b8;font-size:1em;cursor:pointer;text-decoration:underline;padding:0;">Force Update</button>
       </p>
     </div>
   </div>
@@ -1865,6 +2044,163 @@
     </div>
   </div>
 
+
+  <!-- ========== V12: COLORING BOOK MODE ========== -->
+  <div id="coloring-area">
+    <div id="coloring-top-bar">
+      <button id="coloring-back-btn">← Back</button>
+      <div class="coloring-scene-thumbs">
+        <button class="scene-thumb active" data-scene="branch" title="Chameleon on Branch">🌿</button>
+        <button class="scene-thumb" data-scene="car" title="Chameleon in Car">🚗</button>
+        <button class="scene-thumb" data-scene="rain" title="Chameleon in Rain">🌧️</button>
+      </div>
+      <div class="coloring-actions">
+        <button id="coloring-clear-btn">🗑️ Clear</button>
+        <button id="coloring-save-btn">📸 Save</button>
+      </div>
+    </div>
+    <div id="coloring-svg-wrap">
+      <!-- Scene 1: Chameleon on Branch -->
+      <svg id="scene-branch" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+        <!-- Background sky -->
+        <rect data-region="background" x="0" y="0" width="400" height="500" fill="#e0e0e0" rx="12"/>
+        <!-- Sun -->
+        <circle data-region="sun" cx="340" cy="70" r="50" fill="#e0e0e0"/>
+        <line x1="340" y1="5" x2="340" y2="25" stroke="#e0e0e0" stroke-width="3" stroke-linecap="round"/>
+        <line x1="280" y1="30" x2="295" y2="45" stroke="#e0e0e0" stroke-width="3" stroke-linecap="round"/>
+        <line x1="275" y1="70" x2="290" y2="70" stroke="#e0e0e0" stroke-width="3" stroke-linecap="round"/>
+        <!-- Branch -->
+        <path data-region="branch" d="M0 320 Q100 300 200 310 Q300 320 400 290 L400 310 Q300 340 200 330 Q100 320 0 340 Z" fill="#e0e0e0"/>
+        <!-- Leaves -->
+        <ellipse data-region="leaf1" cx="60" cy="295" rx="30" ry="15" transform="rotate(-20 60 295)" fill="#e0e0e0"/>
+        <ellipse data-region="leaf2" cx="160" cy="290" rx="28" ry="13" transform="rotate(15 160 290)" fill="#e0e0e0"/>
+        <ellipse data-region="leaf3" cx="320" cy="280" rx="32" ry="14" transform="rotate(-10 320 280)" fill="#e0e0e0"/>
+        <!-- Chameleon body -->
+        <ellipse data-region="body" cx="200" cy="270" rx="70" ry="45" fill="#e0e0e0"/>
+        <!-- Belly -->
+        <ellipse data-region="belly" cx="200" cy="285" rx="45" ry="20" fill="#e0e0e0"/>
+        <!-- Tail (curly) -->
+        <path data-region="tail" d="M130 270 Q100 250 90 220 Q80 190 100 170 Q120 150 130 175 Q140 200 125 230" fill="none" stroke="#e0e0e0" stroke-width="12" stroke-linecap="round"/>
+        <!-- Head -->
+        <ellipse data-region="head" cx="260" cy="250" rx="35" ry="30" fill="#e0e0e0"/>
+        <!-- Eye white -->
+        <circle data-region="eye-white" cx="275" cy="240" r="14" fill="#e0e0e0"/>
+        <!-- Eye pupil -->
+        <circle data-region="eye-pupil" cx="278" cy="238" r="7" fill="#e0e0e0"/>
+        <!-- Tongue -->
+        <path data-region="tongue" d="M295 255 Q330 260 350 240 Q355 235 350 232" fill="none" stroke="#e0e0e0" stroke-width="4" stroke-linecap="round"/>
+        <!-- Spots -->
+        <circle data-region="spot1" cx="180" cy="260" r="8" fill="#e0e0e0"/>
+        <circle data-region="spot2" cx="210" cy="250" r="6" fill="#e0e0e0"/>
+        <circle data-region="spot3" cx="195" cy="275" r="7" fill="#e0e0e0"/>
+        <circle data-region="spot4" cx="225" cy="265" r="5" fill="#e0e0e0"/>
+        <!-- Front leg -->
+        <path data-region="front-leg" d="M230 300 L235 330 L245 330 L240 300" fill="#e0e0e0"/>
+        <!-- Back leg -->
+        <path data-region="back-leg" d="M170 300 L165 330 L175 330 L180 300" fill="#e0e0e0"/>
+        <!-- Grass -->
+        <path data-region="grass" d="M0 400 Q50 380 100 395 Q150 410 200 390 Q250 370 300 395 Q350 420 400 400 L400 500 L0 500 Z" fill="#e0e0e0"/>
+        <!-- Small flowers -->
+        <circle data-region="flower1" cx="80" cy="420" r="10" fill="#e0e0e0"/>
+        <circle data-region="flower2" cx="300" cy="430" r="10" fill="#e0e0e0"/>
+      </svg>
+
+      <!-- Scene 2: Chameleon in Car -->
+      <svg id="scene-car" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+        <!-- Sky background -->
+        <rect data-region="background" x="0" y="0" width="400" height="500" fill="#e0e0e0" rx="12"/>
+        <!-- Clouds -->
+        <ellipse data-region="cloud1" cx="80" cy="60" rx="50" ry="25" fill="#e0e0e0"/>
+        <ellipse data-region="cloud2" cx="310" cy="90" rx="45" ry="22" fill="#e0e0e0"/>
+        <!-- Mountains -->
+        <path data-region="mountains" d="M0 250 L80 160 L150 220 L220 140 L300 200 L400 170 L400 250 Z" fill="#e0e0e0"/>
+        <!-- Road -->
+        <path data-region="road" d="M0 350 L0 450 L400 450 L400 350 Q300 330 200 345 Q100 360 0 350Z" fill="#e0e0e0"/>
+        <!-- Road lines -->
+        <rect data-region="road-line1" x="80" y="395" width="40" height="6" rx="3" fill="#e0e0e0"/>
+        <rect data-region="road-line2" x="180" y="395" width="40" height="6" rx="3" fill="#e0e0e0"/>
+        <rect data-region="road-line3" x="280" y="395" width="40" height="6" rx="3" fill="#e0e0e0"/>
+        <!-- Car body -->
+        <path data-region="car-body" d="M100 380 L100 340 Q100 320 120 320 L280 320 Q300 320 300 340 L300 380 Q300 395 285 395 L115 395 Q100 395 100 380 Z" fill="#e0e0e0"/>
+        <!-- Car roof / windshield -->
+        <path data-region="car-roof" d="M140 320 L155 275 Q160 265 175 265 L225 265 Q240 265 245 275 L260 320 Z" fill="#e0e0e0"/>
+        <!-- Windshield glass -->
+        <path data-region="windshield" d="M148 315 L160 280 Q163 272 175 272 L225 272 Q237 272 240 280 L252 315 Z" fill="#e0e0e0"/>
+        <!-- Wheels -->
+        <circle data-region="wheel-front" cx="265" cy="395" r="22" fill="#e0e0e0"/>
+        <circle data-region="wheel-back" cx="135" cy="395" r="22" fill="#e0e0e0"/>
+        <!-- Wheel hubs -->
+        <circle data-region="hub-front" cx="265" cy="395" r="10" fill="#e0e0e0"/>
+        <circle data-region="hub-back" cx="135" cy="395" r="10" fill="#e0e0e0"/>
+        <!-- Headlight -->
+        <ellipse data-region="headlight" cx="298" cy="355" rx="8" ry="12" fill="#e0e0e0"/>
+        <!-- Taillight -->
+        <ellipse data-region="taillight" cx="102" cy="355" rx="6" ry="10" fill="#e0e0e0"/>
+        <!-- Chameleon driver (visible through windshield) -->
+        <ellipse data-region="driver-body" cx="200" cy="295" rx="25" ry="20" fill="#e0e0e0"/>
+        <ellipse data-region="driver-head" cx="210" cy="275" rx="16" ry="14" fill="#e0e0e0"/>
+        <circle data-region="driver-eye-white" cx="218" cy="270" r="7" fill="#e0e0e0"/>
+        <circle data-region="driver-eye-pupil" cx="220" cy="269" r="3.5" fill="#e0e0e0"/>
+        <!-- Speed lines -->
+        <line data-region="speed1" x1="50" y1="340" x2="85" y2="340" stroke="#e0e0e0" stroke-width="3" stroke-linecap="round"/>
+        <line data-region="speed2" x1="40" y1="360" x2="80" y2="360" stroke="#e0e0e0" stroke-width="3" stroke-linecap="round"/>
+        <line data-region="speed3" x1="55" y1="380" x2="85" y2="380" stroke="#e0e0e0" stroke-width="3" stroke-linecap="round"/>
+        <!-- Ground/grass below road -->
+        <path data-region="ground" d="M0 450 L400 450 L400 500 L0 500 Z" fill="#e0e0e0"/>
+      </svg>
+
+      <!-- Scene 3: Chameleon in Rain -->
+      <svg id="scene-rain" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+        <!-- Rainy sky -->
+        <rect data-region="background" x="0" y="0" width="400" height="500" fill="#e0e0e0" rx="12"/>
+        <!-- Rain clouds -->
+        <ellipse data-region="cloud-big" cx="200" cy="60" rx="100" ry="40" fill="#e0e0e0"/>
+        <ellipse data-region="cloud-small" cx="330" cy="80" rx="55" ry="28" fill="#e0e0e0"/>
+        <!-- Rain drops -->
+        <line data-region="rain1" x1="60" y1="120" x2="55" y2="160" stroke="#e0e0e0" stroke-width="3" stroke-linecap="round"/>
+        <line data-region="rain2" x1="120" y1="100" x2="115" y2="140" stroke="#e0e0e0" stroke-width="3" stroke-linecap="round"/>
+        <line data-region="rain3" x1="180" y1="115" x2="175" y2="155" stroke="#e0e0e0" stroke-width="3" stroke-linecap="round"/>
+        <line data-region="rain4" x1="250" y1="105" x2="245" y2="145" stroke="#e0e0e0" stroke-width="3" stroke-linecap="round"/>
+        <line data-region="rain5" x1="320" y1="120" x2="315" y2="160" stroke="#e0e0e0" stroke-width="3" stroke-linecap="round"/>
+        <line data-region="rain6" x1="80" y1="200" x2="75" y2="240" stroke="#e0e0e0" stroke-width="3" stroke-linecap="round"/>
+        <line data-region="rain7" x1="350" y1="190" x2="345" y2="230" stroke="#e0e0e0" stroke-width="3" stroke-linecap="round"/>
+        <line data-region="rain8" x1="150" y1="210" x2="145" y2="250" stroke="#e0e0e0" stroke-width="3" stroke-linecap="round"/>
+        <!-- Big leaf umbrella -->
+        <path data-region="umbrella-leaf" d="M120 200 Q200 120 280 200 Q250 190 200 195 Q150 190 120 200 Z" fill="#e0e0e0"/>
+        <path data-region="umbrella-vein" d="M200 195 L200 170" stroke="#e0e0e0" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <!-- Umbrella stem (branch the leaf sits on) -->
+        <path data-region="umbrella-stem" d="M200 200 L200 280" stroke="#e0e0e0" stroke-width="5" stroke-linecap="round" fill="none"/>
+        <!-- Chameleon body -->
+        <ellipse data-region="body" cx="200" cy="340" rx="65" ry="42" fill="#e0e0e0"/>
+        <!-- Belly -->
+        <ellipse data-region="belly" cx="200" cy="355" rx="40" ry="18" fill="#e0e0e0"/>
+        <!-- Tail -->
+        <path data-region="tail" d="M135 340 Q105 320 95 290 Q85 260 105 245 Q125 230 130 255 Q135 280 125 305" fill="none" stroke="#e0e0e0" stroke-width="11" stroke-linecap="round"/>
+        <!-- Head -->
+        <ellipse data-region="head" cx="255" cy="320" rx="32" ry="28" fill="#e0e0e0"/>
+        <!-- Eye -->
+        <circle data-region="eye-white" cx="270" cy="310" r="13" fill="#e0e0e0"/>
+        <circle data-region="eye-pupil" cx="273" cy="308" r="6" fill="#e0e0e0"/>
+        <!-- Happy smile -->
+        <path data-region="smile" d="M260 335 Q270 345 280 335" fill="none" stroke="#e0e0e0" stroke-width="3" stroke-linecap="round"/>
+        <!-- Spots -->
+        <circle data-region="spot1" cx="180" cy="330" r="7" fill="#e0e0e0"/>
+        <circle data-region="spot2" cx="210" cy="325" r="5" fill="#e0e0e0"/>
+        <circle data-region="spot3" cx="195" cy="348" r="6" fill="#e0e0e0"/>
+        <!-- Feet -->
+        <path data-region="front-foot" d="M230 370 L235 400 L248 400 L243 370" fill="#e0e0e0"/>
+        <path data-region="back-foot" d="M170 370 L165 400 L178 400 L183 370" fill="#e0e0e0"/>
+        <!-- Puddle -->
+        <ellipse data-region="puddle" cx="200" cy="420" rx="90" ry="15" fill="#e0e0e0"/>
+        <!-- Ground -->
+        <path data-region="ground" d="M0 430 Q100 420 200 435 Q300 450 400 430 L400 500 L0 500 Z" fill="#e0e0e0"/>
+        <!-- Small splash drops -->
+        <circle data-region="splash1" cx="150" cy="410" r="4" fill="#e0e0e0"/>
+        <circle data-region="splash2" cx="250" cy="412" r="3.5" fill="#e0e0e0"/>
+      </svg>
+    </div>
+    <div id="coloring-palette"></div>
+  </div>
 
   <!-- Achievements Overlay (v11 enhanced) -->
   <div id="achievements-overlay" class="overlay-screen">
@@ -3042,6 +3378,7 @@
     const newLevel = Math.floor(catches / CATCHES_PER_LVL) + 1;
     if (newLevel > level) {
       level = newLevel;
+      trackHighestLevel(level);
       levelEl.textContent = level;
       // show banner
       levelBanner.style.display = 'block';
@@ -3606,20 +3943,34 @@
   const modeDescText = document.getElementById('mode-desc-text');
   const modeHintText = document.getElementById('mode-hint-text');
 
+  const modeColorBtn = document.getElementById('mode-color-btn');
+
   function updateModeUI() {
     modeClassicBtn.classList.toggle('selected', selectedMode === 'classic');
     modeCarBtn.classList.toggle('selected', selectedMode === 'car');
     modeDailyBtn.classList.toggle('selected', selectedMode === 'daily');
+    modeColorBtn.classList.toggle('selected', selectedMode === 'color');
     if (selectedMode === 'car') {
       modeDescText.innerHTML = 'Drive your chameleon car and<br>catch flies on the road!';
       modeHintText.innerHTML = 'Tap left/right to switch lanes. Don\'t run out of <strong style="color:#fbbf24">fuel</strong>! ⛽';
     } else if (selectedMode === 'daily') {
       modeDescText.innerHTML = 'Daily Challenge!<br>Same seed for everyone today.';
       modeHintText.innerHTML = 'Classic gameplay with a <strong style="color:#8b5cf6">seeded</strong> daily puzzle. Compare scores! 📅';
+    } else if (selectedMode === 'color') {
+      modeDescText.innerHTML = 'Coloring Book!<br>Color your own chameleon scenes!';
+      modeHintText.innerHTML = 'Pick a color, tap to fill. Calm, creative fun! 🎨';
     } else {
       modeDescText.innerHTML = 'Tap a fly to shoot your<br>sticky tongue and catch it!';
       modeHintText.innerHTML = 'Don\'t let <strong style="color:#e63946">5 flies</strong> escape! Catch 10 for a poo! 💩';
     }
+    // Hide game-specific controls for Color mode
+    var isColor = selectedMode === 'color';
+    var diffSection = document.getElementById('diff-section');
+    var skinSection = document.getElementById('skin-section');
+    var startBtn = document.getElementById('start-btn');
+    if (diffSection) diffSection.style.display = isColor ? 'none' : '';
+    if (skinSection) skinSection.style.display = isColor ? 'none' : '';
+    if (startBtn) startBtn.textContent = isColor ? '🎨 Start Coloring!' : '🌿 Start Game!';
     updateDailyBestLabel();
     renderStartLeaderboard();
   }
@@ -3640,9 +3991,17 @@
     localStorage.setItem('chameleon-mode', 'daily');
     updateModeUI();
   });
+  modeColorBtn.addEventListener('click', function() {
+    selectedMode = 'color';
+    localStorage.setItem('chameleon-mode', 'color');
+    updateModeUI();
+  });
 
   function handleStart() {
-    if (selectedMode === 'car') {
+    if (selectedMode === 'color') {
+      openColoringMode();
+      return;
+    } else if (selectedMode === 'car') {
       dailyMode = false;
       dailyRng = null;
       startCarGame();
@@ -3877,6 +4236,7 @@
     const newLevel = Math.floor(carCatches / CATCHES_PER_LVL) + 1;
     if (newLevel > carLevel && newLevel <= 10) {
       carLevel = newLevel;
+      trackHighestLevel(carLevel);
       carLevelEl.textContent = carLevel;
       // Increase road speed by 15%
       carRoadSpeed = 200 * Math.pow(1.15, carLevel - 1);
@@ -4522,6 +4882,340 @@
     }
     requestAnimationFrame(devMonitorLoop);
   }
+
+  // ═══════════ V12: COLORING BOOK MODE ══════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════
+
+  var coloringArea = document.getElementById('coloring-area');
+  var coloringSvgWrap = document.getElementById('coloring-svg-wrap');
+  var coloringPalette = document.getElementById('coloring-palette');
+  var coloringBackBtn = document.getElementById('coloring-back-btn');
+  var coloringClearBtn = document.getElementById('coloring-clear-btn');
+  var coloringSaveBtn = document.getElementById('coloring-save-btn');
+  var sceneThumbs = document.querySelectorAll('.scene-thumb');
+
+  var currentScene = 'branch';
+  var selectedColor = '#e63946'; // default: red
+
+  // Base 12 colors + eraser
+  var baseColors = [
+    { color: '#e63946', name: 'Red' },
+    { color: '#f77f00', name: 'Orange' },
+    { color: '#fcbf49', name: 'Yellow' },
+    { color: '#4ade80', name: 'Green' },
+    { color: '#166534', name: 'Dark Green' },
+    { color: '#14b8a6', name: 'Teal' },
+    { color: '#3b82f6', name: 'Blue' },
+    { color: '#8b5cf6', name: 'Purple' },
+    { color: '#ec4899', name: 'Pink' },
+    { color: '#92400e', name: 'Brown' },
+    { color: '#1e1e1e', name: 'Black' },
+    { color: '#ffffff', name: 'White' }
+  ];
+
+  // Unlockable colors
+  var bonusColors = [
+    { color: '#FFD700', name: 'Gold', key: 'gold', condition: 'Catch 10 flies total', check: function() { var s = getStats(); return (s.totalCatches || 0) >= 10; } },
+    { color: '#C0C0C0', name: 'Silver', key: 'silver', condition: 'Reach level 5 in any mode', check: function() { var s = getStats(); return (s.highestLevel || 0) >= 5; } },
+    { color: '#39FF14', name: 'Neon Green', key: 'neon', condition: 'Catch your first bee', check: function() { var s = getStats(); return (s.beesTotal || 0) >= 1; } },
+    { color: 'rainbow', name: 'Rainbow', key: 'rainbow', condition: 'Beat a high score', check: function() { return parseInt(localStorage.getItem('chameleon_hs') || '0', 10) > 0 || parseInt(localStorage.getItem('chameleon_car_hs') || '0', 10) > 0; } }
+  ];
+
+  function getUnlockedColors() {
+    try { return JSON.parse(localStorage.getItem('chameleon-unlocked-colors') || '[]'); }
+    catch(e) { return []; }
+  }
+  function saveUnlockedColors(arr) {
+    localStorage.setItem('chameleon-unlocked-colors', JSON.stringify(arr));
+  }
+  function checkAndUnlockColors() {
+    var unlocked = getUnlockedColors();
+    bonusColors.forEach(function(bc) {
+      if (unlocked.indexOf(bc.key) === -1 && bc.check()) {
+        unlocked.push(bc.key);
+      }
+    });
+    saveUnlockedColors(unlocked);
+    return unlocked;
+  }
+
+  // Also track highest level in stats for the Silver unlock
+  function trackHighestLevel(lvl) {
+    var s = getStats();
+    if (lvl > (s.highestLevel || 0)) {
+      s.highestLevel = lvl;
+      saveStats(s);
+    }
+  }
+
+  function buildPalette() {
+    var unlocked = checkAndUnlockColors();
+    var html = '<div class="palette-row">';
+    // First row: first 6 base colors
+    for (var i = 0; i < 6; i++) {
+      var bc = baseColors[i];
+      var sel = selectedColor === bc.color ? ' selected' : '';
+      html += '<div class="palette-swatch' + sel + '" data-color="' + bc.color + '" style="background:' + bc.color + ';" title="' + bc.name + '"></div>';
+    }
+    html += '</div><div class="palette-row">';
+    // Second row: next 6 base colors
+    for (var i = 6; i < 12; i++) {
+      var bc = baseColors[i];
+      var sel = selectedColor === bc.color ? ' selected' : '';
+      var border = bc.color === '#ffffff' ? 'border-color:#ccc;' : '';
+      html += '<div class="palette-swatch' + sel + '" data-color="' + bc.color + '" style="background:' + bc.color + ';' + border + '" title="' + bc.name + '"></div>';
+    }
+    // Eraser
+    var eraserSel = selectedColor === 'eraser' ? ' selected' : '';
+    html += '<div class="palette-swatch eraser' + eraserSel + '" data-color="eraser" title="Eraser"></div>';
+    html += '</div>';
+
+    // Bonus row
+    html += '<div class="palette-row" style="margin-top:4px;">';
+    bonusColors.forEach(function(bc) {
+      var isUnlocked = unlocked.indexOf(bc.key) !== -1;
+      if (isUnlocked) {
+        var sel = selectedColor === bc.color ? ' selected' : '';
+        var bg = bc.color === 'rainbow' ? 'background:linear-gradient(90deg,red,orange,yellow,green,blue,violet);' : 'background:' + bc.color + ';';
+        html += '<div class="palette-swatch' + sel + '" data-color="' + bc.color + '" style="' + bg + '" title="' + bc.name + '"></div>';
+      } else {
+        html += '<div class="palette-swatch locked" title="' + bc.condition + '"></div>';
+      }
+    });
+    html += '</div>';
+
+    coloringPalette.innerHTML = html;
+
+    // Bind clicks
+    coloringPalette.querySelectorAll('.palette-swatch:not(.locked)').forEach(function(sw) {
+      sw.addEventListener('click', function() {
+        selectedColor = sw.getAttribute('data-color');
+        coloringPalette.querySelectorAll('.palette-swatch').forEach(function(s) { s.classList.remove('selected'); });
+        sw.classList.add('selected');
+      });
+    });
+  }
+
+  function getColoringData(scene) {
+    try { return JSON.parse(localStorage.getItem('chameleon-coloring-' + scene) || '{}'); }
+    catch(e) { return {}; }
+  }
+  function saveColoringData(scene, data) {
+    localStorage.setItem('chameleon-coloring-' + scene, JSON.stringify(data));
+  }
+
+  function showScene(sceneName) {
+    currentScene = sceneName;
+    // Hide all scenes
+    coloringSvgWrap.querySelectorAll('svg').forEach(function(s) { s.style.display = 'none'; });
+    // Show active
+    var svg = document.getElementById('scene-' + sceneName);
+    if (svg) svg.style.display = 'block';
+    // Update thumbs
+    sceneThumbs.forEach(function(t) {
+      t.classList.toggle('active', t.getAttribute('data-scene') === sceneName);
+    });
+    // Restore saved colors
+    restoreScene(sceneName);
+  }
+
+  function restoreScene(sceneName) {
+    var data = getColoringData(sceneName);
+    var svg = document.getElementById('scene-' + sceneName);
+    if (!svg) return;
+    svg.querySelectorAll('[data-region]').forEach(function(el) {
+      var region = el.getAttribute('data-region');
+      if (data[region]) {
+        if (data[region] === 'rainbow') {
+          el.style.fill = '#ff6b6b';
+          el.classList.add('rainbow-fill');
+        } else {
+          el.style.fill = data[region];
+          el.classList.remove('rainbow-fill');
+        }
+      } else {
+        el.style.fill = '#e0e0e0';
+        el.classList.remove('rainbow-fill');
+      }
+      // Remove any stroke fill from lines/paths that use stroke instead of fill
+      if (data[region] && (el.tagName === 'line' || (el.getAttribute('fill') === 'none' && el.getAttribute('stroke')))) {
+        el.setAttribute('stroke', data[region] === 'rainbow' ? '#ff6b6b' : data[region]);
+        if (data[region] === 'rainbow') el.classList.add('rainbow-fill');
+      }
+    });
+  }
+
+  function fillRegion(el, color) {
+    var region = el.getAttribute('data-region');
+    var data = getColoringData(currentScene);
+    var isStrokeElement = el.tagName === 'line' || (el.getAttribute('fill') === 'none' && el.getAttribute('stroke'));
+
+    if (color === 'eraser') {
+      if (isStrokeElement) {
+        el.setAttribute('stroke', '#e0e0e0');
+      } else {
+        el.style.fill = '#e0e0e0';
+      }
+      el.classList.remove('rainbow-fill');
+      delete data[region];
+    } else if (color === 'rainbow') {
+      if (isStrokeElement) {
+        el.setAttribute('stroke', '#ff6b6b');
+      } else {
+        el.style.fill = '#ff6b6b';
+      }
+      el.classList.add('rainbow-fill');
+      data[region] = 'rainbow';
+    } else {
+      if (isStrokeElement) {
+        el.setAttribute('stroke', color);
+      } else {
+        el.style.fill = color;
+      }
+      el.classList.remove('rainbow-fill');
+      data[region] = color;
+    }
+
+    // Pop animation
+    el.classList.remove('color-pop-anim');
+    void el.offsetWidth;
+    el.classList.add('color-pop-anim');
+    setTimeout(function() { el.classList.remove('color-pop-anim'); }, 350);
+
+    saveColoringData(currentScene, data);
+  }
+
+  function bindSvgClicks() {
+    coloringSvgWrap.querySelectorAll('svg').forEach(function(svg) {
+      svg.querySelectorAll('[data-region]').forEach(function(el) {
+        el.style.pointerEvents = 'all';
+        // Add outline class to fill-based elements (not stroke-only)
+        var isStrokeOnly = el.tagName === 'line' || (el.getAttribute('fill') === 'none');
+        if (!isStrokeOnly) el.classList.add('cb-outline');
+        el.addEventListener('click', function(e) {
+          e.stopPropagation();
+          fillRegion(el, selectedColor);
+        });
+      });
+    });
+  }
+
+  function openColoringMode() {
+    checkAndUnlockColors();
+    buildPalette();
+    startScreen.style.display = 'none';
+    coloringArea.classList.add('active');
+    showScene(currentScene);
+  }
+
+  function closeColoringMode() {
+    coloringArea.classList.remove('active');
+    startScreen.style.display = 'flex';
+  }
+
+  // Back button
+  coloringBackBtn.addEventListener('click', closeColoringMode);
+
+  // Scene thumbs
+  sceneThumbs.forEach(function(t) {
+    t.addEventListener('click', function() {
+      showScene(t.getAttribute('data-scene'));
+    });
+  });
+
+  // Clear button
+  coloringClearBtn.addEventListener('click', function() {
+    if (!confirm('Clear this scene? All colors will be reset.')) return;
+    localStorage.removeItem('chameleon-coloring-' + currentScene);
+    var svg = document.getElementById('scene-' + currentScene);
+    if (svg) {
+      svg.querySelectorAll('[data-region]').forEach(function(el) {
+        el.style.fill = '#e0e0e0';
+        el.classList.remove('rainbow-fill');
+        if (el.tagName === 'line' || (el.getAttribute('fill') === 'none' && el.getAttribute('stroke'))) {
+          el.setAttribute('stroke', '#e0e0e0');
+        }
+      });
+    }
+  });
+
+  // Save / Export as PNG
+  coloringSaveBtn.addEventListener('click', function() {
+    var svg = document.getElementById('scene-' + currentScene);
+    if (!svg) return;
+
+    // Clone SVG and inline all computed styles for export
+    var clone = svg.cloneNode(true);
+    clone.style.display = 'block';
+    // Remove rainbow animation classes (snapshot current look)
+    clone.querySelectorAll('.rainbow-fill').forEach(function(el) {
+      el.classList.remove('rainbow-fill');
+    });
+    // Ensure stroke styles are inlined
+    clone.querySelectorAll('[data-region]').forEach(function(el) {
+      var orig = svg.querySelector('[data-region="' + el.getAttribute('data-region') + '"]');
+      if (orig) {
+        var cs = getComputedStyle(orig);
+        el.style.fill = cs.fill;
+        el.style.stroke = cs.stroke || '#333';
+        el.style.strokeWidth = cs.strokeWidth || '2';
+      }
+    });
+
+    var svgData = new XMLSerializer().serializeToString(clone);
+    var svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+    var url = URL.createObjectURL(svgBlob);
+
+    var img = new Image();
+    img.onload = function() {
+      var canvas = document.createElement('canvas');
+      canvas.width = 800;
+      canvas.height = 1000;
+      var ctx = canvas.getContext('2d');
+      // White background
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, 800, 1000);
+      ctx.drawImage(img, 0, 0, 800, 1000);
+      URL.revokeObjectURL(url);
+
+      canvas.toBlob(function(blob) {
+        if (!blob) return;
+        var file = new File([blob], 'my-chameleon.png', { type: 'image/png' });
+
+        // Try Web Share API first (mobile)
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+          navigator.share({
+            files: [file],
+            title: 'My Chameleon Coloring',
+            text: 'Check out my chameleon coloring!'
+          }).catch(function() {
+            // Fallback to download
+            downloadBlob(blob);
+          });
+        } else {
+          downloadBlob(blob);
+        }
+      }, 'image/png');
+    };
+    img.src = url;
+  });
+
+  function downloadBlob(blob) {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'my-chameleon.png';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function() {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(a.href);
+    }, 100);
+  }
+
+  // Initialize SVG click handlers
+  bindSvgClicks();
+
+  // ─── End V12: Coloring Book Mode ─────────────────────────────────────
 
 })();
 </script>

@@ -1,7 +1,7 @@
 // Chameleon Catch - Service Worker
 // Strategy: Cache-first always. Update in background. Never leave user stranded.
 
-const CACHE_NAME = 'chameleon-catch-v11';
+const CACHE_NAME = 'chameleon-catch-v12';
 const PRECACHE_URLS = [
   './',
   './index.html',

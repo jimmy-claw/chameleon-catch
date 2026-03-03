@@ -4136,7 +4136,7 @@
   // ─── Graph Generation ──────────────────────────────────────────────────
   function generateMazeGraph(level, seed) {
     mazeRng = mulberry32(seed);
-    var nodeCount = level <= 2 ? 5 : (level <= 5 ? 7 : 10);
+    var nodeCount = level <= 2 ? 6 : (level <= 5 ? 8 : 11);
     var nodes = [];
     var edges = [];
 
@@ -4165,30 +4165,30 @@
       nodes.push({ x: x, y: y });
     }
 
-    // Build spanning tree using nearest-neighbor approach
+    // Build tree with forced branching — each node connects to a random
+    // already-connected node (not always the nearest), creating real branches
     var connected = [0];
     var remaining = [];
     for (var i = 1; i < nodeCount; i++) remaining.push(i);
+    // Track how many children each node has
+    var childCount = new Array(nodeCount).fill(0);
 
     while (remaining.length > 0) {
-      var bestDist = Infinity;
-      var bestFrom = -1;
-      var bestTo = -1;
-      for (var ci = 0; ci < connected.length; ci++) {
-        for (var ri = 0; ri < remaining.length; ri++) {
-          var dx = nodes[connected[ci]].x - nodes[remaining[ri]].x;
-          var dy = nodes[connected[ci]].y - nodes[remaining[ri]].y;
-          var dist = Math.sqrt(dx*dx + dy*dy);
-          if (dist < bestDist) {
-            bestDist = dist;
-            bestFrom = connected[ci];
-            bestTo = remaining[ri];
-          }
-        }
-      }
-      edges.push([bestFrom, bestTo]);
-      connected.push(bestTo);
-      remaining.splice(remaining.indexOf(bestTo), 1);
+      // Pick random remaining node
+      var ri = Math.floor(mazeRandom() * remaining.length);
+      var toNode = remaining[ri];
+
+      // Pick a connected node with fewest children (forces branching)
+      // With some randomness so it's not always perfectly balanced
+      var candidates = connected.slice().sort(function(a, b) {
+        return (childCount[a] + mazeRandom() * 1.5) - (childCount[b] + mazeRandom() * 1.5);
+      });
+      var fromNode = candidates[0];
+
+      edges.push([fromNode, toNode]);
+      childCount[fromNode]++;
+      connected.push(toNode);
+      remaining.splice(ri, 1);
     }
 
     // Add cycles for level 6+

@@ -1070,7 +1070,7 @@
     to   { opacity: 0.3; }
   }
 
-  /* ═══════════ V9: WEATHER EVENTS ═══════════ */
+  /* === V9: WEATHER EVENTS === */
   #weather-badge {
     position: absolute;
     top: 50px;
@@ -1103,9 +1103,9 @@
     opacity: 1;
   }
 
-  /* ═══════════ V9: ACHIEVEMENTS ═══════════ */
+  /* === V9: ACHIEVEMENTS === */
 
-  /* ═══════════ V11: WEATHER WARNING TOAST ═══════════ */
+  /* === V11: WEATHER WARNING TOAST === */
   #weather-warning-toast {
     position: absolute;
     top: 80px;
@@ -1128,7 +1128,7 @@
     opacity: 1;
   }
 
-  /* ═══════════ V11: CSS RAIN DROPS ═══════════ */
+  /* === V11: CSS RAIN DROPS === */
   .rain-drop {
     position: absolute;
     width: 2px;
@@ -1145,7 +1145,7 @@
     100% { top: 100%; opacity: 0; }
   }
 
-  /* ═══════════ V11: GOOGLY EYES ═══════════ */
+  /* === V11: GOOGLY EYES === */
   .googly-eye {
     position: absolute;
     width: 16px;
@@ -1169,7 +1169,7 @@
     transition: transform 0.1s ease;
   }
 
-  /* ═══════════ V11: CONFETTI ═══════════ */
+  /* === V11: CONFETTI === */
   .confetti-piece {
     position: fixed;
     width: 10px;
@@ -1185,7 +1185,7 @@
     100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
   }
 
-  /* ═══════════ V11: VICTORY DANCE ═══════════ */
+  /* === V11: VICTORY DANCE === */
   @keyframes victory-dance {
     0%   { transform: translateY(0) rotate(0deg); }
     15%  { transform: translateY(-12px) rotate(0deg); }
@@ -1199,7 +1199,7 @@
     animation: victory-dance 0.8s ease-in-out;
   }
 
-  /* ═══════════ V11: STATS BUTTON ═══════════ */
+  /* === V11: STATS BUTTON === */
   #stats-btn {
     position: absolute;
     bottom: 10px;
@@ -1217,7 +1217,7 @@
     justify-content: center;
   }
 
-  /* ═══════════ V11: STATS + ACHIEVEMENTS OVERLAY (shared) ═══════════ */
+  /* === V11: STATS + ACHIEVEMENTS OVERLAY (shared) === */
   .overlay-screen {
     display: none;
     position: fixed;
@@ -1264,7 +1264,7 @@
     cursor: pointer;
   }
 
-  /* ═══════════ V11: ACHIEVEMENTS GALLERY (enhanced) ═══════════ */
+  /* === V11: ACHIEVEMENTS GALLERY (enhanced) === */
   .ach-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -1299,7 +1299,7 @@
     margin-top: 4px;
   }
 
-  /* ═══════════ V11: STATS SCREEN ═══════════ */
+  /* === V11: STATS SCREEN === */
   .stat-row {
     display: flex;
     justify-content: space-between;
@@ -1431,7 +1431,7 @@
     cursor: pointer;
   }
 
-  /* ═══════════ V9: DAILY CHALLENGE ═══════════ */
+  /* === V9: DAILY CHALLENGE === */
   .mode-toggle-btn.daily-btn {
     background: linear-gradient(135deg, #6366f1, #8b5cf6);
     border-color: #818cf8;
@@ -1448,7 +1448,7 @@
     margin-top: 2px;
   }
 
-  /* ═══════════ V9: IMPROVED CAR DESIGN ═══════════ */
+  /* === V9: IMPROVED CAR DESIGN === */
   #car-player {
     --car-color: #4CAF50;
   }
@@ -1573,7 +1573,7 @@
     to   { transform: translateX(-50%) scaleX(1.1); }
   }
 
-  /* ─── Dev Mode Styles ─────────────────────────────────────────────────── */
+  /* --- Dev Mode Styles --------------------------------------------------- */
   #dev-badge {
     display: none;
     position: absolute;
@@ -1638,7 +1638,7 @@
     font-size: 10px;
   }
 
-  /* ═══════════ V12: COLORING BOOK MODE ═══════════ */
+  /* === V12: COLORING BOOK MODE === */
   .mode-toggle-btn.color-btn {
     background: linear-gradient(135deg, #f472b6, #a855f7);
     border-color: #e879f9;
@@ -1647,6 +1647,193 @@
     background: linear-gradient(135deg, #ec4899, #8b5cf6);
     border-color: #f0abfc;
     box-shadow: 0 0 12px rgba(168,85,247,0.5);
+  }
+
+  /* === V13: BRANCH MAZE MODE === */
+  .mode-toggle-btn.maze-btn {
+    background: linear-gradient(135deg, #2d6a4f, #5c4033);
+    border-color: #52b788;
+  }
+  .mode-toggle-btn.maze-btn.selected {
+    background: linear-gradient(135deg, #1b4332, #3d2b1f);
+    border-color: #95d5b2;
+    box-shadow: 0 0 12px rgba(82,183,136,0.5);
+  }
+
+  #maze-mode-area {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    display: none;
+    background: linear-gradient(180deg, #d8f3dc 0%, #b7e4c7 40%, #95d5b2 100%);
+  }
+
+  #maze-svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 88%;
+    max-width: 400px;
+    max-height: 600px;
+  }
+
+  .maze-branch-line {
+    stroke: #5C4033;
+    stroke-width: 8;
+    stroke-linecap: round;
+    fill: none;
+    filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.15));
+  }
+
+  .maze-node {
+    fill: #a8d8b8;
+    stroke: #2d6a4f;
+    stroke-width: 2.5;
+    cursor: pointer;
+    transition: fill 0.2s;
+  }
+  .maze-node:hover { fill: #b7e4c7; }
+
+  .maze-node-start { fill: #52b788; stroke: #1b4332; }
+  .maze-node-exit { fill: #ffd700; stroke: #b8860b; }
+  .maze-node-exit.locked { fill: #a0a0a0; stroke: #666; }
+  .maze-node-water { fill: #74c0fc; stroke: #1971c2; }
+  .maze-node-fly { fill: #a8d8b8; stroke: #2d6a4f; }
+
+  .maze-node-exit-glow {
+    animation: maze-exit-glow 1.2s ease-in-out infinite;
+  }
+  @keyframes maze-exit-glow {
+    0%, 100% { filter: drop-shadow(0 0 4px #ffd700); }
+    50% { filter: drop-shadow(0 0 16px #ffd700) drop-shadow(0 0 24px #ffaa00); }
+  }
+
+  .maze-chameleon {
+    font-size: 28px;
+    transition: transform 0.3s ease;
+    pointer-events: none;
+  }
+
+  .maze-fly-icon {
+    font-size: 18px;
+    pointer-events: none;
+  }
+
+  .maze-fly-wobble {
+    animation: maze-fly-wobble 0.6s ease-in-out infinite alternate;
+  }
+  @keyframes maze-fly-wobble {
+    0% { transform: translate(-1px, -1px); }
+    100% { transform: translate(1px, 1px); }
+  }
+
+  .maze-fly-buzz {
+    fill: none;
+    stroke: rgba(0,0,0,0.15);
+    stroke-width: 1.5;
+    animation: maze-buzz-ring 0.8s ease-in-out infinite;
+  }
+  @keyframes maze-buzz-ring {
+    0% { r: 20; opacity: 0.5; }
+    100% { r: 30; opacity: 0; }
+  }
+
+  .maze-water-icon {
+    font-size: 16px;
+    pointer-events: none;
+  }
+
+  .maze-speed-lines {
+    animation: maze-speed-fade 0.4s forwards;
+  }
+  @keyframes maze-speed-fade {
+    0% { opacity: 0.7; }
+    100% { opacity: 0; }
+  }
+
+  /* Maze HUD */
+  #maze-hud {
+    position: absolute;
+    top: 8px; left: 0; right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    z-index: 50;
+    pointer-events: none;
+  }
+  #maze-hud .hud-box { pointer-events: auto; }
+
+  #maze-thirst-hud {
+    position: absolute;
+    top: 62px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 20px; padding: 4px 12px;
+    z-index: 50;
+  }
+  #maze-thirst-bar-wrap {
+    width: 80px; height: 10px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 5px; overflow: hidden;
+  }
+  #maze-thirst-bar {
+    height: 100%; width: 100%;
+    background: linear-gradient(90deg, #74c0fc, #339af0);
+    border-radius: 5px;
+    transition: width 0.3s;
+  }
+
+  #maze-flies-counter {
+    position: absolute;
+    top: 62px; right: 12px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 20px; padding: 4px 12px;
+    color: #fff; font-size: 0.85rem;
+    font-family: 'Fredoka One', cursive;
+    z-index: 50;
+  }
+
+  #maze-move-counter {
+    position: absolute;
+    bottom: 12px; right: 12px;
+    background: rgba(0,0,0,0.35);
+    border-radius: 12px; padding: 3px 10px;
+    color: #c8f5d8; font-size: 0.7rem;
+    font-family: 'Fredoka One', cursive;
+    z-index: 50;
+  }
+
+  #maze-lives-display {
+    position: absolute;
+    top: 62px; left: 12px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 20px; padding: 4px 12px;
+    color: #fff; font-size: 0.85rem;
+    font-family: 'Fredoka One', cursive;
+    z-index: 50;
+  }
+
+  .maze-level-banner {
+    position: absolute;
+    top: 40%; left: 50%; transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.7);
+    color: #ffd700;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    padding: 16px 32px;
+    border-radius: 16px;
+    z-index: 100;
+    animation: maze-banner-pop 0.4s ease-out;
+    pointer-events: none;
+  }
+  @keyframes maze-banner-pop {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  }
+
+  .maze-red-fly-move {
+    transition: transform 0.4s ease;
   }
 
   #coloring-area {
@@ -1912,6 +2099,7 @@
         <button class="mode-toggle-btn" id="mode-car-btn" data-mode="car">🚗 Car Mode</button>
         <button class="mode-toggle-btn daily-btn" id="mode-daily-btn" data-mode="daily">📅 Daily<span id="daily-best-label"></span></button>
         <button class="mode-toggle-btn color-btn" id="mode-color-btn" data-mode="color">🎨 Color</button>
+        <button class="mode-toggle-btn maze-btn" id="mode-maze-btn" data-mode="maze">🌿 Maze</button>
       </div>
 
       <div id="diff-section" style="margin-top:16px; background:rgba(0,0,0,0.25); border-radius:12px; padding:12px 16px; text-align:left;">
@@ -1945,7 +2133,7 @@
       <button id="achievements-btn" title="Achievements">🏅</button>
       <button id="stats-btn" title="Stats">📊</button>
       <p style="margin-top:10px; font-size:0.7em; color:#6b9e7a;">
-        v12 &nbsp;·&nbsp; <button id="force-update-btn" style="background:none;border:none;color:#a8d8b8;font-size:1em;cursor:pointer;text-decoration:underline;padding:0;">Force Update</button>
+        v13 &nbsp;·&nbsp; <button id="force-update-btn" style="background:none;border:none;color:#a8d8b8;font-size:1em;cursor:pointer;text-decoration:underline;padding:0;">Force Update</button>
       </p>
     </div>
   </div>
@@ -2030,6 +2218,30 @@
 
       <button class="btn" id="restart-btn">🔄 Try Again!</button>
     </div>
+  </div>
+
+  <!-- ========== V13: BRANCH MAZE MODE ========== -->
+  <div id="maze-mode-area">
+    <svg id="maze-svg" viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg">
+      <!-- Branches and nodes rendered by JS -->
+    </svg>
+    <div id="maze-hud">
+      <div class="hud-box">
+        <span class="label">🎯 Score</span>
+        <span class="value" id="maze-score-display">0</span>
+      </div>
+      <div class="hud-box">
+        <span class="label">⚡ Level</span>
+        <span class="value" id="maze-level-display">1</span>
+      </div>
+    </div>
+    <div id="maze-lives-display">❤️ 3</div>
+    <div id="maze-thirst-hud">
+      <span>💧</span>
+      <div id="maze-thirst-bar-wrap"><div id="maze-thirst-bar"></div></div>
+    </div>
+    <div id="maze-flies-counter">🪰 0/2</div>
+    <div id="maze-move-counter">Moves: 0</div>
   </div>
 
   <!-- Pause Overlay -->
@@ -2226,9 +2438,9 @@
   'use strict';
 
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // ═══════════ V9: SEEDED RNG (mulberry32) ═════════════════════════════
-  // ═══════════════════════════════════════════════════════════════════════
+  // ===
+  // === V9: SEEDED RNG (mulberry32) ===
+  // ===
   function mulberry32(a) {
     return function() {
       a |= 0; a = a + 0x6D2B79F5 | 0;
@@ -2251,9 +2463,9 @@
     return Math.random();
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // ═══════════ V11: WEATHER EVENTS (tuned) ════════════════════════════
-  // ═══════════════════════════════════════════════════════════════════════
+  // ===
+  // === V11: WEATHER EVENTS (tuned) ===
+  // ===
   var WEATHER_TYPES = [
     { id: 'rain',    emoji: '🌧️', name: 'Rain',      overlay: 'rgba(0,100,255,0.08)', warning: '🌧️ Rain coming...' },
     { id: 'heat',    emoji: '☀️', name: 'Heat Wave', overlay: 'rgba(255,140,0,0.08)', warning: '☀️ Heat wave incoming...' },
@@ -2393,9 +2605,9 @@
     return 1.3;
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // ═══════════ V9: ACHIEVEMENTS SYSTEM ═════════════════════════════════
-  // ═══════════════════════════════════════════════════════════════════════
+  // ===
+  // === V9: ACHIEVEMENTS SYSTEM ===
+  // ===
   var ACHIEVEMENTS = [
     { id: 'first_blood', emoji: '🩸', name: 'First Blood',  desc: 'Catch your first fly ever', hint: 'Catch a fly' },
     { id: 'poo_master',  emoji: '💩', name: 'Poo Master',   desc: 'Survive 3 poos in one game', hint: 'Survive the poo storm' },
@@ -2405,6 +2617,10 @@
     { id: 'road_warrior', emoji: '🚗', name: 'Road Warrior', desc: 'Reach level 10 in car mode', hint: 'Drive far in car mode' },
     { id: 'purist',      emoji: '🦎', name: 'Purist',       desc: 'Score 500+ in classic on Hard', hint: 'Hard mode challenge' },
     { id: 'century',     emoji: '💯', name: 'Century',      desc: 'Score 100 in a single game', hint: 'Score big' },
+    { id: 'tree_hugger', emoji: '🌿', name: 'Tree Hugger',  desc: 'Complete level 1 in maze mode', hint: 'Try the maze!' },
+    { id: 'pathfinder',  emoji: '🗺️', name: 'Pathfinder',   desc: 'Complete 10 maze levels', hint: 'Keep exploring mazes' },
+    { id: 'speed_runner', emoji: '⚡', name: 'Speed Runner', desc: 'Finish a maze level in under 20s', hint: 'Be quick in the maze' },
+    { id: 'perfect_path', emoji: '🎯', name: 'Perfect Path', desc: 'Finish a maze using minimum moves', hint: 'No wasted steps' },
   ];
 
   function getUnlockedAchievements() {
@@ -2500,11 +2716,11 @@
   }
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
+  // ===
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // ═══════════ V11: GOOGLY EYES ═══════════════════════════════════════
-  // ═══════════════════════════════════════════════════════════════════════
+  // ===
+  // === V11: GOOGLY EYES ===
+  // ===
   var googlyPupilL = null;
   var googlyPupilR = null;
   var googlyEyeL = null;
@@ -2562,9 +2778,9 @@
     googlyPupilR.style.transform = 'translate(calc(-50% + ' + offsetX.toFixed(1) + 'px), calc(-50% + ' + offsetY.toFixed(1) + 'px))';
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // ═══════════ V11: CONFETTI ON NEW HIGH SCORE ════════════════════════
-  // ═══════════════════════════════════════════════════════════════════════
+  // ===
+  // === V11: CONFETTI ON NEW HIGH SCORE ===
+  // ===
   var CONFETTI_COLORS = ['#5cb85c', '#3d8b3d', '#ffd700', '#ff69b4', '#74c69d', '#f4a261', '#4aaa4a'];
 
   function burstConfetti() {
@@ -2586,9 +2802,9 @@
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // ═══════════ V11: VICTORY DANCE ═════════════════════════════════════
-  // ═══════════════════════════════════════════════════════════════════════
+  // ===
+  // === V11: VICTORY DANCE ===
+  // ===
   function triggerVictoryDance() {
     var chameleon = document.getElementById('chameleon');
     if (!chameleon) return;
@@ -2598,9 +2814,9 @@
     setTimeout(function() { chameleon.classList.remove('victory-dance'); }, 850);
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // ═══════════ V11: STATS SCREEN ══════════════════════════════════════
-  // ═══════════════════════════════════════════════════════════════════════
+  // ===
+  // === V11: STATS SCREEN ===
+  // ===
   function renderStatsOverlay() {
     var list = document.getElementById('stats-list');
     if (!list) return;
@@ -2669,8 +2885,8 @@
     if (_timePlayedInterval) { clearInterval(_timePlayedInterval); _timePlayedInterval = null; }
   }
 
-  // ═══════════ V9: DAILY CHALLENGE ═════════════════════════════════════
-  // ═══════════════════════════════════════════════════════════════════════
+  // === V9: DAILY CHALLENGE ===
+  // ===
   function getTodayDateStr() {
     var d = new Date();
     var mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -2698,13 +2914,13 @@
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // ═══════════ V9: CAR EXHAUST PUFF SYSTEM ════════════════════════════
-  // ═══════════════════════════════════════════════════════════════════════
+  // ===
+  // === V9: CAR EXHAUST PUFF SYSTEM ===
+  // ===
   var carExhaustTimer = 0;
 
 
-  // ─── Sound Effects (Web Audio API) ──────────────────────────────────────
+  // --- Sound Effects (Web Audio API) --------------------------------------
   let audioCtx = null;
   let isMuted = localStorage.getItem('chameleon-mute') === 'true';
 
@@ -2831,7 +3047,7 @@
     } catch(e) { /* ignore audio errors */ }
   }
 
-  // ─── Leaderboard ────────────────────────────────────────────────────────
+  // --- Leaderboard --------------------------------------------------------
   function getLeaderboard() {
     try {
       return JSON.parse(localStorage.getItem('chameleon-leaderboard') || '[]');
@@ -2877,7 +3093,7 @@
       ).join('');
   }
 
-  // ─── Skin Customization ─────────────────────────────────────────────────
+  // --- Skin Customization -------------------------------------------------
   const SKIN_FILTERS = {
     green: '',
     purple: 'hue-rotate(270deg)',
@@ -2906,7 +3122,7 @@
   }
 
 
-  // ─── Difficulty ──────────────────────────────────────────────────────────
+  // --- Difficulty ----------------------------------------------------------
   const DIFFICULTIES = {
     1: { label:'Easy',   flySpeed:60,  thirstTime:60, fuelTime:120, maxMissed:10, poiInterval:20, thirstStart:80,  pooStart:50,  fuelStart:80  },
     2: { label:'Normal', flySpeed:90,  thirstTime:30, fuelTime:60,  maxMissed:8,  poiInterval:15, thirstStart:40,  pooStart:30,  fuelStart:40  },
@@ -2922,7 +3138,7 @@
     });
   }
 
-  // ─── Constants ───────────────────────────────────────────────────────────
+  // --- Constants -----------------------------------------------------------
   const MAX_MISSED      = 5;   // overridden per difficulty at startGame
   const BASE_FLY_SPEED  = 90;  // overridden per difficulty at startGame
   const BASE_FLY_COUNT  = 3;
@@ -2936,7 +3152,7 @@
   const THIRST_DRAIN    = 100 / 20; // % per second (empties in 20s)
   const THIRST_WARN     = 30;   // show thirsty message at this %
 
-  // ─── State ────────────────────────────────────────────────────────────────
+  // --- State ----------------------------------------------------------------
   let score = 0, level = 1, missed = 0, catches = 0;
   // Active difficulty params (set at startGame)
   let activeFlySpeed    = 90;
@@ -2970,7 +3186,7 @@
   let lastPointerPos = null;
   let waterDropTimer = 0;
 
-  // ─── DOM ──────────────────────────────────────────────────────────────────
+  // --- DOM ------------------------------------------------------------------
   const container   = document.getElementById('game-container');
   const tongueCanvas= document.getElementById('tongue-canvas');
   const ctx         = tongueCanvas.getContext('2d');
@@ -3005,7 +3221,7 @@
   const nameInput    = document.getElementById('name-input');
   const saveScoreBtn = document.getElementById('save-score-btn');
 
-  // ─── Mute toggle ──────────────────────────────────────────────────────────
+  // --- Mute toggle ----------------------------------------------------------
   function updateMuteBtn() {
     muteBtn.textContent = isMuted ? '🔇' : '🔊';
   }
@@ -3017,7 +3233,7 @@
     updateMuteBtn();
   });
 
-  // ─── Pause menu ─────────────────────────────────────────────────────────
+  // --- Pause menu ---------------------------------------------------------
   const pauseBtn      = document.getElementById('pause-btn');
   const pauseOverlay  = document.getElementById('pause-overlay');
   const pauseResumeBtn = document.getElementById('pause-resume-btn');
@@ -3041,6 +3257,9 @@
     if (carActive) {
       cancelAnimationFrame(carRafId);
     }
+    if (mazeActive) {
+      cancelAnimationFrame(mazeRafId);
+    }
     pauseOverlay.style.display = 'flex';
   }
 
@@ -3055,6 +3274,10 @@
     if (carActive) {
       carLastTime = performance.now();
       carRafId = requestAnimationFrame(carGameLoop);
+    }
+    if (mazeActive) {
+      mazeLastTime = performance.now();
+      mazeRafId = requestAnimationFrame(mazeGameLoop);
     }
   }
 
@@ -3078,6 +3301,10 @@
       endCarGame(null, true);
       selectedMode = 'classic';
       localStorage.setItem('chameleon-mode', 'classic');
+    } else if (mazeActive) {
+      endMazeGame(null, true);
+      selectedMode = 'classic';
+      localStorage.setItem('chameleon-mode', 'classic');
     }
     updateModeUI();
     renderStartLeaderboard();
@@ -3092,6 +3319,8 @@
       endGame(null, true);
     } else if (carActive) {
       endCarGame(null, true);
+    } else if (mazeActive) {
+      endMazeGame(null, true);
     }
     startScreen.style.display = 'flex';
   });
@@ -3103,7 +3332,7 @@
     }
   });
 
-  // ─── Skin picker events ───────────────────────────────────────────────────
+  // --- Skin picker events ---------------------------------------------------
   if (skinPicker) {
     skinPicker.addEventListener('click', function(e) {
       const swatch = e.target.closest('.skin-swatch');
@@ -3114,10 +3343,10 @@
   // Restore saved skin on load
   requestAnimationFrame(() => applySkin(currentSkin));
 
-  // ─── Show start screen leaderboard ────────────────────────────────────────
+  // --- Show start screen leaderboard ----------------------------------------
   // (handled by renderStartLeaderboard() below, after mode selection is set up)
 
-  // ─── Resize canvas ────────────────────────────────────────────────────────
+  // --- Resize canvas --------------------------------------------------------
   function resizeCanvas() {
     tongueCanvas.width  = window.innerWidth;
     tongueCanvas.height = window.innerHeight;
@@ -3125,7 +3354,7 @@
   window.addEventListener('resize', resizeCanvas);
   resizeCanvas();
 
-  // ─── Build leaves ─────────────────────────────────────────────────────────
+  // --- Build leaves ---------------------------------------------------------
   const leafColors = ['#2d6a4f','#40916c','#52b788','#74c69d','#1b4332','#388659'];
   function buildLeaves() {
     leavesContainer.innerHTML = '';
@@ -3152,7 +3381,7 @@
   }
   buildLeaves();
 
-  // ─── Chameleon SVG ────────────────────────────────────────────────────────
+  // --- Chameleon SVG --------------------------------------------------------
   chameleonEl.innerHTML = `
   <svg id="chameleon-svg" viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" overflow="visible">
     <!-- tail (curly, behind body) -->
@@ -3195,7 +3424,7 @@
     <path d="M148,52 Q149,55 148,56" fill="none" stroke="#3d8b3d" stroke-width="1.5" stroke-linecap="round"/>
   </svg>`;
 
-  // ─── Find chameleon mouth tip in screen coords ────────────────────────────
+  // --- Find chameleon mouth tip in screen coords ----------------------------
   function updateMouthPos() {
     const rect = chameleonEl.getBoundingClientRect();
     // mouth tip is at SVG point (161, 55) in a 160×110 viewBox
@@ -3207,7 +3436,7 @@
   requestAnimationFrame(updateMouthPos);
   initGooglyEyes();
 
-  // ─── Fly factory ──────────────────────────────────────────────────────────
+  // --- Fly factory ----------------------------------------------------------
   let flyIdCounter = 0;
   function determineFlyType() {
     // Golden fly: every ~15 normal catches
@@ -3299,13 +3528,13 @@
     return fly;
   }
 
-  // ─── Remove fly ───────────────────────────────────────────────────────────
+  // --- Remove fly -----------------------------------------------------------
   function removeFly(fly) {
     fly.el.remove();
     flies = flies.filter(f => f !== fly);
   }
 
-  // ─── Tongue ───────────────────────────────────────────────────────────────
+  // --- Tongue ---------------------------------------------------------------
   function shootTongue(targetFly) {
     initAudio();
     playSound('tongue');
@@ -3331,7 +3560,7 @@
     };
   }
 
-  // ─── Draw tongue ─────────────────────────────────────────────────────────
+  // --- Draw tongue ---------------------------------------------------------
   function drawTongue() {
     if (!tongue) { ctx.clearRect(0,0,tongueCanvas.width,tongueCanvas.height); return; }
     ctx.clearRect(0,0,tongueCanvas.width,tongueCanvas.height);
@@ -3361,7 +3590,7 @@
     ctx.fill();
   }
 
-  // ─── Show feedback ───────────────────────────────────────────────────────
+  // --- Show feedback -------------------------------------------------------
   function showFeedback(text, x, y, color) {
     const el = document.createElement('div');
     el.className = 'feedback-popup';
@@ -3373,7 +3602,7 @@
     setTimeout(() => el.remove(), 1100);
   }
 
-  // ─── Level up ─────────────────────────────────────────────────────────────
+  // --- Level up -------------------------------------------------------------
   function checkLevelUp() {
     const newLevel = Math.floor(catches / CATCHES_PER_LVL) + 1;
     if (newLevel > level) {
@@ -3393,7 +3622,7 @@
     }
   }
 
-  // ─── Update HUD ───────────────────────────────────────────────────────────
+  // --- Update HUD -----------------------------------------------------------
   function updateHUD() {
     scoreEl.textContent  = score;
     levelEl.textContent  = level;
@@ -3407,7 +3636,7 @@
     }
   }
 
-  // ─── Combo HUD ──────────────────────────────────────────────────────────
+  // --- Combo HUD ----------------------------------------------------------
   function updateComboHUD() {
     if (comboStreak >= 3) {
       comboHud.style.display = 'flex';
@@ -3417,13 +3646,13 @@
     }
   }
 
-  // ─── Game loop ────────────────────────────────────────────────────────────
+  // --- Game loop ------------------------------------------------------------
   function gameLoop(timestamp) {
     if (!gameActive) return;
     const dt = Math.min((timestamp - lastTime) / 1000, 0.1); // cap at 100ms
     lastTime = timestamp;
 
-    // ── Thirst drain (weather: heat = 2x) ──
+    // -- Thirst drain (weather: heat = 2x) --
     if (score >= activeThirstStart) thirst -= activeThirstDrain * dt * getWeatherDrainMultiplier();
     if (thirst < 0) thirst = 0;
     updateThirstHUD();
@@ -3445,7 +3674,7 @@
     updateMouthPos();
     updateGooglyEyes();
 
-    // ── Move flies ──
+    // -- Move flies --
     const W = window.innerWidth, H = window.innerHeight;
     flies.forEach(fly => {
       if (fly.caught) return;
@@ -3514,7 +3743,7 @@
       }
     });
 
-    // ── Tongue update ──
+    // -- Tongue update --
     if (tongue) {
       const {phase, dist} = tongue;
 
@@ -3641,7 +3870,7 @@
     rafId = requestAnimationFrame(gameLoop);
   }
 
-  // ─── Poo mechanic ─────────────────────────────────────────────────────────
+  // --- Poo mechanic ---------------------------------------------------------
   function updatePooHUD() {
     pooDisplayEl.textContent = '💩'.repeat(poos.length) || '✨';
     pooDisplayEl.style.color = poos.length >= 2 ? '#e63946' : '#ffd700';
@@ -3717,7 +3946,7 @@
     }
   }
 
-  // ─── Thirst mechanic ──────────────────────────────────────────────────────
+  // --- Thirst mechanic ------------------------------------------------------
   function updateThirstHUD() {
     const pct = Math.max(0, thirst);
     thirstBarEl.style.width = pct + '%';
@@ -3783,7 +4012,7 @@
   container.addEventListener('pointerup', function() { pointerDown = false; });
   container.addEventListener('pointercancel', function() { pointerDown = false; });
 
-  // ─── Start game ───────────────────────────────────────────────────────────
+  // --- Start game -----------------------------------------------------------
   function startGame() {
     // Apply difficulty settings
     trackGameStart(); startTimeTracking();
@@ -3848,7 +4077,7 @@
     rafId = requestAnimationFrame(gameLoop);
   }
 
-  // ─── End game ─────────────────────────────────────────────────────────────
+  // --- End game -------------------------------------------------------------
   function endGame(reason, silent) {
     gameActive = false;
     stopTimeTracking();
@@ -3921,13 +4150,13 @@
     gameoverScreen.style.display = 'flex';
   }
 
-  // ─── Buttons ──────────────────────────────────────────────────────────────
+  // --- Buttons --------------------------------------------------------------
   startBtn.addEventListener('click',   handleStart);
   startBtn.addEventListener('touchend', e => { e.preventDefault(); handleStart(); });
   restartBtn.addEventListener('click',  handleStart);
   restartBtn.addEventListener('touchend', e => { e.preventDefault(); handleStart(); });
 
-  // ─── Save score on pressing Enter ─────────────────────────────────────────
+  // --- Save score on pressing Enter -----------------------------------------
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && nameEntrySection.style.display !== 'none') {
       const btn = document.getElementById('save-score-btn');
@@ -3935,7 +4164,7 @@
     }
   });
 
-  // ─── Mode selection ──────────────────────────────────────────────────────
+  // --- Mode selection ------------------------------------------------------
   let selectedMode = localStorage.getItem('chameleon-mode') || 'classic';
   const modeClassicBtn = document.getElementById('mode-classic-btn');
   const modeCarBtn = document.getElementById('mode-car-btn');
@@ -3944,12 +4173,14 @@
   const modeHintText = document.getElementById('mode-hint-text');
 
   const modeColorBtn = document.getElementById('mode-color-btn');
+  const modeMazeBtn = document.getElementById('mode-maze-btn');
 
   function updateModeUI() {
     modeClassicBtn.classList.toggle('selected', selectedMode === 'classic');
     modeCarBtn.classList.toggle('selected', selectedMode === 'car');
     modeDailyBtn.classList.toggle('selected', selectedMode === 'daily');
     modeColorBtn.classList.toggle('selected', selectedMode === 'color');
+    if (modeMazeBtn) modeMazeBtn.classList.toggle('selected', selectedMode === 'maze');
     if (selectedMode === 'car') {
       modeDescText.innerHTML = 'Drive your chameleon car and<br>catch flies on the road!';
       modeHintText.innerHTML = 'Tap left/right to switch lanes. Don\'t run out of <strong style="color:#fbbf24">fuel</strong>! ⛽';
@@ -3959,6 +4190,9 @@
     } else if (selectedMode === 'color') {
       modeDescText.innerHTML = 'Coloring Book!<br>Color your own chameleon scenes!';
       modeHintText.innerHTML = 'Pick a color, tap to fill. Calm, creative fun! 🎨';
+    } else if (selectedMode === 'maze') {
+      modeDescText.innerHTML = 'Branch Maze!<br>Navigate branches, catch flies, find the exit!';
+      modeHintText.innerHTML = 'Tap nodes to move. Catch <strong style="color:#52b788">N flies</strong> then reach the 🌸 exit! 🌿';
     } else {
       modeDescText.innerHTML = 'Tap a fly to shoot your<br>sticky tongue and catch it!';
       modeHintText.innerHTML = 'Don\'t let <strong style="color:#e63946">5 flies</strong> escape! Catch 10 for a poo! 💩';
@@ -3969,8 +4203,12 @@
     var skinSection = document.getElementById('skin-section');
     var startBtn = document.getElementById('start-btn');
     if (diffSection) diffSection.style.display = isColor ? 'none' : '';
-    if (skinSection) skinSection.style.display = isColor ? 'none' : '';
-    if (startBtn) startBtn.textContent = isColor ? '🎨 Start Coloring!' : '🌿 Start Game!';
+    if (skinSection) skinSection.style.display = (isColor) ? 'none' : '';
+    if (startBtn) {
+      if (isColor) startBtn.textContent = '🎨 Start Coloring!';
+      else if (selectedMode === 'maze') startBtn.textContent = '🌿 Enter Maze!';
+      else startBtn.textContent = '🌿 Start Game!';
+    }
     updateDailyBestLabel();
     renderStartLeaderboard();
   }
@@ -3996,10 +4234,19 @@
     localStorage.setItem('chameleon-mode', 'color');
     updateModeUI();
   });
+  if (modeMazeBtn) modeMazeBtn.addEventListener('click', function() {
+    selectedMode = 'maze';
+    localStorage.setItem('chameleon-mode', 'maze');
+    updateModeUI();
+  });
 
   function handleStart() {
     if (selectedMode === 'color') {
       openColoringMode();
+      return;
+    } else if (selectedMode === 'maze') {
+      dailyMode = false; dailyRng = null;
+      startMazeGame();
       return;
     } else if (selectedMode === 'car') {
       dailyMode = false;
@@ -4017,7 +4264,7 @@
     }
   }
 
-  // ─── Car Mode Leaderboard ──────────────────────────────────────────────
+  // --- Car Mode Leaderboard ----------------------------------------------
   function getCarLeaderboard() {
     try { return JSON.parse(localStorage.getItem('chameleon-car-leaderboard') || '[]'); }
     catch(e) { return []; }
@@ -4050,9 +4297,9 @@
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // ═══════════ CAR MODE GAME ENGINE ═════════════════════════════════════
-  // ═══════════════════════════════════════════════════════════════════════
+  // ===
+  // === CAR MODE GAME ENGINE ===
+  // ===
 
   const carArea        = document.getElementById('car-mode-area');
   const carPlayer      = document.getElementById('car-player');
@@ -4263,7 +4510,7 @@
     return objY + objH > playerTop && objY < playerBottom;
   }
 
-  // ─── Car Mode Game Loop ────────────────────────────────────────────────
+  // --- Car Mode Game Loop ------------------------------------------------
   function carGameLoop(timestamp) {
     if (!carActive) return;
     const dt = Math.min((timestamp - carLastTime) / 1000, 0.1);
@@ -4271,7 +4518,7 @@
 
     const H = window.innerHeight;
 
-    // ── Fuel drain (weather: heat = 2x) ──
+    // -- Fuel drain (weather: heat = 2x) --
     if (carScore >= (carActiveFuelStart||0)) carFuel -= carActiveFuelDrain * dt * getWeatherDrainMultiplier();
     if (carFuel < 0) carFuel = 0;
     updateFuelHUD();
@@ -4281,7 +4528,7 @@
       return;
     }
 
-    // ── Nitro timer ──
+    // -- Nitro timer --
     if (carNitroTimer > 0) {
       carNitroTimer -= dt;
       // V9: Show/hide nitro flame
@@ -4313,7 +4560,7 @@
 
     // V9: Weather wind drift on car — removed car drift, wind only affects flies
 
-    // ── Update lane mark scroll speed ──
+    // -- Update lane mark scroll speed --
     const scrollDur = Math.max(0.15, 80 / carRoadSpeed);
     if (carLaneMarks) {
       const pseudoStyle = carLaneMarks.style;
@@ -4321,7 +4568,7 @@
       pseudoStyle.animationDuration = scrollDur + 's';
     }
 
-    // ── Spawn flies ──
+    // -- Spawn flies --
     carFlySpawnTimer -= dt;
     if (carFlySpawnTimer <= 0) {
       spawnCarFly();
@@ -4329,14 +4576,14 @@
       carFlySpawnTimer = Math.max(0.4, 1.8 - carLevel * 0.12) + gameRandom() * 0.5;
     }
 
-    // ── Spawn fuel drops ──
+    // -- Spawn fuel drops --
     carFuelSpawnTimer -= dt;
     if (carFuelSpawnTimer <= 0) {
       spawnFuelDrop();
       carFuelSpawnTimer = 6 + gameRandom() * 4;
     }
 
-    // ── Move flies ──
+    // -- Move flies --
     for (let i = carFlies.length - 1; i >= 0; i--) {
       const fly = carFlies[i];
       if (fly.caught) continue;
@@ -4454,7 +4701,7 @@
       }
     }
 
-    // ── Move fuel drops ──
+    // -- Move fuel drops --
     for (let i = carFuelDrops.length - 1; i >= 0; i--) {
       const drop = carFuelDrops[i];
       drop.y += drop.speed * dt;
@@ -4476,7 +4723,7 @@
       }
     }
 
-    // ── Move poos ──
+    // -- Move poos --
     for (let i = carPoos.length - 1; i >= 0; i--) {
       const poo = carPoos[i];
       poo.y += poo.speed * dt;
@@ -4487,14 +4734,14 @@
       }
     }
 
-    // ── Update lane mark animation ──
+    // -- Update lane mark animation --
     const markStyle = document.documentElement.style;
     markStyle.setProperty('--car-scroll-speed', scrollDur + 's');
 
     carRafId = requestAnimationFrame(carGameLoop);
   }
 
-  // ─── Start Car Game ────────────────────────────────────────────────────
+  // --- Start Car Game ----------------------------------------------------
   function startCarGame() {
     const diff = DIFFICULTIES[difficulty] || DIFFICULTIES[2];
     trackGameStart(); startTimeTracking();
@@ -4570,7 +4817,7 @@
     carRafId = requestAnimationFrame(carGameLoop);
   }
 
-  // ─── End Car Game ──────────────────────────────────────────────────────
+  // --- End Car Game ------------------------------------------------------
   function endCarGame(reason, silent) {
     carActive = false;
     stopTimeTracking();
@@ -4633,7 +4880,7 @@
     gameoverScreen.style.display = 'flex';
   }
 
-  // ─── Car Mode Controls ─────────────────────────────────────────────────
+  // --- Car Mode Controls -------------------------------------------------
   let carTouchStartX = null;
 
   document.addEventListener('touchstart', function(e) {
@@ -4681,7 +4928,7 @@
     }
   });
 
-  // ─── Render appropriate leaderboard on start ───────────────────────────
+  // --- Render appropriate leaderboard on start ---------------------------
   function renderStartLeaderboard() {
     if (selectedMode === 'car') {
       renderCarLeaderboard(startLeaderboardTable, startLeaderboard);
@@ -4745,27 +4992,28 @@
     });
   }
 
-  // ─── Initial mouth pos after fonts/layout ────────────────────────────────
+  // --- Initial mouth pos after fonts/layout --------------------------------
   window.addEventListener('load', updateMouthPos);
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // ═══════════ DEV MODE ═══════════════════════════════════════════════
-  // ═══════════════════════════════════════════════════════════════════════
+  // ===
+  // === DEV MODE ===
+  // ===
   var devMode = new URLSearchParams(window.location.search).get('dev') === '1';
 
-  // ─── window.__gameState — always available for external inspection ────
+  // --- window.__gameState — always available for external inspection ----
   window.__gameState = {};
   function updateExposedState() {
     window.__gameState.gameActive = gameActive;
     window.__gameState.carActive = carActive;
+    window.__gameState.mazeActive = mazeActive;
     window.__gameState.gamePaused = gamePaused;
     window.__gameState.selectedMode = selectedMode;
     window.__gameState.difficulty = difficulty;
-    window.__gameState.score = gameActive ? score : (carActive ? carScore : 0);
-    window.__gameState.level = gameActive ? level : (carActive ? carLevel : 1);
+    window.__gameState.score = gameActive ? score : (carActive ? carScore : (mazeActive ? mazeScore : 0));
+    window.__gameState.level = gameActive ? level : (carActive ? carLevel : (mazeActive ? mazeLevel : 1));
     window.__gameState.missed = gameActive ? missed : (carActive ? carMissed : 0);
-    window.__gameState.catches = gameActive ? catches : (carActive ? carCatches : 0);
-    window.__gameState.thirst = gameActive ? thirst : 100;
+    window.__gameState.catches = gameActive ? catches : (carActive ? carCatches : (mazeActive ? mazeFliesCaught : 0));
+    window.__gameState.thirst = gameActive ? thirst : (mazeActive ? mazeThirst : 100);
     window.__gameState.fuel = carActive ? carFuel : 100;
     window.__gameState.weather = currentWeather ? currentWeather.name : 'None';
     window.__gameState.flyCount = gameActive ? flies.length : (carActive ? carFlies.length : 0);
@@ -4775,7 +5023,7 @@
   // Poll state every frame via existing RAF loops — also patch with a fallback interval
   setInterval(updateExposedState, 250);
 
-  // ─── window.__getFlies() — returns fly position data ────────────────────
+  // --- window.__getFlies() — returns fly position data --------------------
   window.__getFlies = function() {
     if (gameActive) {
       return flies.map(function(f) {
@@ -4792,7 +5040,7 @@
     return [];
   };
 
-  // ─── window.__botTap(x, y) — simulate a tap ────────────────────────────
+  // --- window.__botTap(x, y) — simulate a tap ----------------------------
   window.__botTap = function(x, y) {
     var el = document.elementFromPoint(x, y);
     if (!el) return;
@@ -4802,13 +5050,13 @@
     el.dispatchEvent(new MouseEvent('click', opts));
   };
 
-  // ─── window.__forceEndGame() — end game for test cleanup ────────────────
+  // --- window.__forceEndGame() — end game for test cleanup ----------------
   window.__forceEndGame = function() {
     if (gameActive) { endGame('force', true); }
     if (carActive) { endCarGame('force', true); }
   };
 
-  // ─── Dev mode UI ───────────────────────────────────────────────────────
+  // --- Dev mode UI -------------------------------------------------------
   if (devMode) {
     var devBadge = document.getElementById('dev-badge');
     var devMonitor = document.getElementById('dev-state-monitor');
@@ -4818,7 +5066,7 @@
     if (devBadge) devBadge.style.display = 'block';
     if (devMonitor) devMonitor.style.display = 'block';
 
-    // ─── Error overlay ──────────────────────────────────────────────────
+    // --- Error overlay --------------------------------------------------
     function showDevError(msg, stack) {
       console.error('[DEV]', msg, stack);
       if (!devErrorOverlay) return;
@@ -4842,7 +5090,7 @@
       showDevError('Unhandled Promise: ' + (reason.message || String(reason)), reason.stack || '');
     });
 
-    // ─── FPS + state monitor ────────────────────────────────────────────
+    // --- FPS + state monitor --------------------------------------------
     var devFpsFrames = [];
     var devLastMonitorUpdate = 0;
 
@@ -4863,8 +5111,8 @@
         }
 
         var state = 'idle';
-        if (gameActive || carActive) state = gamePaused ? 'paused' : 'active';
-        if (!gameActive && !carActive && document.getElementById('gameover-screen') && document.getElementById('gameover-screen').style.display === 'flex') state = 'over';
+        if (gameActive || carActive || mazeActive) state = gamePaused ? 'paused' : 'active';
+        if (!gameActive && !carActive && !mazeActive && document.getElementById('gameover-screen') && document.getElementById('gameover-screen').style.display === 'flex') state = 'over';
 
         var gs = window.__gameState;
         if (devMonitor) {
@@ -4883,8 +5131,8 @@
     requestAnimationFrame(devMonitorLoop);
   }
 
-  // ═══════════ V12: COLORING BOOK MODE ══════════════════════════════════
-  // ════════════════════════════════════════════════════════════════════════
+  // === V12: COLORING BOOK MODE ===
+  // ===
 
   var coloringArea = document.getElementById('coloring-area');
   var coloringSvgWrap = document.getElementById('coloring-svg-wrap');
@@ -5215,7 +5463,824 @@
   // Initialize SVG click handlers
   bindSvgClicks();
 
-  // ─── End V12: Coloring Book Mode ─────────────────────────────────────
+  // --- End V12: Coloring Book Mode -------------------------------------
+
+  // =====================================================================
+  // === V13: BRANCH MAZE MODE ===========================================
+  // =====================================================================
+
+  // --- Maze State ---
+  let mazeActive = false;
+  let mazeRafId = null;
+  let mazeLastTime = 0;
+  let mazeScore = 0;
+  let mazeLevel = 1;
+  let mazeLives = 3;
+  let mazeThirst = 100;
+  let mazeMoves = 0;
+  let mazeFliesCaught = 0;
+  let mazeFliesNeeded = 2;
+  let mazeGraph = null; // { nodes: [], edges: [] }
+  let mazeChameleonNode = 0; // current node index
+  let mazeWalking = false;
+  let mazeWalkQueue = null;
+  let mazeLevelStartTime = 0;
+  let mazeRedFlyTimer = 0;
+  let mazeHighScore = parseInt(localStorage.getItem('chameleon_maze_hs') || '0', 10);
+  let mazeTotalLevelsCompleted = 0;
+  let mazeMinMoves = 0; // BFS-computed minimum moves for this level
+  let mazeRng = null; // seeded RNG per level
+
+  // DOM refs
+  const mazeSvg = document.getElementById('maze-svg');
+  const mazeModeArea = document.getElementById('maze-mode-area');
+  const mazeScoreDisplay = document.getElementById('maze-score-display');
+  const mazeLevelDisplay = document.getElementById('maze-level-display');
+  const mazeLivesDisplay = document.getElementById('maze-lives-display');
+  const mazeThirstBar = document.getElementById('maze-thirst-bar');
+  const mazeFliesCounter = document.getElementById('maze-flies-counter');
+  const mazeMoveCounter = document.getElementById('maze-move-counter');
+
+  // --- Maze Level Config ---
+  function getMazeLevelConfig(lvl) {
+    if (lvl <= 2) return { nodeCount: 5, fliesNeeded: 2, hasRedFly: false, hasBee: false, hasCycles: false };
+    if (lvl <= 5) return { nodeCount: 7, fliesNeeded: 3, hasRedFly: true, hasBee: false, hasCycles: false };
+    if (lvl <= 8) return { nodeCount: 10, fliesNeeded: 4, hasRedFly: true, hasBee: false, hasCycles: true };
+    return { nodeCount: 12, fliesNeeded: 5, hasRedFly: true, hasBee: true, hasCycles: true };
+  }
+
+  // --- Seeded RNG for maze levels ---
+  function mazeRandom() {
+    if (mazeRng) return mazeRng();
+    return Math.random();
+  }
+
+  // --- Graph Generation ---
+  function generateMazeGraph(config, seed) {
+    mazeRng = mulberry32(seed);
+
+    var nodes = [];
+    var edges = [];
+    var nc = config.nodeCount;
+
+    // Layout: place nodes in a nice spread within viewBox 400x600
+    // Use a force-like layout: random positions, then push apart
+    var positions = [];
+    var padX = 60, padY = 80;
+    var w = 400 - padX * 2, h = 600 - padY * 2;
+
+    for (var i = 0; i < nc; i++) {
+      positions.push({
+        x: padX + mazeRandom() * w,
+        y: padY + mazeRandom() * h
+      });
+    }
+
+    // Push nodes apart (simple repulsion, 10 iterations)
+    for (var iter = 0; iter < 15; iter++) {
+      for (var a = 0; a < nc; a++) {
+        for (var b = a + 1; b < nc; b++) {
+          var dx = positions[b].x - positions[a].x;
+          var dy = positions[b].y - positions[a].y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          var minDist = 75;
+          if (dist < minDist && dist > 0) {
+            var push = (minDist - dist) / 2;
+            var nx = (dx / dist) * push;
+            var ny = (dy / dist) * push;
+            positions[a].x -= nx; positions[a].y -= ny;
+            positions[b].x += nx; positions[b].y += ny;
+          }
+        }
+        // Clamp to bounds
+        positions[a].x = Math.max(padX, Math.min(400 - padX, positions[a].x));
+        positions[a].y = Math.max(padY, Math.min(600 - padY, positions[a].y));
+      }
+    }
+
+    // Build random spanning tree from node 0 (start)
+    var connected = [0];
+    var unconnected = [];
+    for (var i = 1; i < nc; i++) unconnected.push(i);
+
+    // Shuffle unconnected using seeded RNG
+    for (var i = unconnected.length - 1; i > 0; i--) {
+      var j = Math.floor(mazeRandom() * (i + 1));
+      var tmp = unconnected[i]; unconnected[i] = unconnected[j]; unconnected[j] = tmp;
+    }
+
+    // Connect each unconnected node to closest connected node (Prim-like)
+    while (unconnected.length > 0) {
+      var bestDist = Infinity, bestU = -1, bestC = -1;
+      for (var ui = 0; ui < unconnected.length; ui++) {
+        var u = unconnected[ui];
+        for (var ci = 0; ci < connected.length; ci++) {
+          var c = connected[ci];
+          var dx = positions[u].x - positions[c].x;
+          var dy = positions[u].y - positions[c].y;
+          var d = Math.sqrt(dx * dx + dy * dy);
+          // Add some randomness to avoid straight-line trees
+          d += mazeRandom() * 40;
+          if (d < bestDist) { bestDist = d; bestU = ui; bestC = c; }
+        }
+      }
+      var nodeIdx = unconnected.splice(bestU, 1)[0];
+      connected.push(nodeIdx);
+      edges.push([bestC, nodeIdx]);
+    }
+
+    // Add extra edges for cycles if allowed
+    if (config.hasCycles) {
+      var extraEdges = Math.floor(mazeRandom() * 2) + 1;
+      for (var e = 0; e < extraEdges; e++) {
+        var a = Math.floor(mazeRandom() * nc);
+        var b = Math.floor(mazeRandom() * nc);
+        if (a !== b && !hasEdge(edges, a, b)) {
+          // Only add if distance is reasonable
+          var dx = positions[a].x - positions[b].x;
+          var dy = positions[a].y - positions[b].y;
+          if (Math.sqrt(dx * dx + dy * dy) < 200) {
+            edges.push([a, b]);
+          }
+        }
+      }
+    }
+
+    // Find exit: node at max BFS depth from start
+    var depths = bfsDepths(nc, edges, 0);
+    var maxDepth = 0, exitNode = nc - 1;
+    for (var i = 1; i < nc; i++) {
+      if (depths[i] > maxDepth) { maxDepth = depths[i]; exitNode = i; }
+    }
+
+    // Create node objects
+    for (var i = 0; i < nc; i++) {
+      nodes.push({
+        x: Math.round(positions[i].x),
+        y: Math.round(positions[i].y),
+        type: i === 0 ? 'start' : (i === exitNode ? 'exit' : 'empty'),
+        flyType: null, // set below
+        hasFly: false,
+        hasWater: false
+      });
+    }
+
+    // Place flies on non-start, non-exit nodes
+    var availableNodes = [];
+    for (var i = 0; i < nc; i++) {
+      if (nodes[i].type !== 'start' && nodes[i].type !== 'exit') availableNodes.push(i);
+    }
+    // Shuffle available
+    for (var i = availableNodes.length - 1; i > 0; i--) {
+      var j = Math.floor(mazeRandom() * (i + 1));
+      var tmp = availableNodes[i]; availableNodes[i] = availableNodes[j]; availableNodes[j] = tmp;
+    }
+
+    // Place required flies + extras
+    var totalFlies = config.fliesNeeded + Math.floor(mazeRandom() * 2);
+    var flyIdx = 0;
+    for (var i = 0; i < Math.min(totalFlies, availableNodes.length); i++) {
+      var ni = availableNodes[flyIdx++];
+      nodes[ni].hasFly = true;
+      // Determine fly type
+      if (config.hasRedFly && i === totalFlies - 1) {
+        nodes[ni].flyType = 'red';
+      } else if (config.hasBee && i === totalFlies - 2 && totalFlies >= 3) {
+        nodes[ni].flyType = 'bee';
+      } else if (mazeRandom() < 0.15) {
+        nodes[ni].flyType = 'golden';
+      } else {
+        nodes[ni].flyType = 'normal';
+      }
+    }
+
+    // Place water nodes (1-2)
+    var waterCount = Math.min(1 + Math.floor(mazeRandom() * 2), availableNodes.length - flyIdx);
+    for (var i = 0; i < waterCount && flyIdx < availableNodes.length; i++) {
+      nodes[availableNodes[flyIdx++]].hasWater = true;
+    }
+
+    return { nodes: nodes, edges: edges, exitNode: exitNode };
+  }
+
+  function hasEdge(edges, a, b) {
+    for (var i = 0; i < edges.length; i++) {
+      if ((edges[i][0] === a && edges[i][1] === b) || (edges[i][0] === b && edges[i][1] === a)) return true;
+    }
+    return false;
+  }
+
+  function bfsDepths(nc, edges, start) {
+    var depths = new Array(nc).fill(-1);
+    depths[start] = 0;
+    var queue = [start];
+    while (queue.length > 0) {
+      var curr = queue.shift();
+      var neighbors = getNeighbors(nc, edges, curr);
+      for (var i = 0; i < neighbors.length; i++) {
+        if (depths[neighbors[i]] === -1) {
+          depths[neighbors[i]] = depths[curr] + 1;
+          queue.push(neighbors[i]);
+        }
+      }
+    }
+    return depths;
+  }
+
+  function getNeighbors(nc, edges, node) {
+    var result = [];
+    for (var i = 0; i < edges.length; i++) {
+      if (edges[i][0] === node) result.push(edges[i][1]);
+      else if (edges[i][1] === node) result.push(edges[i][0]);
+    }
+    return result;
+  }
+
+  // --- BFS Pathfinding ---
+  function bfsPath(graph, from, to) {
+    var nc = graph.nodes.length;
+    var visited = new Array(nc).fill(false);
+    var parent = new Array(nc).fill(-1);
+    visited[from] = true;
+    var queue = [from];
+    while (queue.length > 0) {
+      var curr = queue.shift();
+      if (curr === to) break;
+      var neighbors = getNeighbors(nc, graph.edges, curr);
+      for (var i = 0; i < neighbors.length; i++) {
+        if (!visited[neighbors[i]]) {
+          visited[neighbors[i]] = true;
+          parent[neighbors[i]] = curr;
+          queue.push(neighbors[i]);
+        }
+      }
+    }
+    if (!visited[to]) return null; // no path
+    // Reconstruct path
+    var path = [];
+    var curr = to;
+    while (curr !== from) {
+      path.unshift(curr);
+      curr = parent[curr];
+    }
+    return path; // does NOT include 'from'
+  }
+
+  // Compute minimum moves to collect all flies then reach exit
+  function computeMinMoves(graph) {
+    // For small graphs, BFS to each fly in order isn't optimal,
+    // but a simple estimate: BFS from start, visit each fly node, then exit
+    // We'll use sum of BFS distances as lower bound
+    var flyNodes = [];
+    for (var i = 0; i < graph.nodes.length; i++) {
+      if (graph.nodes[i].hasFly) flyNodes.push(i);
+    }
+    if (flyNodes.length === 0) {
+      var p = bfsPath(graph, 0, graph.exitNode);
+      return p ? p.length : 999;
+    }
+    // Simple greedy: from start, go to closest fly, repeat, then exit
+    var visited = [];
+    var curr = 0;
+    var totalMoves = 0;
+    var remaining = flyNodes.slice();
+    while (remaining.length > 0) {
+      var bestDist = Infinity, bestIdx = 0;
+      for (var i = 0; i < remaining.length; i++) {
+        var p = bfsPath(graph, curr, remaining[i]);
+        if (p && p.length < bestDist) { bestDist = p.length; bestIdx = i; }
+      }
+      totalMoves += bestDist;
+      curr = remaining.splice(bestIdx, 1)[0];
+    }
+    var pExit = bfsPath(graph, curr, graph.exitNode);
+    if (pExit) totalMoves += pExit.length;
+    return totalMoves;
+  }
+
+  // --- Render Maze ---
+  function renderMaze() {
+    if (!mazeGraph || !mazeSvg) return;
+    mazeSvg.innerHTML = '';
+
+    var g = mazeGraph;
+
+    // Draw edges (branches)
+    for (var i = 0; i < g.edges.length; i++) {
+      var e = g.edges[i];
+      var n1 = g.nodes[e[0]], n2 = g.nodes[e[1]];
+      // Quadratic bezier with slight curve
+      var mx = (n1.x + n2.x) / 2;
+      var my = (n1.y + n2.y) / 2;
+      var dx = n2.x - n1.x, dy = n2.y - n1.y;
+      // Perpendicular offset for curve
+      var off = 12 + (mazeRandom ? mazeRandom() * 8 : Math.random() * 8);
+      var cx = mx + (-dy / Math.sqrt(dx * dx + dy * dy + 0.01)) * off;
+      var cy = my + (dx / Math.sqrt(dx * dx + dy * dy + 0.01)) * off;
+
+      var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', 'M' + n1.x + ' ' + n1.y + ' Q' + Math.round(cx) + ' ' + Math.round(cy) + ' ' + n2.x + ' ' + n2.y);
+      path.setAttribute('class', 'maze-branch-line');
+      path.dataset.edge = i;
+      mazeSvg.appendChild(path);
+    }
+
+    // Draw nodes
+    for (var i = 0; i < g.nodes.length; i++) {
+      var node = g.nodes[i];
+      var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', node.x);
+      circle.setAttribute('cy', node.y);
+      circle.setAttribute('r', 28);
+      circle.dataset.nodeIdx = i;
+
+      var cls = 'maze-node';
+      if (node.type === 'start') cls += ' maze-node-start';
+      else if (node.type === 'exit') {
+        cls += ' maze-node-exit';
+        if (mazeFliesCaught < mazeFliesNeeded) cls += ' locked';
+        else cls += ' maze-node-exit-glow';
+      }
+      else if (node.hasWater) cls += ' maze-node-water';
+      circle.setAttribute('class', cls);
+
+      circle.addEventListener('click', (function(idx) {
+        return function() { onMazeNodeClick(idx); };
+      })(i));
+
+      mazeSvg.appendChild(circle);
+
+      // Node icons
+      if (node.type === 'exit') {
+        var txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        txt.setAttribute('x', node.x);
+        txt.setAttribute('y', node.y + 7);
+        txt.setAttribute('text-anchor', 'middle');
+        txt.setAttribute('font-size', '22');
+        txt.setAttribute('pointer-events', 'none');
+        txt.textContent = mazeFliesCaught >= mazeFliesNeeded ? '🌸' : '🔒';
+        mazeSvg.appendChild(txt);
+      }
+
+      // Water icon
+      if (node.hasWater) {
+        var wt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        wt.setAttribute('x', node.x);
+        wt.setAttribute('y', node.y + 6);
+        wt.setAttribute('text-anchor', 'middle');
+        wt.setAttribute('class', 'maze-water-icon');
+        wt.textContent = '💧';
+        mazeSvg.appendChild(wt);
+      }
+
+      // Fly icon + buzz ring
+      if (node.hasFly) {
+        var buzzCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        buzzCircle.setAttribute('cx', node.x);
+        buzzCircle.setAttribute('cy', node.y);
+        buzzCircle.setAttribute('r', 24);
+        buzzCircle.setAttribute('class', 'maze-fly-buzz');
+        mazeSvg.appendChild(buzzCircle);
+
+        var ft = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        ft.setAttribute('x', node.x);
+        ft.setAttribute('y', node.y - 22);
+        ft.setAttribute('text-anchor', 'middle');
+        ft.setAttribute('class', 'maze-fly-icon maze-fly-wobble');
+        if (node.flyType === 'golden') ft.textContent = '⭐';
+        else if (node.flyType === 'red') ft.textContent = '🔴';
+        else if (node.flyType === 'bee') ft.textContent = '🐝';
+        else ft.textContent = '🪰';
+        ft.dataset.flyNode = i;
+        mazeSvg.appendChild(ft);
+      }
+    }
+
+    // Draw chameleon
+    var chamNode = g.nodes[mazeChameleonNode];
+    var chamEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    chamEl.setAttribute('id', 'maze-chameleon');
+    chamEl.setAttribute('x', chamNode.x);
+    chamEl.setAttribute('y', chamNode.y + 10);
+    chamEl.setAttribute('text-anchor', 'middle');
+    chamEl.setAttribute('class', 'maze-chameleon');
+    chamEl.textContent = '🦎';
+    mazeSvg.appendChild(chamEl);
+  }
+
+  // --- Node Click Handler ---
+  function onMazeNodeClick(targetIdx) {
+    if (!mazeActive || mazeWalking) return;
+    if (targetIdx === mazeChameleonNode) return;
+
+    var g = mazeGraph;
+    var neighbors = getNeighbors(g.nodes.length, g.edges, mazeChameleonNode);
+
+    // Check if target is a directly connected node
+    if (neighbors.indexOf(targetIdx) !== -1) {
+      // Direct single step
+      walkToNode(targetIdx);
+    } else if (g.nodes[targetIdx].hasFly) {
+      // Fly node: auto-pathfind
+      var path = bfsPath(g, mazeChameleonNode, targetIdx);
+      if (path && path.length > 0) {
+        walkPath(path);
+      }
+    }
+    // Otherwise: not reachable in one step and not a fly node → ignore
+  }
+
+  // --- Walk along path (multi-step) ---
+  function walkPath(path) {
+    if (path.length === 0) return;
+    mazeWalking = true;
+    mazeWalkQueue = path.slice(1); // queue rest after first step
+    walkToNode(path[0]);
+  }
+
+  // --- Walk to single adjacent node ---
+  function walkToNode(targetIdx) {
+    mazeWalking = true;
+    var g = mazeGraph;
+    var fromNode = g.nodes[mazeChameleonNode];
+    var toNode = g.nodes[targetIdx];
+
+    // Play rustle sound
+    playMazeWalkSound();
+
+    // Animate chameleon sliding to target node
+    var chamEl = document.getElementById('maze-chameleon');
+    if (!chamEl) { arriveAtNode(targetIdx); return; }
+
+    // Check color-match speed bonus
+    var branchColor = '#5C4033';
+    var skinColors = { green: '#5cb85c', purple: '#9b59b6', blue: '#3498db', orange: '#e67e22' };
+    var speedMult = 1;
+    if (skinColors[currentSkin] && currentSkin === 'green') {
+      // Branches are brown - green doesn't match. This is a cosmetic feature.
+    }
+
+    var dur = 300 / speedMult;
+    var startX = parseFloat(chamEl.getAttribute('x'));
+    var startY = parseFloat(chamEl.getAttribute('y'));
+    var endX = toNode.x;
+    var endY = toNode.y + 10;
+
+    var startTime = performance.now();
+    function animWalk(now) {
+      var t = Math.min(1, (now - startTime) / dur);
+      // Ease in-out
+      t = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      chamEl.setAttribute('x', startX + (endX - startX) * t);
+      chamEl.setAttribute('y', startY + (endY - startY) * t);
+      if (t < 1) {
+        requestAnimationFrame(animWalk);
+      } else {
+        arriveAtNode(targetIdx);
+      }
+    }
+    requestAnimationFrame(animWalk);
+  }
+
+  // --- Arrive at node ---
+  function arriveAtNode(nodeIdx) {
+    mazeChameleonNode = nodeIdx;
+    mazeMoves++;
+    updateMazeHUD();
+
+    var g = mazeGraph;
+    var node = g.nodes[nodeIdx];
+
+    // Thirst drain: every 5 moves, -15%
+    if (mazeMoves % 5 === 0) {
+      var drainMult = 1;
+      var diff = DIFFICULTIES[difficulty] || DIFFICULTIES[2];
+      if (difficulty === 1) drainMult = 0.6;
+      else if (difficulty === 3) drainMult = 1.5;
+      mazeThirst = Math.max(0, mazeThirst - 15 * drainMult);
+      updateMazeHUD();
+      if (mazeThirst <= 0) {
+        mazeLives--;
+        updateMazeHUD();
+        if (mazeLives <= 0) {
+          endMazeGame('Dried out in the maze! 🏜️');
+          return;
+        }
+        mazeThirst = 30; // partial refill on life loss
+        showMazeBanner('💀 Lost a life! Thirst depleted');
+      }
+    }
+
+    // Water node
+    if (node.hasWater) {
+      mazeThirst = Math.min(100, mazeThirst + 30);
+      node.hasWater = false;
+      playSound('catch'); // reuse catch sound for water
+      updateMazeHUD();
+    }
+
+    // Fly node
+    if (node.hasFly) {
+      catchMazeFly(nodeIdx);
+    }
+
+    // Exit node
+    if (node.type === 'exit' && mazeFliesCaught >= mazeFliesNeeded) {
+      completeMazeLevel();
+      return;
+    }
+
+    // Continue walk queue
+    if (mazeWalkQueue && mazeWalkQueue.length > 0) {
+      // Check if we should stop (e.g., we caught a fly and path is done)
+      var next = mazeWalkQueue.shift();
+      setTimeout(function() {
+        if (mazeActive) walkToNode(next);
+      }, 50);
+    } else {
+      mazeWalking = false;
+      mazeWalkQueue = null;
+    }
+  }
+
+  // --- Catch Fly ---
+  function catchMazeFly(nodeIdx) {
+    var node = mazeGraph.nodes[nodeIdx];
+    if (!node.hasFly) return;
+
+    var ft = node.flyType || 'normal';
+    node.hasFly = false;
+    node.flyType = null;
+
+    var basePoints = SCORE_PER_CATCH + (mazeLevel - 1) * 2;
+    var pointsMult = 1;
+
+    if (ft === 'golden') {
+      pointsMult = 3;
+      playSound('golden');
+      incrementStat('goldenTotal', 1);
+    } else if (ft === 'red') {
+      pointsMult = 2;
+      playSound('catch');
+    } else if (ft === 'bee') {
+      pointsMult = 5;
+      playSound('bee');
+      mazeLives--;
+      mazeThirst = Math.max(0, mazeThirst - 20);
+      incrementStat('beesTotal', 1);
+      updateMazeHUD();
+      if (mazeLives <= 0) {
+        endMazeGame('Stung too many times! 🐝');
+        return;
+      }
+      showMazeBanner('🐝 Ouch! Bee sting! Lost a life');
+    } else {
+      playSound('catch');
+    }
+
+    var totalPoints = Math.round(basePoints * pointsMult);
+    mazeScore += totalPoints;
+    mazeFliesCaught++;
+
+    // Check if exit should unlock
+    if (mazeFliesCaught >= mazeFliesNeeded) {
+      showMazeBanner('🌸 Exit unlocked!');
+    }
+
+    incrementStat('mazeTotalCatches', 1);
+
+    checkAchievements({
+      score: mazeScore, catches: mazeFliesCaught, combo: 0,
+      poos: 0, level: mazeLevel, mode: 'maze', difficulty: difficulty, flyType: ft
+    });
+
+    updateMazeHUD();
+    renderMaze();
+  }
+
+  // --- Complete Level ---
+  function completeMazeLevel() {
+    mazeWalking = false;
+    mazeWalkQueue = null;
+
+    // Calculate bonuses
+    var elapsed = (performance.now() - mazeLevelStartTime) / 1000;
+    var efficiencyBonus = Math.max(0, (mazeMinMoves + 5 - mazeMoves)) * 5;
+    var speedBonus = elapsed < 30 ? 50 : 0;
+    mazeScore += efficiencyBonus + speedBonus;
+
+    mazeTotalLevelsCompleted++;
+    incrementStat('mazeLevelsCompleted', 1);
+
+    // Achievements
+    if (mazeLevel === 1) unlockAchievement('tree_hugger');
+    var stats = getStats();
+    if ((stats.mazeLevelsCompleted || 0) >= 10) unlockAchievement('pathfinder');
+    if (elapsed < 20) unlockAchievement('speed_runner');
+    if (mazeMoves <= mazeMinMoves) unlockAchievement('perfect_path');
+
+    checkAchievements({
+      score: mazeScore, catches: mazeFliesCaught, combo: 0,
+      poos: 0, level: mazeLevel, mode: 'maze', difficulty: difficulty
+    });
+
+    var bonusText = '';
+    if (efficiencyBonus > 0) bonusText += ' +' + efficiencyBonus + ' efficiency';
+    if (speedBonus > 0) bonusText += ' +' + speedBonus + ' speed';
+    showMazeBanner('🎉 Level ' + mazeLevel + ' Complete!' + bonusText);
+
+    // Next level after brief delay
+    setTimeout(function() {
+      if (!mazeActive) return;
+      mazeLevel++;
+      loadMazeLevel();
+    }, 1800);
+  }
+
+  // --- Load Level ---
+  function loadMazeLevel() {
+    var config = getMazeLevelConfig(mazeLevel);
+    mazeFliesNeeded = config.fliesNeeded;
+    mazeFliesCaught = 0;
+    mazeMoves = 0;
+    mazeLevelStartTime = performance.now();
+    mazeRedFlyTimer = 0;
+
+    // Difficulty affects lives and thirst
+    var diff = DIFFICULTIES[difficulty] || DIFFICULTIES[2];
+    if (mazeLevel === 1) {
+      if (difficulty === 1) mazeLives = 5;
+      else if (difficulty === 3) mazeLives = 2;
+      else mazeLives = 3;
+      mazeThirst = 100;
+    }
+
+    var seed = mazeLevel * 1337 + 42;
+    mazeGraph = generateMazeGraph(config, seed);
+    mazeChameleonNode = 0;
+    mazeMinMoves = computeMinMoves(mazeGraph);
+    mazeWalking = false;
+    mazeWalkQueue = null;
+
+    updateMazeHUD();
+    renderMaze();
+  }
+
+  // --- Red Fly Movement ---
+  function moveRedFlies(dt) {
+    if (!mazeGraph) return;
+    mazeRedFlyTimer += dt;
+    var interval = 3; // seconds
+    if (difficulty === 3) interval = 2;
+    if (difficulty === 1) interval = 4;
+
+    if (mazeRedFlyTimer >= interval) {
+      mazeRedFlyTimer = 0;
+      var g = mazeGraph;
+      for (var i = 0; i < g.nodes.length; i++) {
+        if (g.nodes[i].hasFly && g.nodes[i].flyType === 'red') {
+          // Move to random adjacent empty node
+          var neighbors = getNeighbors(g.nodes.length, g.edges, i);
+          var validTargets = [];
+          for (var j = 0; j < neighbors.length; j++) {
+            var n = neighbors[j];
+            if (!g.nodes[n].hasFly && g.nodes[n].type !== 'start' && n !== mazeChameleonNode) {
+              validTargets.push(n);
+            }
+          }
+          if (validTargets.length > 0) {
+            var target = validTargets[Math.floor(mazeRandom() * validTargets.length)];
+            g.nodes[target].hasFly = true;
+            g.nodes[target].flyType = 'red';
+            g.nodes[i].hasFly = false;
+            g.nodes[i].flyType = null;
+            renderMaze();
+          }
+          break; // Only move one red fly per tick
+        }
+      }
+    }
+  }
+
+  // --- Maze Game Loop ---
+  function mazeGameLoop(now) {
+    if (!mazeActive) return;
+    if (gamePaused) { mazeRafId = requestAnimationFrame(mazeGameLoop); return; }
+
+    var dt = Math.min((now - mazeLastTime) / 1000, 0.1);
+    mazeLastTime = now;
+
+    moveRedFlies(dt);
+
+    mazeRafId = requestAnimationFrame(mazeGameLoop);
+  }
+
+  // --- Start Maze Game ---
+  function startMazeGame() {
+    initAudio();
+    mazeActive = true;
+    mazeScore = 0;
+    mazeLevel = 1;
+    mazeTotalLevelsCompleted = 0;
+
+    startScreen.style.display = 'none';
+    gameoverScreen.style.display = 'none';
+    document.getElementById('hud').style.display = 'none';
+    document.getElementById('car-mode-area').style.display = 'none';
+    mazeModeArea.style.display = 'block';
+    showPauseBtn();
+
+    loadMazeLevel();
+
+    mazeLastTime = performance.now();
+    mazeRafId = requestAnimationFrame(mazeGameLoop);
+
+    incrementStat('mazeGamesPlayed', 1);
+  }
+
+  // --- End Maze Game ---
+  function endMazeGame(reason, silent) {
+    mazeActive = false;
+    mazeWalking = false;
+    mazeWalkQueue = null;
+    cancelAnimationFrame(mazeRafId);
+    hidePauseBtn();
+    mazeModeArea.style.display = 'none';
+
+    if (silent) return;
+
+    playSound('gameover');
+
+    var beatHighScore = mazeScore > mazeHighScore && mazeHighScore > 0;
+    if (mazeScore > mazeHighScore) {
+      mazeHighScore = mazeScore;
+      localStorage.setItem('chameleon_maze_hs', mazeHighScore);
+    }
+    if (beatHighScore) { burstConfetti(); triggerVictoryDance(); }
+
+    gameoverMsg.textContent = reason || 'The maze got the best of you... 🌿';
+    finalScoreEl.textContent = mazeScore;
+    finalLevelEl.textContent = 'Reached Level ' + mazeLevel + ' 🌿';
+    highScoreEl.textContent = mazeHighScore > 0 ? '🏆 Best: ' + mazeHighScore : '';
+
+    // Simple name entry / leaderboard (reuse existing UI)
+    nameEntrySection.style.display = 'none';
+    gameoverScreen.style.display = 'flex';
+  }
+
+  // --- HUD Update ---
+  function updateMazeHUD() {
+    if (mazeScoreDisplay) mazeScoreDisplay.textContent = mazeScore;
+    if (mazeLevelDisplay) mazeLevelDisplay.textContent = mazeLevel;
+    if (mazeLivesDisplay) {
+      var hearts = '';
+      for (var i = 0; i < mazeLives; i++) hearts += '❤️';
+      mazeLivesDisplay.textContent = hearts || '💀';
+    }
+    if (mazeThirstBar) mazeThirstBar.style.width = Math.max(0, mazeThirst) + '%';
+    if (mazeFliesCounter) mazeFliesCounter.textContent = '🪰 ' + mazeFliesCaught + '/' + mazeFliesNeeded;
+    if (mazeMoveCounter) mazeMoveCounter.textContent = 'Moves: ' + mazeMoves;
+  }
+
+  // --- Banner ---
+  function showMazeBanner(text) {
+    var banner = document.createElement('div');
+    banner.className = 'maze-level-banner';
+    banner.textContent = text;
+    mazeModeArea.appendChild(banner);
+    setTimeout(function() { banner.remove(); }, 1500);
+  }
+
+  // --- Maze Walk Sound (rustle) ---
+  function playMazeWalkSound() {
+    if (isMuted || !audioCtx) return;
+    try {
+      var now = audioCtx.currentTime;
+      // Short noise burst for rustling
+      var bufferSize = audioCtx.sampleRate * 0.06;
+      var buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      var data = buffer.getChannelData(0);
+      for (var i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * 0.08;
+      }
+      var source = audioCtx.createBufferSource();
+      source.buffer = buffer;
+      var gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.linearRampToValueAtTime(0, now + 0.06);
+      var filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 2000;
+      filter.Q.value = 0.5;
+      source.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      source.start(now);
+      source.stop(now + 0.06);
+    } catch(e) {}
+  }
+
+  // --- End V13: Branch Maze Mode -----------------------------------------
 
 })();
 </script>

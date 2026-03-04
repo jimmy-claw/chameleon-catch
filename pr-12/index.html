@@ -1525,7 +1525,7 @@
     inset: 0;
     overflow: hidden;
     z-index: 15;
-    background: linear-gradient(180deg, #87CEEB 0%, #87CEEB 15%, #228B22 15%, #228B22 100%);
+    background: linear-gradient(180deg, #87CEEB 0%, #87CEEB 80%, #228B22 80%, #228B22 100%);
     display: none;
   }
   #runner-ground {
@@ -1533,12 +1533,12 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 85%;
+    height: 20%;
     background: linear-gradient(180deg, #2d8a4e 0%, #1a6b35 100%);
   }
   #runner-ground-line {
     position: absolute;
-    bottom: 85%;
+    bottom: 20%;
     left: 0;
     right: 0;
     height: 4px;
@@ -1548,7 +1548,7 @@
   /* Scrolling forest background */
   #runner-forest {
     position: absolute;
-    bottom: 85%;
+    bottom: 20%;
     left: 0;
     width: 200%;
     height: 100px;
@@ -1566,7 +1566,7 @@
   /* Scrolling grass */
   #runner-grass {
     position: absolute;
-    bottom: 80%;
+    bottom: 15%;
     left: 0;
     width: 200%;
     height: 40px;
@@ -1616,7 +1616,7 @@
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
   }
   .runner-obstacle.ground-snake {
-    bottom: 83%;
+    bottom: 18%;
     font-size: 2.2rem;
     transform: translateY(50%);
   }
@@ -5545,7 +5545,7 @@
 
     // Calculate ground position NOW that area is visible
     var rAreaH = runnerArea.offsetHeight || window.innerHeight || 600;
-    runnerGroundY = Math.round(rAreaH * 0.85);
+    runnerGroundY = Math.round(rAreaH * 0.20);
 
     // Position chameleon on ground
     runnerChameleon.classList.remove('hit', 'jumping', 'ducking');

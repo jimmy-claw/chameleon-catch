@@ -1586,16 +1586,15 @@
   #runner-chameleon {
     position: absolute;
     left: 15%;
-    bottom: 60%;
+    bottom: 0;
     font-size: 2.8rem;
     z-index: 10;
-    transition: bottom 0.05s linear;
     line-height: 1;
     transform: translateY(50%);
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+    will-change: bottom;
   }
   #runner-chameleon.jumping {
-    transition: none;
   }
   #runner-chameleon.ducking {
     transform: translateY(50%) scaleY(0.5) scaleX(1.2);
@@ -1617,7 +1616,7 @@
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
   }
   .runner-obstacle.ground-snake {
-    bottom: 60%;
+    bottom: 28%;
     font-size: 2.2rem;
     transform: translateY(50%);
   }
@@ -5546,7 +5545,7 @@
 
     // Calculate ground position NOW that area is visible
     var rAreaH = runnerArea.offsetHeight || window.innerHeight || 600;
-    runnerGroundY = Math.round(rAreaH * 0.60);
+    runnerGroundY = Math.round(rAreaH * 0.28);
 
     // Position chameleon on ground
     runnerChameleon.classList.remove('hit', 'jumping', 'ducking');

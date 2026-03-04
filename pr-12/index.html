@@ -1550,37 +1550,41 @@
     position: absolute;
     bottom: 20%;
     left: 0;
-    width: 200%;
+    width: 400%;
     height: 100px;
     font-size: 3rem;
     line-height: 100px;
     white-space: nowrap;
     z-index: 1;
-    animation: runner-scroll-forest 8s linear infinite;
+    animation: runner-scroll-forest 16s linear infinite;
     pointer-events: none;
+    will-change: transform;
+    backface-visibility: hidden;
   }
   @keyframes runner-scroll-forest {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+    0%   { transform: translateX(0) translateZ(0); }
+    100% { transform: translateX(-50%) translateZ(0); }
   }
   /* Scrolling grass */
   #runner-grass {
     position: absolute;
     bottom: 15%;
     left: 0;
-    width: 200%;
+    width: 400%;
     height: 40px;
     font-size: 1.5rem;
     line-height: 40px;
     white-space: nowrap;
     z-index: 3;
-    animation: runner-scroll-grass 4s linear infinite;
+    animation: runner-scroll-grass 8s linear infinite;
     pointer-events: none;
     opacity: 0.7;
+    will-change: transform;
+    backface-visibility: hidden;
   }
   @keyframes runner-scroll-grass {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+    0%   { transform: translateX(0) translateZ(0); }
+    100% { transform: translateX(-50%) translateZ(0); }
   }
   /* Chameleon runner */
   #runner-chameleon {
@@ -5248,8 +5252,8 @@
   // Populate scrolling forest/grass
   var treeLine = '🌳🌲🌿🌳🌴🌲🌳🌿🌲🌴🌳🌲🌿🌳🌴🌲';
   var grassLine = '🌿🍃🌱🌿🍃🌱🌿🍃🌱🌿🍃🌱🌿🍃🌱🌿🍃🌱🌿🍃🌱🌿🍃🌱';
-  if (runnerForest) runnerForest.textContent = treeLine + treeLine;
-  if (runnerGrass) runnerGrass.textContent = grassLine + grassLine;
+  if (runnerForest) runnerForest.textContent = treeLine + treeLine + treeLine + treeLine;
+  if (runnerGrass) runnerGrass.textContent = grassLine + grassLine + grassLine + grassLine;
 
   // ─── Runner Leaderboard ─────────────────────────────────────────────
   function getRunnerLeaderboard() {

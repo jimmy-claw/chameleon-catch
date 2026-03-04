@@ -1607,7 +1607,7 @@
     z-index: 10;
     line-height: 1;
     will-change: transform;
-    transition: bottom 0.18s ease-out;
+    transition: transform 0.18s ease-out;
   }
   #runner-chameleon.mid-air {
     transition: bottom 0.18s ease-out;
@@ -5400,8 +5400,9 @@
 
   // ─── Position chameleon on current level ───────────────────────────
   function positionChameleon() {
-    runnerChameleon.style.transform = '';
-    runnerChameleon.style.bottom = runnerPlatformY[runnerCurrentLevel] + 'px';
+    // Use translateY (negative = up) so transform is the single source of truth
+    var targetY = -(runnerPlatformY[runnerCurrentLevel]);
+    runnerChameleon.style.transform = 'translateY(' + targetY + 'px)';
   }
 
   // ─── Show/hide platforms based on game level ───────────────────────
@@ -5579,11 +5580,12 @@
 
     // Position chameleon on ground (level 0) — disable transition for initial placement
     runnerChameleon.classList.remove('hit', 'mid-air');
-    runnerChameleon.style.transform = '';
+    runnerChameleon.style.bottom = '0px';
     runnerChameleon.style.transition = 'none';
-    positionChameleon();
-    void runnerChameleon.offsetWidth; // force reflow
+    runnerChameleon.style.transform = 'translateY(0)';
+    void runnerChameleon.offsetWidth;
     runnerChameleon.style.transition = '';
+    positionChameleon();
 
     runnerActive = true;
     runnerLastTime = performance.now();

@@ -235,11 +235,13 @@
     position: absolute;
     top: 12px; left: 0; right: 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 0 16px;
+    padding: 0 8px;
+    gap: 6px;
     z-index: 20;
     pointer-events: none;
+    overflow: hidden;
   }
   .hud-box {
     background: var(--score-bg);
@@ -252,6 +254,9 @@
     display: flex;
     gap: 6px;
     align-items: center;
+    flex-shrink: 1;
+    min-width: 0;
+    white-space: nowrap;
   }
   .hud-box .label { opacity: 0.8; font-size: 0.85rem; }
   .hud-box .value { color: var(--gold); font-size: 1.3rem; }
@@ -283,6 +288,12 @@
     z-index: 50;
     background: rgba(20,60,35,0.88);
     backdrop-filter: blur(6px);
+  }
+  #start-screen {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+    padding: 16px 0;
   }
 
   .screen-card {
@@ -607,44 +618,63 @@
 
   /* ===== MUTE BUTTON ===== */
   #mute-btn {
-    position: absolute;
-    top: 12px;
-    right: 12px;
     z-index: 55;
-    background: rgba(0,0,0,0.35);
+    background: rgba(0,0,0,0.3);
     backdrop-filter: blur(4px);
     border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 1.3rem;
+    border-radius: 10px;
+    padding: 4px 6px;
+    font-size: 1.1rem;
     cursor: pointer;
     color: #fff;
     touch-action: manipulation;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
+    min-width: 32px;
+    pointer-events: auto;
+  }
+  /* When inside a HUD bar, flow inline */
+  #hud > #mute-btn,
+  #car-hud > #mute-btn,
+  #maze-hud > #mute-btn,
+  #runner-hud > #mute-btn,
+  #hud > #pause-btn,
+  #car-hud > #pause-btn,
+  #maze-hud > #pause-btn,
+  #runner-hud > #pause-btn {
+    position: static;
+  }
+  /* When floating (start screen / game-over) */
+  #mute-btn.floating {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    padding: 0;
   }
 
   /* ===== PAUSE BUTTON ===== */
   #pause-btn {
-    position: absolute;
-    top: 12px;
-    left: 12px;
     z-index: 55;
-    background: rgba(0,0,0,0.35);
+    background: rgba(0,0,0,0.3);
     backdrop-filter: blur(4px);
     border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 1.3rem;
+    border-radius: 10px;
+    padding: 4px 6px;
+    font-size: 1.1rem;
     cursor: pointer;
     color: #fff;
     touch-action: manipulation;
     display: none;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
+    min-width: 32px;
+    pointer-events: auto;
   }
 
   /* ===== PAUSE OVERLAY ===== */
@@ -798,6 +828,24 @@
   @media (max-width: 480px) {
     #branch { bottom: 18%; }
     #chameleon { bottom: calc(18% + 20px); }
+  }
+  @media (max-width: 420px) {
+    #hud .hud-box { padding: 4px 5px; font-size: 0.7rem; }
+    #hud .hud-box .value { font-size: 0.85rem; }
+  }
+
+  /* compact menu on short screens */
+  @media (max-height: 600px) {
+    #start-screen { padding: 8px 0; }
+    .screen-card { padding: 16px 20px; border-radius: 18px; }
+    .screen h1 { font-size: clamp(1.4rem, 6vw, 2rem); margin-bottom: 4px; }
+    .menu-card-grid { gap: 6px; margin-top: 8px; }
+    .menu-card { padding: 8px 6px; border-radius: 12px; }
+    .menu-card-emoji { font-size: 1.6rem; margin-bottom: 2px; }
+    .menu-card-name { font-size: 0.85rem; }
+    .menu-card-tagline { font-size: 0.6rem; }
+    .skin-swatch { width: 32px; height: 32px; }
+    .skin-picker { gap: 8px; margin-top: 8px; }
   }
 
   /* ===== MODE TOGGLE BUTTONS ===== */
@@ -1004,9 +1052,10 @@
     position: absolute;
     top: 12px; left: 0; right: 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 0 16px;
+    padding: 0 8px;
+    gap: 6px;
     z-index: 20;
     pointer-events: none;
   }
@@ -1303,9 +1352,9 @@
     position: absolute;
     top: 8px; left: 0; right: 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 0 10px;
+    padding: 0 8px;
     z-index: 20;
     pointer-events: none;
     gap: 4px;
@@ -1321,20 +1370,21 @@
     z-index: 30;
     display: grid;
     grid-template-areas: ". up ." "left . right" ". down .";
-    grid-template-columns: 52px 52px 52px;
-    grid-template-rows: 52px 52px 52px;
+    grid-template-columns: 44px 44px 44px;
+    grid-template-rows: 44px 44px 44px;
     gap: 4px;
     touch-action: none;
     user-select: none;
+    opacity: 0.6;
   }
   .dpad-btn {
-    width: 52px; height: 52px;
-    border-radius: 14px;
-    background: rgba(255,255,255,0.18);
-    backdrop-filter: blur(6px);
-    border: 2px solid rgba(255,255,255,0.35);
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(4px);
+    border: 2px solid rgba(255,255,255,0.25);
     display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
+    font-size: 20px;
     cursor: pointer;
     transition: background 0.1s, transform 0.08s;
     -webkit-tap-highlight-color: transparent;
@@ -1351,7 +1401,7 @@
 
   #maze-thirst-hud {
     position: absolute;
-    bottom: 10px;
+    top: 36px;
     right: 10px;
     background: var(--score-bg);
     backdrop-filter: blur(4px);
@@ -1631,9 +1681,10 @@
     position: absolute;
     top: 12px; left: 0; right: 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 0 16px;
+    padding: 0 8px;
+    gap: 6px;
     z-index: 20;
     pointer-events: none;
   }
@@ -1785,7 +1836,7 @@
   </div>
 
   <!-- Mute Button -->
-  <button id="mute-btn">🔊</button>
+  <button id="mute-btn" class="floating">🔊</button>
 
   <!-- Pause Button -->
   <button id="pause-btn">⏸️</button>
@@ -2595,6 +2646,22 @@
   const pauseQuitBtn   = document.getElementById('pause-quit-btn');
   let gamePaused = false;
 
+  /** Move pause (first) & mute (last) into the given HUD bar */
+  function attachBtnsToHud(hudEl) {
+    if (!hudEl) return;
+    muteBtn.classList.remove('floating');
+    hudEl.insertBefore(pauseBtn, hudEl.firstChild);
+    hudEl.appendChild(muteBtn);
+  }
+  /** Return mute btn to game-container as a floating button */
+  function detachBtnsFromHud() {
+    var gc = document.getElementById('game-container');
+    if (gc) {
+      gc.appendChild(muteBtn);
+      gc.appendChild(pauseBtn);
+    }
+    muteBtn.classList.add('floating');
+  }
   function showPauseBtn() {
     pauseBtn.style.display = 'flex';
   }
@@ -3414,11 +3481,12 @@
     gameActive = true;
     startScreen.style.display   = 'none';
     gameoverScreen.style.display= 'none';
+    // Show classic HUD
+    document.getElementById('hud').style.display = 'flex';
+    attachBtnsToHud(document.getElementById('hud'));
     showPauseBtn();
     // Ensure car mode area is hidden for classic
     if (carArea) carArea.style.display = 'none';
-    // Show classic HUD
-    document.getElementById('hud').style.display = 'flex';
 
     // Restore skin (it gets cleared during thirst/game over)
     applySkin(currentSkin);
@@ -3442,6 +3510,7 @@
     gameActive = false;
     cancelAnimationFrame(rafId);
     hidePauseBtn();
+    detachBtnsFromHud();
     stopWeatherSystem();
     tongue = null;
     ctx.clearRect(0,0,tongueCanvas.width,tongueCanvas.height);
@@ -4113,6 +4182,7 @@
     carArea.style.display = '';
     if (nitroLines) nitroLines.style.display = 'none';
     carTongue.classList.remove('active');
+    attachBtnsToHud(document.getElementById('car-hud'));
     showPauseBtn();
 
     // Hide classic game elements
@@ -4135,6 +4205,7 @@
     carActive = false;
     cancelAnimationFrame(carRafId);
     hidePauseBtn();
+    detachBtnsFromHud();
     stopWeatherSystem();
 
     // Clean up
@@ -5073,6 +5144,7 @@
     if (carArea) carArea.style.display = 'none';
     document.getElementById('hud').style.display = 'none';
     mazeArea.style.display = 'block';
+    attachBtnsToHud(document.getElementById('maze-hud'));
     showPauseBtn();
     applyMazeSkin();
 
@@ -5084,6 +5156,7 @@
     mazeActive = false;
     clearMazeTimers();
     hidePauseBtn();
+    detachBtnsFromHud();
     mazeArea.style.display = 'none';
 
     if (silent) return;
@@ -5544,6 +5617,7 @@
     if (carArea) carArea.style.display = 'none';
     mazeArea.style.display = 'none';
     runnerArea.style.display = 'block';
+    attachBtnsToHud(document.getElementById('runner-hud'));
     showPauseBtn();
 
     // Calculate ground position NOW that area is visible
@@ -5565,6 +5639,7 @@
     runnerActive = false;
     cancelAnimationFrame(runnerRafId);
     hidePauseBtn();
+    detachBtnsFromHud();
 
     // Clean up
     runnerObstacles.forEach(function(o) { o.el.remove(); });

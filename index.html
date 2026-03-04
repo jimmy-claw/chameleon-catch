@@ -1732,6 +1732,184 @@
     line-height: 1.3;
   }
 
+  /* ═══ COLORING BOOK MODE ═══ */
+  #coloring-mode-area {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, #fffbe6 0%, #e8f5e9 50%, #fff9c4 100%);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px;
+    overflow-y: auto;
+    z-index: 10;
+  }
+  #coloring-mode-area h2 {
+    font-family: 'Fredoka One', cursive;
+    color: #2d7a4f;
+    font-size: clamp(1.3rem, 5vw, 1.8rem);
+    margin: 4px 0 8px;
+    text-shadow: 1px 1px 0 #fff;
+  }
+  #coloring-svg-wrap {
+    width: 90%;
+    max-width: 320px;
+    margin: 0 auto 10px;
+    position: relative;
+  }
+  #coloring-svg-wrap svg {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.15));
+  }
+  #coloring-svg-wrap svg .colorable {
+    cursor: pointer;
+    transition: stroke 0.2s, stroke-dasharray 0.2s;
+  }
+  #coloring-svg-wrap svg .colorable.selected-region {
+    stroke: #333;
+    stroke-width: 3;
+    stroke-dasharray: 8 4;
+  }
+  .color-palette {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 6px;
+    max-width: 400px;
+    width: 95%;
+    margin: 0 auto 12px;
+  }
+  .color-swatch {
+    width: 100%;
+    aspect-ratio: 1;
+    min-width: 36px;
+    min-height: 36px;
+    border-radius: 10px;
+    border: 3px solid rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .color-swatch:hover { transform: scale(1.12); }
+  .color-swatch:active { transform: scale(0.92); }
+  .color-swatch.selected-swatch {
+    border-color: #fff;
+    box-shadow: 0 0 0 3px #333, 0 0 12px rgba(0,0,0,0.3);
+    transform: scale(1.1);
+  }
+  .coloring-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .coloring-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s;
+  }
+  .coloring-btn:active { transform: scale(0.93); }
+  #coloring-reset-btn {
+    background: #e57373;
+    color: #fff;
+  }
+  #coloring-done-btn {
+    background: linear-gradient(135deg, #66bb6a, #43a047);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  #coloring-back-btn {
+    background: rgba(0,0,0,0.2);
+    color: #555;
+    font-size: 0.85rem;
+    padding: 8px 14px;
+  }
+
+  /* Celebration overlay */
+  #coloring-celebration {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: background 0.3s;
+  }
+  #coloring-celebration.active { display: flex; }
+  #celebration-chameleon-wrap {
+    width: 60%;
+    max-width: 260px;
+    animation: celebBounce 0.6s ease-in-out infinite alternate;
+  }
+  #celebration-chameleon-wrap svg {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(3px 6px 10px rgba(0,0,0,0.25));
+  }
+  @keyframes celebBounce {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-30px); }
+  }
+  #celebration-tongue {
+    position: absolute;
+    width: 60px;
+    height: 6px;
+    background: #e91e63;
+    border-radius: 3px;
+    transform-origin: left center;
+    animation: tongueShoot 0.8s ease-in-out infinite;
+    top: 50%;
+    right: -60px;
+  }
+  @keyframes tongueShoot {
+    0%, 100% { transform: scaleX(0); }
+    40%, 60% { transform: scaleX(1); }
+  }
+  #celebration-text {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.3rem, 5vw, 2rem);
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+    margin-top: 20px;
+    text-align: center;
+  }
+  #celebration-play-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 16px;
+    background: #fff;
+    color: #2d7a4f;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s;
+  }
+  #celebration-play-btn:active { transform: scale(0.93); }
+  .confetti-particle {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    animation: confettiFall 1.5s ease-out forwards;
+    pointer-events: none;
+    z-index: 10000;
+  }
+  @keyframes confettiFall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
 </style>
 </head>
 <body>
@@ -1831,6 +2009,11 @@
           <span class="menu-card-emoji">🚗</span>
           <span class="menu-card-name">Car</span>
           <span class="menu-card-tagline">Drive and dodge!</span>
+        </div>
+        <div class="menu-card" id="mode-coloring-btn" data-mode="coloring">
+          <span class="menu-card-emoji">🎨</span>
+          <span class="menu-card-name">Color Me!</span>
+          <span class="menu-card-tagline">Paint your own chameleon!</span>
         </div>
       </div>
       <!-- Hidden elements for backwards compat -->
@@ -1982,6 +2165,52 @@
     </div>
     <div id="runner-hearts">❤️❤️❤️</div>
     <div id="runner-level-banner" style="display:none;"></div>
+  </div>
+
+  <!-- ========== COLORING BOOK MODE ========== -->
+  <div id="coloring-mode-area">
+    <button id="coloring-back-btn" class="coloring-btn" style="align-self:flex-start;">← Back</button>
+    <h2>🎨 Color Me!</h2>
+    <div id="coloring-svg-wrap">
+      <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- Tail (curly) -->
+        <path id="region-tail" class="colorable" d="M40,140 Q10,130 15,100 Q20,70 40,80 Q30,100 35,120 Q38,130 40,140Z" fill="#8bc34a" stroke="#555" stroke-width="1.5"/>
+        <!-- Body (main) -->
+        <ellipse id="region-body" class="colorable" cx="150" cy="120" rx="95" ry="60" fill="#4caf50" stroke="#555" stroke-width="1.5"/>
+        <!-- Belly strip -->
+        <ellipse id="region-belly" class="colorable" cx="155" cy="145" rx="75" ry="22" fill="#a5d6a7" stroke="#555" stroke-width="1"/>
+        <!-- Spots on back -->
+        <g id="region-spots" class="colorable">
+          <circle cx="120" cy="100" r="12" fill="#ff9800" stroke="#555" stroke-width="1"/>
+          <circle cx="155" cy="90" r="10" fill="#ff9800" stroke="#555" stroke-width="1"/>
+          <circle cx="185" cy="100" r="11" fill="#ff9800" stroke="#555" stroke-width="1"/>
+          <circle cx="140" cy="110" r="9" fill="#ff9800" stroke="#555" stroke-width="1"/>
+        </g>
+        <!-- Legs -->
+        <ellipse cx="105" cy="170" rx="14" ry="18" fill="#388e3c" stroke="#555" stroke-width="1"/>
+        <ellipse cx="195" cy="170" rx="14" ry="18" fill="#388e3c" stroke="#555" stroke-width="1"/>
+        <!-- Head -->
+        <ellipse cx="250" cy="105" rx="35" ry="30" fill="#4caf50" stroke="#555" stroke-width="1.5"/>
+        <!-- Eye (large, round, kid-friendly) -->
+        <circle id="region-eye" class="colorable" cx="262" cy="95" r="13" fill="#fff" stroke="#555" stroke-width="1.5"/>
+        <circle cx="265" cy="93" r="6" fill="#333"/>
+        <circle cx="267" cy="91" r="2.5" fill="#fff"/>
+        <!-- Mouth/smile -->
+        <path d="M272,112 Q280,118 275,120" fill="none" stroke="#555" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="color-palette" id="color-palette"></div>
+    <div class="coloring-buttons">
+      <button id="coloring-reset-btn" class="coloring-btn">Reset</button>
+      <button id="coloring-done-btn" class="coloring-btn">Done! 🎉</button>
+    </div>
+  </div>
+
+  <!-- Coloring Celebration Overlay -->
+  <div id="coloring-celebration">
+    <div id="celebration-chameleon-wrap" style="position:relative;"></div>
+    <div id="celebration-text">Your chameleon is alive! 🦎✨</div>
+    <button id="celebration-play-btn">Play!</button>
   </div>
 
   <!-- Game Over Screen -->
@@ -3415,8 +3644,9 @@
     startScreen.style.display   = 'none';
     gameoverScreen.style.display= 'none';
     showPauseBtn();
-    // Ensure car mode area is hidden for classic
+    // Ensure other mode areas are hidden for classic
     if (carArea) carArea.style.display = 'none';
+    if (coloringArea) coloringArea.style.display = 'none';
     // Show classic HUD
     document.getElementById('hud').style.display = 'flex';
 
@@ -3528,11 +3758,12 @@
   const modeDailyBtn = document.getElementById('mode-daily-btn');
   const modeMazeBtn = document.getElementById('mode-maze-btn');
   const modeRunnerBtn = document.getElementById('mode-runner-btn');
+  const modeColoringBtn = document.getElementById('mode-coloring-btn');
   const modeDescText = document.getElementById('mode-desc-text');
   const modeHintText = document.getElementById('mode-hint-text');
 
   // All card buttons for easy iteration
-  var allModeCards = [modeClassicBtn, modeCarBtn, modeMazeBtn, modeRunnerBtn].filter(Boolean);
+  var allModeCards = [modeClassicBtn, modeCarBtn, modeMazeBtn, modeRunnerBtn, modeColoringBtn].filter(Boolean);
 
   function updateModeUI() {
     // Update card selection
@@ -3549,6 +3780,10 @@
   // Card click handlers
   allModeCards.forEach(function(card) {
     card.addEventListener('click', function() {
+      if (card.dataset.mode === 'coloring') {
+        startColoringMode();
+        return;
+      }
       selectedMode = card.dataset.mode;
       localStorage.setItem('chameleon-mode', selectedMode);
       updateModeUI();
@@ -4110,6 +4345,7 @@
     // Hide classic elements, show car area
     startScreen.style.display = 'none';
     gameoverScreen.style.display = 'none';
+    if (coloringArea) coloringArea.style.display = 'none';
     carArea.style.display = '';
     if (nitroLines) nitroLines.style.display = 'none';
     carTongue.classList.remove('active');
@@ -5071,6 +5307,7 @@
     startScreen.style.display = 'none';
     gameoverScreen.style.display = 'none';
     if (carArea) carArea.style.display = 'none';
+    if (coloringArea) coloringArea.style.display = 'none';
     document.getElementById('hud').style.display = 'none';
     mazeArea.style.display = 'block';
     showPauseBtn();
@@ -5542,6 +5779,7 @@
     thirstHud.style.display = 'none';
     comboHud.style.display = 'none';
     if (carArea) carArea.style.display = 'none';
+    if (coloringArea) coloringArea.style.display = 'none';
     mazeArea.style.display = 'none';
     runnerArea.style.display = 'block';
     showPauseBtn();
@@ -5768,6 +6006,204 @@
     window.addEventListener('error', function(e) { showDevError('ERR: ' + e.message + ' ' + (e.filename||'').split('/').pop() + ':' + e.lineno); });
     window.addEventListener('unhandledrejection', function(e) { showDevError('UNHANDLED: ' + (e.reason && e.reason.message ? e.reason.message : String(e.reason))); });
   }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // ═══════════ COLORING BOOK MODE ═══════════════════════════════════════
+  // ═══════════════════════════════════════════════════════════════════════
+
+  var coloringArea = document.getElementById('coloring-mode-area');
+  var colorPaletteEl = document.getElementById('color-palette');
+  var coloringCelebration = document.getElementById('coloring-celebration');
+  var celebrationWrap = document.getElementById('celebration-chameleon-wrap');
+
+  var COLORING_COLORS = [
+    {name:'Red',      hex:'#e53935'},
+    {name:'Orange',   hex:'#ff9800'},
+    {name:'Yellow',   hex:'#ffeb3b'},
+    {name:'Green',    hex:'#4caf50'},
+    {name:'Teal',     hex:'#009688'},
+    {name:'Blue',     hex:'#2196f3'},
+    {name:'Purple',   hex:'#9c27b0'},
+    {name:'Pink',     hex:'#e91e63'},
+    {name:'Brown',    hex:'#795548'},
+    {name:'Black',    hex:'#212121'},
+    {name:'White',    hex:'#ffffff'},
+    {name:'Gold',     hex:'#ffd700'},
+    {name:'Hot Pink', hex:'#ff69b4'},
+    {name:'Lime',     hex:'#cddc39'},
+    {name:'Sky Blue', hex:'#03a9f4'},
+    {name:'Coral',    hex:'#ff7043'}
+  ];
+
+  var COLORING_DEFAULTS = {
+    'region-body':  '#4caf50',
+    'region-belly': '#a5d6a7',
+    'region-spots': '#ff9800',
+    'region-eye':   '#ffffff',
+    'region-tail':  '#8bc34a'
+  };
+
+  var coloringSelectedRegion = null;
+  var coloringSelectedColor = null;
+
+  // Build palette swatches
+  COLORING_COLORS.forEach(function(c) {
+    var swatch = document.createElement('div');
+    swatch.className = 'color-swatch';
+    swatch.style.background = c.hex;
+    if (c.name === 'White') swatch.style.borderColor = '#ccc';
+    swatch.setAttribute('title', c.name);
+    swatch.addEventListener('click', function() {
+      coloringSelectedColor = c.hex;
+      document.querySelectorAll('.color-swatch').forEach(function(s) { s.classList.remove('selected-swatch'); });
+      swatch.classList.add('selected-swatch');
+      if (coloringSelectedRegion) {
+        applyColorToRegion(coloringSelectedRegion, c.hex);
+        saveColoringState();
+      }
+    });
+    colorPaletteEl.appendChild(swatch);
+  });
+
+  // Region click handlers
+  document.querySelectorAll('#coloring-svg-wrap .colorable').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.stopPropagation();
+      document.querySelectorAll('#coloring-svg-wrap .colorable').forEach(function(r) { r.classList.remove('selected-region'); });
+      el.classList.add('selected-region');
+      coloringSelectedRegion = el.id;
+      if (coloringSelectedColor) {
+        applyColorToRegion(el.id, coloringSelectedColor);
+        saveColoringState();
+      }
+    });
+  });
+
+  function applyColorToRegion(regionId, color) {
+    var el = document.getElementById(regionId);
+    if (!el) return;
+    if (el.tagName === 'g') {
+      el.querySelectorAll('circle, path, ellipse').forEach(function(c) { c.setAttribute('fill', color); });
+    } else {
+      el.setAttribute('fill', color);
+    }
+  }
+
+  function saveColoringState() {
+    var state = {};
+    Object.keys(COLORING_DEFAULTS).forEach(function(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      if (el.tagName === 'g') {
+        var first = el.querySelector('circle, path, ellipse');
+        state[id] = first ? first.getAttribute('fill') : COLORING_DEFAULTS[id];
+      } else {
+        state[id] = el.getAttribute('fill');
+      }
+    });
+    localStorage.setItem('chameleon-coloring', JSON.stringify(state));
+  }
+
+  function loadColoringState() {
+    try {
+      var saved = JSON.parse(localStorage.getItem('chameleon-coloring'));
+      if (saved) {
+        Object.keys(saved).forEach(function(id) {
+          applyColorToRegion(id, saved[id]);
+        });
+        return;
+      }
+    } catch(e) {}
+    resetColoringDefaults();
+  }
+
+  function resetColoringDefaults() {
+    Object.keys(COLORING_DEFAULTS).forEach(function(id) {
+      applyColorToRegion(id, COLORING_DEFAULTS[id]);
+    });
+    saveColoringState();
+  }
+
+  function startColoringMode() {
+    startScreen.style.display = 'none';
+    gameoverScreen.style.display = 'none';
+    if (carArea) carArea.style.display = 'none';
+    if (document.getElementById('maze-mode-area')) document.getElementById('maze-mode-area').style.display = 'none';
+    if (document.getElementById('runner-mode-area')) document.getElementById('runner-mode-area').style.display = 'none';
+    document.getElementById('hud').style.display = 'none';
+    coloringArea.style.display = 'flex';
+    coloringSelectedRegion = null;
+    coloringSelectedColor = null;
+    document.querySelectorAll('.color-swatch').forEach(function(s) { s.classList.remove('selected-swatch'); });
+    document.querySelectorAll('#coloring-svg-wrap .colorable').forEach(function(r) { r.classList.remove('selected-region'); });
+    loadColoringState();
+  }
+
+  function exitColoringMode() {
+    coloringArea.style.display = 'none';
+    startScreen.style.display = 'flex';
+  }
+
+  // Back button
+  document.getElementById('coloring-back-btn').addEventListener('click', exitColoringMode);
+
+  // Reset button
+  document.getElementById('coloring-reset-btn').addEventListener('click', function() {
+    resetColoringDefaults();
+    document.querySelectorAll('#coloring-svg-wrap .colorable').forEach(function(r) { r.classList.remove('selected-region'); });
+    coloringSelectedRegion = null;
+  });
+
+  // Done button — celebration!
+  document.getElementById('coloring-done-btn').addEventListener('click', function() {
+    showColoringCelebration();
+  });
+
+  function showColoringCelebration() {
+    var svgOriginal = document.querySelector('#coloring-svg-wrap svg');
+    celebrationWrap.innerHTML = '';
+    var svgClone = svgOriginal.cloneNode(true);
+    // Remove selection highlight from clone
+    svgClone.querySelectorAll('.selected-region').forEach(function(r) { r.classList.remove('selected-region'); });
+    var tongue = document.createElement('div');
+    tongue.id = 'celebration-tongue';
+    celebrationWrap.appendChild(svgClone);
+    celebrationWrap.appendChild(tongue);
+
+    var bodyEl = document.getElementById('region-body');
+    var bodyColor = bodyEl ? bodyEl.getAttribute('fill') : '#4caf50';
+    coloringCelebration.style.background = bodyColor;
+    coloringCelebration.classList.add('active');
+    spawnConfetti();
+  }
+
+  function spawnConfetti() {
+    var confettiColors = ['#e53935','#ff9800','#ffeb3b','#4caf50','#2196f3','#9c27b0','#e91e63','#ffd700','#ff69b4','#03a9f4'];
+    for (var i = 0; i < 40; i++) {
+      (function(idx) {
+        setTimeout(function() {
+          var p = document.createElement('div');
+          p.className = 'confetti-particle';
+          p.style.left = (Math.random() * 100) + 'vw';
+          p.style.top = '-10px';
+          p.style.background = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+          p.style.width = (6 + Math.random() * 8) + 'px';
+          p.style.height = (6 + Math.random() * 8) + 'px';
+          p.style.animationDuration = (1 + Math.random() * 1.5) + 's';
+          p.style.animationDelay = '0s';
+          document.body.appendChild(p);
+          setTimeout(function() { p.remove(); }, 3000);
+        }, idx * 50);
+      })(i);
+    }
+  }
+
+  // Celebration play button → back to main menu
+  document.getElementById('celebration-play-btn').addEventListener('click', function() {
+    coloringCelebration.classList.remove('active');
+    celebrationWrap.innerHTML = '';
+    exitColoringMode();
+  });
 
 })();
 </script>

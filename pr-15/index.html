@@ -5265,6 +5265,9 @@
 
   // Platform / level state (replaces jump/duck physics)
   var runnerCurrentLevel = 0;     // 0=ground, 1=mid, 2=high
+  var runnerY = 0;            // px above current platform
+  var runnerVelY = 0;
+  var runnerJumping = false;
   var runnerMidAir = false;       // true during level transition (no collision)
   var runnerMidAirTimer = 0;
   var RUNNER_TRANSITION_TIME = 0.18; // seconds — matches CSS transition
@@ -5400,9 +5403,8 @@
 
   // ─── Position chameleon on current level ───────────────────────────
   function positionChameleon() {
-    // Use translateY (negative = up) so transform is the single source of truth
-    var targetY = -(runnerPlatformY[runnerCurrentLevel]);
-    runnerChameleon.style.transform = 'translateY(' + targetY + 'px)';
+    var baseY = runnerPlatformY[runnerCurrentLevel];
+    runnerChameleon.style.transform = 'translateY(' + (-(baseY + runnerY)) + 'px)';
   }
 
   // ─── Show/hide platforms based on game level ───────────────────────
@@ -5420,6 +5422,37 @@
     runnerLastTime = timestamp;
 
     var containerW = runnerArea.offsetWidth;
+
+    // ── Arc jump physics ──
+    if (runnerJumping) {
+      var grav = runnerVelY > 0 ? 600 : 800;
+      runnerVelY -= grav * dt;
+      runnerY += runnerVelY * dt;
+      // Check if we landed on a higher platform
+      var platforms = getActivePlatforms();
+      for (var pi = platforms.length - 1; pi >= 0; pi--) {
+        var platIdx = platforms[pi];
+        if (platIdx <= runnerCurrentLevel) continue;
+        var platY = runnerPlatformY[platIdx] - runnerPlatformY[runnerCurrentLevel];
+        if (runnerY >= platY && runnerVelY > 0) {
+          // peaked above this platform - will land here on way down
+        }
+        if (runnerY <= platY && runnerVelY < 0 && runnerY >= platY - 20) {
+          runnerCurrentLevel = platIdx;
+          runnerY = 0;
+          runnerJumping = false;
+          runnerVelY = 0;
+          break;
+        }
+      }
+      // Landed back on current or lower platform
+      if (runnerY <= 0 && runnerVelY < 0) {
+        runnerY = 0;
+        runnerJumping = false;
+        runnerVelY = 0;
+      }
+      positionChameleon();
+    }
 
     // ── Mid-air timer (no collision during level transition) ──
     if (runnerMidAir) {
@@ -5545,6 +5578,9 @@
     runnerCurrentLevel = 0;
     runnerMidAir = false;
     runnerMidAirTimer = 0;
+    runnerY = 0;
+    runnerVelY = 0;
+    runnerJumping = false;
     runnerInvincible = false;
     runnerInvincibleTimer = 0;
     runnerObstacleTimer = 3.0;
@@ -5652,23 +5688,29 @@
 
   function runnerJumpUp() {
     if (!runnerActive || gamePaused) return;
-    if (runnerCurrentLevel >= 2) return; // already at top platform
-    runnerCurrentLevel++;
+    if (runnerJumping) return; // already in air
+    runnerJumping = true;
+    runnerVelY = 480;  // launch upward
     runnerMidAir = true;
-    runnerMidAirTimer = RUNNER_TRANSITION_TIME;
+    runnerMidAirTimer = 0.6;
     runnerChameleon.classList.add('mid-air');
-    positionChameleon();
     playSound('tongue');
   }
 
   function runnerDropDown() {
     if (!runnerActive || gamePaused) return;
-    if (runnerCurrentLevel <= 0) return; // already on ground
-    runnerCurrentLevel--;
-    runnerMidAir = true;
-    runnerMidAirTimer = RUNNER_TRANSITION_TIME;
-    runnerChameleon.classList.add('mid-air');
-    positionChameleon();
+    if (runnerCurrentLevel <= 0 && !runnerJumping) return;
+    if (runnerJumping) {
+      // fast drop
+      runnerVelY = -600;
+    } else {
+      runnerCurrentLevel = Math.max(0, runnerCurrentLevel - 1);
+      runnerJumping = true;
+      runnerVelY = -300;
+      runnerMidAir = true;
+      runnerMidAirTimer = 0.3;
+      runnerChameleon.classList.add('mid-air');
+    }
   }
 
   // Touch controls: tap anywhere = jump up (except on drop button)

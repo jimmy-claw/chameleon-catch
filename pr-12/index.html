@@ -5235,7 +5235,7 @@
   var runnerVelY = 0;
   var runnerY = 0;                // px above ground (0 = on ground)
   var runnerGravity = 1800;       // px/s^2
-  var runnerJumpVel = -620;       // initial jump velocity (negative = up)
+  var runnerJumpVel = 620;        // initial jump velocity (positive = up, bottom-based)
   var runnerGroundY = 0;          // calculated at start
 
   // DOM refs
@@ -5370,8 +5370,8 @@
 
     // ── Update jump physics ──
     if (runnerJumping) {
-      runnerVelY += runnerGravity * dt;
-      runnerY -= runnerVelY * dt;
+      runnerVelY -= runnerGravity * dt;   // gravity pulls velocity down
+      runnerY += runnerVelY * dt;          // positive runnerY = above ground
       if (runnerY <= 0) {
         runnerY = 0;
         runnerJumping = false;
@@ -5381,8 +5381,7 @@
     }
 
     // Position chameleon
-    var chameleonBottom = groundBottom - (containerH * 0.4) + runnerY;
-    runnerChameleon.style.bottom = (containerH * 0.6 + runnerY) + 'px';
+    runnerChameleon.style.bottom = (runnerGroundY + runnerY) + 'px';
 
     // ── Invincibility timer ──
     if (runnerInvincible) {
@@ -5532,9 +5531,14 @@
     updateRunnerHUD();
     updateRunnerScrollSpeed();
 
-    // Position chameleon
+    // Calculate ground position
+    var rAreaH = runnerArea.offsetHeight || 400;
+    runnerGroundY = Math.round(rAreaH * 0.38); // chameleon bottom from area bottom
+
+    // Position chameleon on ground
     runnerChameleon.classList.remove('hit', 'jumping', 'ducking');
-    runnerChameleon.style.bottom = '60%';
+    runnerY = 0;
+    runnerChameleon.style.bottom = runnerGroundY + 'px';
 
     // Hide other mode elements, show runner
     startScreen.style.display = 'none';

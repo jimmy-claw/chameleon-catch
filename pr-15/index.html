@@ -5650,8 +5650,7 @@
 
   function runnerJumpUp() {
     if (!runnerActive || gamePaused) return;
-    var maxLevel = getActivePlatforms().length - 1;
-    if (runnerCurrentLevel >= maxLevel) return; // already at top active platform
+    if (runnerCurrentLevel >= 2) return; // already at top platform
     runnerCurrentLevel++;
     runnerMidAir = true;
     runnerMidAirTimer = RUNNER_TRANSITION_TIME;

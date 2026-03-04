@@ -5531,16 +5531,7 @@
     updateRunnerHUD();
     updateRunnerScrollSpeed();
 
-    // Calculate ground position
-    var rAreaH = runnerArea.offsetHeight || 400;
-    runnerGroundY = Math.round(rAreaH * 0.38); // chameleon bottom from area bottom
-
-    // Position chameleon on ground
-    runnerChameleon.classList.remove('hit', 'jumping', 'ducking');
-    runnerY = 0;
-    runnerChameleon.style.bottom = runnerGroundY + 'px';
-
-    // Hide other mode elements, show runner
+    // Show runner area FIRST so offsetHeight is valid
     startScreen.style.display = 'none';
     gameoverScreen.style.display = 'none';
     document.getElementById('hud').style.display = 'none';
@@ -5548,8 +5539,17 @@
     comboHud.style.display = 'none';
     if (carArea) carArea.style.display = 'none';
     mazeArea.style.display = 'none';
-    runnerArea.style.display = '';
+    runnerArea.style.display = 'block';
     showPauseBtn();
+
+    // Calculate ground position NOW that area is visible
+    var rAreaH = runnerArea.offsetHeight || window.innerHeight || 600;
+    runnerGroundY = Math.round(rAreaH * 0.38);
+
+    // Position chameleon on ground
+    runnerChameleon.classList.remove('hit', 'jumping', 'ducking');
+    runnerY = 0;
+    runnerChameleon.style.bottom = runnerGroundY + 'px';
 
     runnerActive = true;
     runnerLastTime = performance.now();

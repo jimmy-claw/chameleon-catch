@@ -5235,7 +5235,7 @@
   var runnerVelY = 0;
   var runnerY = 0;                // px above ground (0 = on ground)
   var runnerGravity = 900;        // px/s^2 — floaty for kids
-  var runnerJumpVel = 700;        // initial jump velocity
+  var runnerJumpVel = 480;        // initial jump velocity — not too high
   var runnerGroundY = 0;          // calculated at start
 
   // DOM refs
@@ -5370,8 +5370,10 @@
 
     // ── Update jump physics ──
     if (runnerJumping) {
-      runnerVelY -= runnerGravity * dt;   // gravity pulls velocity down
-      runnerY += runnerVelY * dt;          // positive runnerY = above ground
+      // Asymmetric gravity: slow up AND slow down = floaty arc
+      var grav = runnerVelY > 0 ? 600 : 800;  // rising = lighter, falling = slightly heavier
+      runnerVelY -= grav * dt;
+      runnerY += runnerVelY * dt;
       if (runnerY <= 0) {
         runnerY = 0;
         runnerJumping = false;

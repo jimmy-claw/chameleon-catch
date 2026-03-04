@@ -1590,14 +1590,12 @@
     font-size: 2.8rem;
     z-index: 10;
     line-height: 1;
-    transform: translateY(50%);
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
-    will-change: bottom;
+    will-change: transform;
   }
   #runner-chameleon.jumping {
   }
   #runner-chameleon.ducking {
-    transform: translateY(50%) scaleY(0.5) scaleX(1.2);
+    transform: scaleY(0.5) scaleX(1.2) !important;
     transform-origin: bottom center;
   }
   #runner-chameleon.hit {
@@ -5382,7 +5380,8 @@
     }
 
     // Position chameleon
-    runnerChameleon.style.bottom = (runnerGroundY + runnerY) + 'px';
+    runnerChameleon.style.bottom = runnerGroundY + 'px';
+    runnerChameleon.style.transform = runnerDucking ? 'scaleY(0.5) scaleX(1.2)' : 'translateY(' + (-runnerY) + 'px)';
 
     // ── Invincibility timer ──
     if (runnerInvincible) {

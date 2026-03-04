@@ -1519,6 +1519,219 @@
     to   { transform: translateX(-50%) scaleX(1.1); }
   }
 
+  /* ═══════════ V14: SNAKE RUNNER MODE ═══════════ */
+  #runner-mode-area {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 15;
+    background: linear-gradient(180deg, #87CEEB 0%, #87CEEB 80%, #228B22 80%, #228B22 100%);
+    display: none;
+  }
+  #runner-ground {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20%;
+    background: linear-gradient(180deg, #2d8a4e 0%, #1a6b35 100%);
+  }
+  #runner-ground-line {
+    position: absolute;
+    bottom: 20%;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #1a5c2e;
+    z-index: 2;
+  }
+  /* Scrolling forest background */
+  #runner-forest {
+    position: absolute;
+    bottom: 20%;
+    left: 0;
+    width: 400%;
+    height: 100px;
+    font-size: 3rem;
+    line-height: 100px;
+    white-space: nowrap;
+    z-index: 1;
+    animation: runner-scroll-forest 16s linear infinite;
+    pointer-events: none;
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+  @keyframes runner-scroll-forest {
+    0%   { transform: translateX(0) translateZ(0); }
+    100% { transform: translateX(-50%) translateZ(0); }
+  }
+  /* Scrolling grass */
+  #runner-grass {
+    position: absolute;
+    bottom: 15%;
+    left: 0;
+    width: 400%;
+    height: 40px;
+    font-size: 1.5rem;
+    line-height: 40px;
+    white-space: nowrap;
+    z-index: 3;
+    animation: runner-scroll-grass 8s linear infinite;
+    pointer-events: none;
+    opacity: 0.7;
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+  @keyframes runner-scroll-grass {
+    0%   { transform: translateX(0) translateZ(0); }
+    100% { transform: translateX(-50%) translateZ(0); }
+  }
+  /* Chameleon runner */
+  #runner-chameleon {
+    position: absolute;
+    left: 15%;
+    bottom: 0;
+    font-size: 2.8rem;
+    z-index: 10;
+    line-height: 1;
+    will-change: transform;
+  }
+  #runner-chameleon.jumping {
+  }
+  #runner-chameleon.ducking {
+    transform: scaleY(0.5) scaleX(1.2) !important;
+    transform-origin: bottom center;
+  }
+  #runner-chameleon.hit {
+    animation: runner-hit-flash 0.15s ease infinite alternate;
+  }
+  @keyframes runner-hit-flash {
+    0% { opacity: 1; }
+    100% { opacity: 0.3; }
+  }
+  /* Obstacles */
+  .runner-obstacle {
+    position: absolute;
+    z-index: 8;
+    pointer-events: none;
+    line-height: 1;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+  }
+  .runner-obstacle.ground-snake {
+    bottom: 18%;
+    font-size: 2.2rem;
+    transform: translateY(50%);
+  }
+  .runner-obstacle.hanging-cobra {
+    font-size: 2.2rem;
+    top: 0;
+  }
+  /* Runner HUD */
+  #runner-hud {
+    position: absolute;
+    top: 12px; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    z-index: 20;
+    pointer-events: none;
+  }
+  #runner-hearts {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.5rem;
+    z-index: 20;
+    pointer-events: none;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.4));
+  }
+  /* Milestone popup */
+  .runner-milestone {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.5rem, 6vw, 2.5rem);
+    color: #ffd700;
+    text-shadow: 0 0 20px rgba(255,215,0,0.8), 2px 2px 6px rgba(0,0,0,0.6);
+    z-index: 40;
+    pointer-events: none;
+    animation: runner-milestone-pop 1.5s ease-out forwards;
+  }
+  @keyframes runner-milestone-pop {
+    0%   { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    20%  { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+    40%  { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    80%  { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+  }
+  #runner-level-banner {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    color: var(--gold);
+    text-shadow: 0 0 30px rgba(255,215,0,0.8), 2px 2px 6px rgba(0,0,0,0.6);
+    z-index: 40;
+    pointer-events: none;
+    display: none;
+  }
+
+  /* ═══════════ V14: CARD MENU REDESIGN ═══════════ */
+  .menu-card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .menu-card {
+    background: rgba(0,0,0,0.3);
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 18px;
+    padding: 14px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .menu-card:hover {
+    transform: scale(1.04);
+    border-color: rgba(255,255,255,0.35);
+    background: rgba(0,0,0,0.4);
+  }
+  .menu-card:active {
+    transform: scale(0.96);
+  }
+  .menu-card.selected {
+    background: linear-gradient(135deg, #2d7a4f, #1e6b45);
+    border-color: var(--gold);
+    box-shadow: 0 0 16px rgba(255,215,0,0.3);
+  }
+  .menu-card-emoji {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+  .menu-card-name {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(0.95rem, 3.5vw, 1.15rem);
+    color: #fff;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .menu-card-tagline {
+    font-size: clamp(0.65rem, 2.5vw, 0.78rem);
+    color: #a8d8b8;
+    display: block;
+    line-height: 1.3;
+  }
+
 </style>
 </head>
 <body>
@@ -1597,16 +1810,33 @@
   <div class="screen" id="start-screen">
     <div class="screen-card">
       <h1>🦎 Chameleon<br>Catch!</h1>
-      <p id="mode-desc-text">Tap a fly to shoot your<br>sticky tongue and catch it!</p>
-      <p id="mode-hint-text" style="margin-top:12px; color:#a8d8b8;">Don't let <strong style="color:#e63946">5 flies</strong> escape! Catch 10 for a poo! 💩</p>
-
-      <!-- Mode Toggle -->
-      <div style="margin-top:14px; display:flex; gap:8px; justify-content:center;">
-        <button class="mode-toggle-btn selected" id="mode-classic-btn" data-mode="classic">🦎 Classic</button>
-        <button class="mode-toggle-btn" id="mode-car-btn" data-mode="car">🚗 Car Mode</button>
-        <button class="mode-toggle-btn daily-btn" id="mode-daily-btn" data-mode="daily">📅 Daily<span id="daily-best-label"></span></button>
-        <button class="mode-toggle-btn maze-btn" id="mode-maze-btn" data-mode="maze">🌿 Maze</button>
+      <!-- Mode Card Grid -->
+      <div class="menu-card-grid">
+        <div class="menu-card selected" id="mode-classic-btn" data-mode="classic">
+          <span class="menu-card-emoji">🦟</span>
+          <span class="menu-card-name">Catch!</span>
+          <span class="menu-card-tagline">Tap the flies before they escape!</span>
+        </div>
+        <div class="menu-card" id="mode-maze-btn" data-mode="maze">
+          <span class="menu-card-emoji">🌿</span>
+          <span class="menu-card-name">Maze</span>
+          <span class="menu-card-tagline">Find your way through the jungle!</span>
+        </div>
+        <div class="menu-card" id="mode-runner-btn" data-mode="runner">
+          <span class="menu-card-emoji">🐍</span>
+          <span class="menu-card-name">Runner</span>
+          <span class="menu-card-tagline">Jump over snakes in the forest!</span>
+        </div>
+        <div class="menu-card" id="mode-car-btn" data-mode="car">
+          <span class="menu-card-emoji">🚗</span>
+          <span class="menu-card-name">Car</span>
+          <span class="menu-card-tagline">Drive and dodge!</span>
+        </div>
       </div>
+      <!-- Hidden elements for backwards compat -->
+      <button class="mode-toggle-btn daily-btn" id="mode-daily-btn" data-mode="daily" style="display:none;">📅 Daily<span id="daily-best-label"></span></button>
+      <p id="mode-desc-text" style="display:none;"></p>
+      <p id="mode-hint-text" style="display:none;"></p>
 
       <div style="margin-top:16px; background:rgba(0,0,0,0.25); border-radius:12px; padding:12px 16px; text-align:left;">
         <label style="font-size:0.85em; color:#a8d8b8; display:block; margin-bottom:6px;">⚙️ Difficulty: <strong id="diff-label" style="color:#ffd700">Normal</strong></label>
@@ -1638,7 +1868,7 @@
       <button class="btn" id="start-btn" style="margin-top:14px;">🌿 Start Game!</button>
       <button id="achievements-btn" title="Achievements">🏅</button>
       <p style="margin-top:10px; font-size:0.7em; color:#6b9e7a;">
-        v13 &nbsp;·&nbsp; <button id="force-update-btn" style="background:none;border:none;color:#a8d8b8;font-size:1em;cursor:pointer;text-decoration:underline;padding:0;">Force Update</button>
+        v14 &nbsp;·&nbsp; <button id="force-update-btn" style="background:none;border:none;color:#a8d8b8;font-size:1em;cursor:pointer;text-decoration:underline;padding:0;">Force Update</button>
       </p>
     </div>
   </div>
@@ -1731,6 +1961,27 @@
       <button class="dpad-btn" id="dpad-right" aria-label="Right">▶</button>
       <button class="dpad-btn" id="dpad-down"  aria-label="Down">▼</button>
     </div>
+  </div>
+
+  <!-- ========== RUNNER MODE AREA (v14) ========== -->
+  <div id="runner-mode-area">
+    <div id="runner-ground"></div>
+    <div id="runner-ground-line"></div>
+    <div id="runner-forest"></div>
+    <div id="runner-grass"></div>
+    <div id="runner-chameleon">🦎</div>
+    <div id="runner-hud">
+      <div class="hud-box">
+        <span class="label">🎯 Score</span>
+        <span class="value" id="runner-score-display">0</span>
+      </div>
+      <div class="hud-box">
+        <span class="label">⚡ Level</span>
+        <span class="value" id="runner-level-display">1</span>
+      </div>
+    </div>
+    <div id="runner-hearts">❤️❤️❤️</div>
+    <div id="runner-level-banner" style="display:none;"></div>
   </div>
 
   <!-- Game Over Screen -->
@@ -2363,6 +2614,9 @@
     if (mazeActive) {
       clearMazeTimers();
     }
+    if (runnerActive) {
+      cancelAnimationFrame(runnerRafId);
+    }
     pauseOverlay.style.display = 'flex';
   }
 
@@ -2380,6 +2634,10 @@
     }
     if (mazeActive) {
       restartMazeTimers();
+    }
+    if (runnerActive) {
+      runnerLastTime = performance.now();
+      runnerRafId = requestAnimationFrame(runnerGameLoop);
     }
   }
 
@@ -2407,6 +2665,10 @@
       endMazeGame(null, true);
       selectedMode = 'classic';
       localStorage.setItem('chameleon-mode', 'classic');
+    } else if (runnerActive) {
+      endRunnerGame(null, true);
+      selectedMode = 'classic';
+      localStorage.setItem('chameleon-mode', 'classic');
     }
     updateModeUI();
     renderStartLeaderboard();
@@ -2423,6 +2685,8 @@
       endCarGame(null, true);
     } else if (mazeActive) {
       endMazeGame(null, true);
+    } else if (runnerActive) {
+      endRunnerGame(null, true);
     }
     startScreen.style.display = 'flex';
   });
@@ -3263,57 +3527,45 @@
   const modeCarBtn = document.getElementById('mode-car-btn');
   const modeDailyBtn = document.getElementById('mode-daily-btn');
   const modeMazeBtn = document.getElementById('mode-maze-btn');
+  const modeRunnerBtn = document.getElementById('mode-runner-btn');
   const modeDescText = document.getElementById('mode-desc-text');
   const modeHintText = document.getElementById('mode-hint-text');
 
+  // All card buttons for easy iteration
+  var allModeCards = [modeClassicBtn, modeCarBtn, modeMazeBtn, modeRunnerBtn].filter(Boolean);
+
   function updateModeUI() {
-    modeClassicBtn.classList.toggle('selected', selectedMode === 'classic');
-    modeCarBtn.classList.toggle('selected', selectedMode === 'car');
-    modeDailyBtn.classList.toggle('selected', selectedMode === 'daily');
-    modeMazeBtn.classList.toggle('selected', selectedMode === 'maze');
-    if (selectedMode === 'car') {
-      modeDescText.innerHTML = 'Drive your chameleon car and<br>catch flies on the road!';
-      modeHintText.innerHTML = 'Tap left/right to switch lanes. Don\'t run out of <strong style="color:#fbbf24">fuel</strong>! ⛽';
-    } else if (selectedMode === 'daily') {
-      modeDescText.innerHTML = 'Daily Challenge!<br>Same seed for everyone today.';
-      modeHintText.innerHTML = 'Classic gameplay with a <strong style="color:#8b5cf6">seeded</strong> daily puzzle. Compare scores! 📅';
-    } else if (selectedMode === 'maze') {
-      modeDescText.innerHTML = 'Navigate the grid maze<br>and catch flies along the way!';
-      modeHintText.innerHTML = 'Swipe or tap to navigate. Catch all <strong style="color:#ffd700">flies</strong> then reach the exit! 🌿';
-    } else {
-      modeDescText.innerHTML = 'Tap a fly to shoot your<br>sticky tongue and catch it!';
-      modeHintText.innerHTML = 'Don\'t let <strong style="color:#e63946">5 flies</strong> escape! Catch 10 for a poo! 💩';
-    }
+    // Update card selection
+    allModeCards.forEach(function(card) {
+      card.classList.toggle('selected', card.dataset.mode === selectedMode);
+    });
+    // Keep hidden daily button in sync
+    if (modeDailyBtn) modeDailyBtn.classList.toggle('selected', selectedMode === 'daily');
     updateDailyBestLabel();
     renderStartLeaderboard();
   }
   updateModeUI();
 
-  modeClassicBtn.addEventListener('click', function() {
-    selectedMode = 'classic';
-    localStorage.setItem('chameleon-mode', 'classic');
-    updateModeUI();
+  // Card click handlers
+  allModeCards.forEach(function(card) {
+    card.addEventListener('click', function() {
+      selectedMode = card.dataset.mode;
+      localStorage.setItem('chameleon-mode', selectedMode);
+      updateModeUI();
+    });
   });
-  modeCarBtn.addEventListener('click', function() {
-    selectedMode = 'car';
-    localStorage.setItem('chameleon-mode', 'car');
-    updateModeUI();
-  });
-  modeDailyBtn.addEventListener('click', function() {
-    selectedMode = 'daily';
-    localStorage.setItem('chameleon-mode', 'daily');
-    updateModeUI();
-  });
-  modeMazeBtn.addEventListener('click', function() {
-    selectedMode = 'maze';
-    localStorage.setItem('chameleon-mode', 'maze');
-    updateModeUI();
-  });
+  if (modeDailyBtn) {
+    modeDailyBtn.addEventListener('click', function() {
+      selectedMode = 'daily';
+      localStorage.setItem('chameleon-mode', 'daily');
+      updateModeUI();
+    });
+  }
 
   function handleStart() {
+    dailyMode = false;
+    dailyRng = null;
     if (selectedMode === 'car') {
-      dailyMode = false;
-      dailyRng = null;
       startCarGame();
     } else if (selectedMode === 'daily') {
       dailyMode = true;
@@ -3321,12 +3573,10 @@
       dailyRng = mulberry32(seed);
       startGame();
     } else if (selectedMode === 'maze') {
-      dailyMode = false;
-      dailyRng = null;
       startMazeGame();
+    } else if (selectedMode === 'runner') {
+      startRunnerGame();
     } else {
-      dailyMode = false;
-      dailyRng = null;
       startGame();
     }
   }
@@ -3994,6 +4244,8 @@
       renderCarLeaderboard(startLeaderboardTable, startLeaderboard);
     } else if (selectedMode === 'maze') {
       renderMazeLeaderboard(startLeaderboardTable, startLeaderboard);
+    } else if (selectedMode === 'runner') {
+      renderRunnerLeaderboard(startLeaderboardTable, startLeaderboard);
     } else {
       renderLeaderboard(startLeaderboardTable, startLeaderboard);
     }
@@ -4001,9 +4253,9 @@
   renderStartLeaderboard();
 
   // Update leaderboard when mode changes
-  modeClassicBtn.addEventListener('click', renderStartLeaderboard);
-  modeCarBtn.addEventListener('click', renderStartLeaderboard);
-  modeMazeBtn.addEventListener('click', renderStartLeaderboard);
+  allModeCards.forEach(function(card) {
+    card.addEventListener('click', renderStartLeaderboard);
+  });
 
   // V9: Achievements overlay
   var achBtn = document.getElementById('achievements-btn');
@@ -4959,15 +5211,509 @@
   });
 
 
+  // ═══════════════════════════════════════════════════════════════════════
+  // ═══════════ V14: SNAKE RUNNER MODE ════════════════════════════════════
+  // ═══════════════════════════════════════════════════════════════════════
+
+  var runnerActive = false;
+  var runnerScore = 0;
+  var runnerLevel = 1;
+  var runnerLives = 3;
+  var runnerSpeed = 120;          // px/s obstacle speed (slow for kids)
+  var runnerObstacles = [];       // {el, type, x, hitboxW, hitboxH}
+  var runnerRafId = null;
+  var runnerLastTime = 0;
+  var runnerObstacleTimer = 0;
+  var runnerNextObstacleIn = 1.5; // seconds until next obstacle
+  var runnerDodged = 0;           // obstacles dodged (for milestone popups)
+  var runnerInvincible = false;
+  var runnerInvincibleTimer = 0;
+  var runnerHighScore = parseInt(localStorage.getItem('chameleon_runner_hs') || '0', 10);
+
+  // Jump / duck state
+  var runnerJumping = false;
+  var runnerDucking = false;
+  var runnerVelY = 0;
+  var runnerY = 0;                // px above ground (0 = on ground)
+  var runnerGravity = 900;        // px/s^2 — floaty for kids
+  var runnerJumpVel = 480;        // initial jump velocity — not too high
+  var runnerGroundY = 0;          // calculated at start
+
+  // DOM refs
+  var runnerArea = document.getElementById('runner-mode-area');
+  var runnerChameleon = document.getElementById('runner-chameleon');
+  var runnerScoreDisplay = document.getElementById('runner-score-display');
+  var runnerLevelDisplay = document.getElementById('runner-level-display');
+  var runnerHeartsEl = document.getElementById('runner-hearts');
+  var runnerForest = document.getElementById('runner-forest');
+  var runnerGrass = document.getElementById('runner-grass');
+  var runnerLevelBanner = document.getElementById('runner-level-banner');
+
+  // Populate scrolling forest/grass
+  var treeLine = '🌳🌲🌿🌳🌴🌲🌳🌿🌲🌴🌳🌲🌿🌳🌴🌲';
+  var grassLine = '🌿🍃🌱🌿🍃🌱🌿🍃🌱🌿🍃🌱🌿🍃🌱🌿🍃🌱🌿🍃🌱🌿🍃🌱';
+  if (runnerForest) runnerForest.textContent = treeLine + treeLine + treeLine + treeLine;
+  if (runnerGrass) runnerGrass.textContent = grassLine + grassLine + grassLine + grassLine;
+
+  // ─── Runner Leaderboard ─────────────────────────────────────────────
+  function getRunnerLeaderboard() {
+    try { return JSON.parse(localStorage.getItem('chameleon-runner-leaderboard') || '[]'); }
+    catch(e) { return []; }
+  }
+  function saveRunnerLeaderboard(board) {
+    localStorage.setItem('chameleon-runner-leaderboard', JSON.stringify(board));
+  }
+  function isRunnerTopScore(sc) {
+    var board = getRunnerLeaderboard();
+    return board.length < 5 || sc > (board[board.length - 1] || {}).score;
+  }
+  function addToRunnerLeaderboard(name, sc, lvl) {
+    var board = getRunnerLeaderboard();
+    board.push({ name: (name || 'You').substring(0, 8), score: sc, level: lvl });
+    board.sort(function(a, b) { return b.score - a.score; });
+    if (board.length > 5) board.length = 5;
+    saveRunnerLeaderboard(board);
+    return board;
+  }
+  function renderRunnerLeaderboard(tableEl, containerEl) {
+    var board = getRunnerLeaderboard();
+    if (board.length === 0) {
+      if (containerEl) containerEl.style.display = 'none';
+      return;
+    }
+    if (containerEl) containerEl.style.display = '';
+    var ranks = ['🥇', '🥈', '🥉'];
+    var tbody = tableEl.querySelector('tbody') || tableEl;
+    tbody.innerHTML = '<tr><th></th><th>Name</th><th>Score</th><th>Lvl</th></tr>' +
+      board.map(function(entry, i) {
+        return '<tr><td>' + (ranks[i] || (i+1)) + '</td><td>🐍 ' + entry.name + '</td><td>' + entry.score + '</td><td>' + entry.level + '</td></tr>';
+      }).join('');
+  }
+
+  // ─── Runner HUD ─────────────────────────────────────────────────────
+  function updateRunnerHUD() {
+    if (runnerScoreDisplay) runnerScoreDisplay.textContent = runnerScore;
+    if (runnerLevelDisplay) runnerLevelDisplay.textContent = runnerLevel;
+    if (runnerHeartsEl) {
+      var hearts = '';
+      for (var i = 0; i < runnerLives; i++) hearts += '❤️';
+      for (var j = runnerLives; j < 3; j++) hearts += '🖤';
+      runnerHeartsEl.textContent = hearts;
+    }
+  }
+
+  // ─── Runner Scroll Speed ────────────────────────────────────────────
+  function updateRunnerScrollSpeed() {
+    var duration = 8 / (runnerSpeed / 120);
+    if (runnerForest) runnerForest.style.animationDuration = duration + 's';
+    if (runnerGrass) runnerGrass.style.animationDuration = (duration / 2) + 's';
+  }
+
+  // ─── Create Obstacle ────────────────────────────────────────────────
+  function createRunnerObstacle() {
+    if (!runnerActive) return;
+    var containerW = runnerArea.offsetWidth;
+    var containerH = runnerArea.offsetHeight;
+    var groundTop = containerH * 0.4; // ground starts at 40% from top
+
+    // Decide type: mostly ground snakes, some hanging cobras at higher levels
+    var type = 'ground';
+    if (runnerLevel >= 2 && Math.random() < 0.25 + (runnerLevel - 2) * 0.05) {
+      type = 'hanging';
+    }
+
+    var el = document.createElement('div');
+    el.className = 'runner-obstacle';
+
+    var obs = { el: el, type: type, x: containerW + 20, scored: false };
+
+    if (type === 'ground') {
+      el.classList.add('ground-snake');
+      el.textContent = Math.random() < 0.5 ? '🐍' : '🐍';
+      el.style.fontSize = '2.2rem';
+      obs.hitboxW = 30 * 0.7;
+      obs.hitboxH = 30 * 0.7;
+    } else {
+      el.classList.add('hanging-cobra');
+      // Hanging cobra drops from top, positioned at a height where ducking avoids it
+      el.textContent = '🐍';
+      el.style.fontSize = '2.2rem';
+      el.style.top = (groundTop - 70) + 'px';
+      obs.hitboxW = 30 * 0.7;
+      obs.hitboxH = 50 * 0.7;
+    }
+
+    el.style.left = obs.x + 'px';
+    runnerArea.appendChild(el);
+    runnerObstacles.push(obs);
+  }
+
+  // ─── Show Milestone ─────────────────────────────────────────────────
+  function showRunnerMilestone() {
+    var messages = ['Amazing! 🎉', 'WOW! ⭐', 'Superstar! 🌟', 'Awesome! 🔥', 'Go go go! 🚀'];
+    var msg = messages[Math.floor(Math.random() * messages.length)];
+    var el = document.createElement('div');
+    el.className = 'runner-milestone';
+    el.textContent = msg;
+    runnerArea.appendChild(el);
+    setTimeout(function() { el.remove(); }, 1600);
+  }
+
+  // ─── Runner Game Loop ───────────────────────────────────────────────
+  function runnerGameLoop(timestamp) {
+    if (!runnerActive) return;
+    var dt = Math.min((timestamp - runnerLastTime) / 1000, 0.05);
+    runnerLastTime = timestamp;
+
+    var containerW = runnerArea.offsetWidth;
+    var containerH = runnerArea.offsetHeight;
+    var groundBottom = containerH * 0.6; // 60% from top = bottom 40%
+
+    // ── Update jump physics ──
+    if (runnerJumping) {
+      // Asymmetric gravity: slow up AND slow down = floaty arc
+      var grav = runnerVelY > 0 ? 600 : 800;  // rising = lighter, falling = slightly heavier
+      runnerVelY -= grav * dt;
+      runnerY += runnerVelY * dt;
+      if (runnerY <= 0) {
+        runnerY = 0;
+        runnerJumping = false;
+        runnerVelY = 0;
+        runnerChameleon.classList.remove('jumping');
+      }
+    }
+
+    // Position chameleon
+    runnerChameleon.style.bottom = runnerGroundY + 'px';
+    runnerChameleon.style.transform = runnerDucking ? 'scaleY(0.5) scaleX(1.2)' : 'translateY(' + (-runnerY) + 'px)';
+
+    // ── Invincibility timer ──
+    if (runnerInvincible) {
+      runnerInvincibleTimer -= dt;
+      if (runnerInvincibleTimer <= 0) {
+        runnerInvincible = false;
+        runnerChameleon.classList.remove('hit');
+      }
+    }
+
+    // ── Spawn obstacles ──
+    runnerObstacleTimer -= dt;
+    if (runnerObstacleTimer <= 0) {
+      createRunnerObstacle();
+      // Random interval, decreases with speed
+      var minGap = Math.max(2.0, 3.0 - (runnerLevel - 1) * 0.1);
+      var maxGap = Math.max(3.0, 5.0 - (runnerLevel - 1) * 0.15);
+      runnerNextObstacleIn = minGap + Math.random() * (maxGap - minGap);
+      runnerObstacleTimer = runnerNextObstacleIn;
+    }
+
+    // ── Move obstacles & check collisions ──
+    var chameleonLeft = containerW * 0.15;
+    var chameleonW = 40 * 0.7;  // forgiving hitbox
+    var chameleonH = runnerDucking ? 20 * 0.7 : 40 * 0.7;
+    var chameleonBottom2 = runnerY;
+    var chameleonTop = chameleonBottom2 + (runnerDucking ? 25 : 50);
+
+    for (var i = runnerObstacles.length - 1; i >= 0; i--) {
+      var obs = runnerObstacles[i];
+      obs.x -= runnerSpeed * dt;
+      obs.el.style.left = obs.x + 'px';
+
+      // Off screen left — remove and score
+      if (obs.x < -60) {
+        obs.el.remove();
+        runnerObstacles.splice(i, 1);
+        continue;
+      }
+
+      // Score when obstacle passes chameleon
+      if (!obs.scored && obs.x + 30 < chameleonLeft) {
+        obs.scored = true;
+        runnerScore += 10 + (runnerLevel - 1) * 2;
+        runnerDodged++;
+        updateRunnerHUD();
+
+        // Milestone every 10 dodged
+        if (runnerDodged % 10 === 0) {
+          showRunnerMilestone();
+        }
+
+        // Level up every 20 dodged
+        if (runnerDodged % 20 === 0) {
+          runnerLevel++;
+          runnerSpeed = 120 + (runnerLevel - 1) * 15;
+          updateRunnerScrollSpeed();
+          updateRunnerHUD();
+          // Show level banner
+          if (runnerLevelBanner) {
+            runnerLevelBanner.textContent = '🎉 Level ' + runnerLevel + '!';
+            runnerLevelBanner.style.display = '';
+            runnerLevelBanner.style.animation = 'none';
+            void runnerLevelBanner.offsetWidth;
+            runnerLevelBanner.style.animation = 'level-pop 1.6s ease-out forwards';
+            setTimeout(function() { runnerLevelBanner.style.display = 'none'; }, 1600);
+          }
+          playSound('combo');
+        }
+        continue;
+      }
+
+      // Collision check (forgiving hitboxes — 30% smaller than visual)
+      if (obs.scored || runnerInvincible) continue;
+
+      var obsLeft = obs.x;
+      var obsRight = obs.x + 40;
+
+      // Chameleon bounds
+      var cLeft = chameleonLeft;
+      var cRight = chameleonLeft + chameleonW + 15;
+
+      // Horizontal overlap?
+      if (cRight > obsLeft + 10 && cLeft < obsRight - 10) {
+        var hit = false;
+
+        if (obs.type === 'ground') {
+          // Ground snake — chameleon must be jumping to avoid
+          // Snake hitbox: from ground up to ~35px
+          if (chameleonBottom2 < 35) {
+            hit = true;
+          }
+        } else {
+          // Hanging cobra — chameleon must be ducking to avoid
+          // Cobra hitbox: from top down, hits if chameleon is standing/jumping at that height
+          if (!runnerDucking && runnerY < 60) {
+            hit = true;
+          }
+        }
+
+        if (hit) {
+          runnerLives--;
+          updateRunnerHUD();
+          playSound('miss');
+
+          if (runnerLives <= 0) {
+            endRunnerGame('The snakes got you! 🐍🐍🐍');
+            return;
+          }
+
+          // Invincibility window
+          runnerInvincible = true;
+          runnerInvincibleTimer = 1.5;
+          runnerChameleon.classList.add('hit');
+        }
+      }
+    }
+
+    runnerRafId = requestAnimationFrame(runnerGameLoop);
+  }
+
+  // ─── Start Runner ───────────────────────────────────────────────────
+  function startRunnerGame() {
+    initAudio();
+
+    runnerScore = 0;
+    runnerLevel = 1;
+    runnerLives = 3;
+    runnerSpeed = 120;
+    runnerDodged = 0;
+    runnerY = 0;
+    runnerVelY = 0;
+    runnerJumping = false;
+    runnerDucking = false;
+    runnerInvincible = false;
+    runnerInvincibleTimer = 0;
+    runnerObstacleTimer = 3.0;
+
+    // Clear old obstacles
+    runnerObstacles.forEach(function(o) { o.el.remove(); });
+    runnerObstacles = [];
+
+    // Remove stale milestones
+    var oldMilestones = runnerArea.querySelectorAll('.runner-milestone');
+    oldMilestones.forEach(function(m) { m.remove(); });
+
+    updateRunnerHUD();
+    updateRunnerScrollSpeed();
+
+    // Show runner area FIRST so offsetHeight is valid
+    startScreen.style.display = 'none';
+    gameoverScreen.style.display = 'none';
+    document.getElementById('hud').style.display = 'none';
+    thirstHud.style.display = 'none';
+    comboHud.style.display = 'none';
+    if (carArea) carArea.style.display = 'none';
+    mazeArea.style.display = 'none';
+    runnerArea.style.display = 'block';
+    showPauseBtn();
+
+    // Calculate ground position NOW that area is visible
+    var rAreaH = runnerArea.offsetHeight || window.innerHeight || 600;
+    runnerGroundY = Math.round(rAreaH * 0.20);
+
+    // Position chameleon on ground
+    runnerChameleon.classList.remove('hit', 'jumping', 'ducking');
+    runnerY = 0;
+    runnerChameleon.style.bottom = runnerGroundY + 'px';
+
+    runnerActive = true;
+    runnerLastTime = performance.now();
+    runnerRafId = requestAnimationFrame(runnerGameLoop);
+  }
+
+  // ─── End Runner ─────────────────────────────────────────────────────
+  function endRunnerGame(reason, silent) {
+    runnerActive = false;
+    cancelAnimationFrame(runnerRafId);
+    hidePauseBtn();
+
+    // Clean up
+    runnerObstacles.forEach(function(o) { o.el.remove(); });
+    runnerObstacles = [];
+    runnerChameleon.classList.remove('hit', 'jumping', 'ducking');
+    var oldMilestones = runnerArea.querySelectorAll('.runner-milestone');
+    oldMilestones.forEach(function(m) { m.remove(); });
+
+    runnerArea.style.display = 'none';
+
+    if (silent) return;
+
+    playSound('gameover');
+
+    if (runnerScore > runnerHighScore) {
+      runnerHighScore = runnerScore;
+      localStorage.setItem('chameleon_runner_hs', runnerHighScore);
+    }
+
+    gameoverMsg.textContent = reason || 'Game Over! 🐍';
+    finalScoreEl.textContent = runnerScore;
+    finalLevelEl.textContent = 'Reached Level ' + runnerLevel + ' 🐍';
+    highScoreEl.textContent = runnerHighScore > 0 ? '🏆 Best (Runner): ' + runnerHighScore : '';
+
+    // Leaderboard
+    var isTop = isRunnerTopScore(runnerScore);
+    if (isTop && runnerScore > 0) {
+      nameEntrySection.style.display = '';
+      nameInput.value = '';
+      var newSaveBtn = saveScoreBtn.cloneNode(true);
+      saveScoreBtn.parentNode.replaceChild(newSaveBtn, saveScoreBtn);
+      var currentSaveBtn = document.getElementById('save-score-btn');
+      currentSaveBtn.addEventListener('click', function() {
+        var name = (document.getElementById('name-input').value || 'You').substring(0, 8);
+        addToRunnerLeaderboard(name, runnerScore, runnerLevel);
+        document.getElementById('name-entry-section').style.display = 'none';
+        renderRunnerLeaderboard(
+          document.getElementById('gameover-leaderboard-table'),
+          document.getElementById('gameover-leaderboard')
+        );
+      });
+    } else {
+      nameEntrySection.style.display = 'none';
+    }
+
+    renderRunnerLeaderboard(gameoverLeaderboardTable, gameoverLeaderboard);
+    gameoverScreen.style.display = 'flex';
+  }
+
+  // ─── Runner Controls ────────────────────────────────────────────────
+  // Tap/click anywhere = jump, hold = duck
+  var runnerTouchTimer = null;
+  var runnerHolding = false;
+
+  function runnerDoJump() {
+    if (!runnerActive || gamePaused) return;
+    if (!runnerJumping && runnerY <= 0) {
+      runnerJumping = true;
+      runnerVelY = runnerJumpVel;
+      runnerChameleon.classList.add('jumping');
+      playSound('tongue');
+    }
+  }
+
+  function runnerStartDuck() {
+    if (!runnerActive || gamePaused) return;
+    runnerDucking = true;
+    runnerChameleon.classList.add('ducking');
+  }
+
+  function runnerStopDuck() {
+    runnerDucking = false;
+    runnerChameleon.classList.remove('ducking');
+  }
+
+  // Touch controls
+  runnerArea.addEventListener('touchstart', function(e) {
+    if (!runnerActive || gamePaused) return;
+    e.preventDefault();
+    runnerHolding = false;
+    runnerTouchTimer = setTimeout(function() {
+      runnerHolding = true;
+      runnerStartDuck();
+    }, 200);
+  }, { passive: false });
+
+  runnerArea.addEventListener('touchend', function(e) {
+    if (!runnerActive) return;
+    e.preventDefault();
+    clearTimeout(runnerTouchTimer);
+    if (runnerHolding) {
+      runnerStopDuck();
+      runnerHolding = false;
+    } else {
+      runnerDoJump();
+    }
+  }, { passive: false });
+
+  // Mouse controls
+  runnerArea.addEventListener('mousedown', function(e) {
+    if (!runnerActive || gamePaused) return;
+    runnerHolding = false;
+    runnerTouchTimer = setTimeout(function() {
+      runnerHolding = true;
+      runnerStartDuck();
+    }, 200);
+  });
+
+  runnerArea.addEventListener('mouseup', function(e) {
+    if (!runnerActive) return;
+    clearTimeout(runnerTouchTimer);
+    if (runnerHolding) {
+      runnerStopDuck();
+      runnerHolding = false;
+    } else {
+      runnerDoJump();
+    }
+  });
+
+  // Keyboard: space/up = jump, down = duck
+  document.addEventListener('keydown', function(e) {
+    if (!runnerActive || gamePaused) return;
+    if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'w') {
+      e.preventDefault();
+      runnerDoJump();
+    }
+    if (e.key === 'ArrowDown' || e.key === 's') {
+      e.preventDefault();
+      runnerStartDuck();
+    }
+  });
+  document.addEventListener('keyup', function(e) {
+    if (!runnerActive) return;
+    if (e.key === 'ArrowDown' || e.key === 's') {
+      runnerStopDuck();
+    }
+  });
+
+
   // ─── Initial mouth pos after fonts/layout ────────────────────────────────
   window.addEventListener('load', updateMouthPos);
 
   // ── Dev/Test hooks ────────────────────────────────────────────────────────
   window.__gameState = {
-    get gameActive() { return typeof gameActive !== 'undefined' ? gameActive : false; },
-    get carActive()  { return typeof carActive  !== 'undefined' ? carActive  : false; },
-    get mazeActive() { return typeof mazeActive !== 'undefined' ? mazeActive : false; },
-    get gamePaused() { return typeof gamePaused !== 'undefined' ? gamePaused : false; },
+    get gameActive()   { return typeof gameActive   !== 'undefined' ? gameActive   : false; },
+    get carActive()    { return typeof carActive    !== 'undefined' ? carActive    : false; },
+    get mazeActive()   { return typeof mazeActive   !== 'undefined' ? mazeActive   : false; },
+    get runnerActive() { return typeof runnerActive !== 'undefined' ? runnerActive : false; },
+    get gamePaused()   { return typeof gamePaused   !== 'undefined' ? gamePaused   : false; },
     get score()   { return typeof score   !== 'undefined' ? score   : 0; },
     get catches() { return typeof catches !== 'undefined' ? catches : 0; },
     get missed()  { return typeof missed  !== 'undefined' ? missed  : 0; },
@@ -5005,9 +5751,10 @@
   };
 
   window.__forceEndGame = function() {
-    if (typeof endGame    === 'function') endGame('test');
-    if (typeof endCarGame === 'function') endCarGame('test', true);
-    if (typeof endMazeGame === 'function') endMazeGame('test', true);
+    if (typeof endGame       === 'function') endGame('test');
+    if (typeof endCarGame    === 'function') endCarGame('test', true);
+    if (typeof endMazeGame   === 'function') endMazeGame('test', true);
+    if (typeof endRunnerGame === 'function') endRunnerGame('test', true);
   };
 
   // Dev mode error overlay

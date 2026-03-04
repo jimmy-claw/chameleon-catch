@@ -242,3 +242,40 @@ test('mode switch from pause menu', async ({ page }) => {
   });
   expect(carBtnSelected).toBe(true);
 });
+
+// ─── Test: Snake Runner smoke test ───────────────────────────────────────────
+test('snake runner mode smoke test', async ({ page }) => {
+  test.setTimeout(15000);
+  await page.goto('/');
+  await page.waitForTimeout(500);
+
+  // Select runner mode then click Start
+  const runnerBtn = page.locator('#mode-runner-btn');
+  await runnerBtn.click();
+  await page.waitForTimeout(300);
+  await page.locator('#start-btn').click();
+  await page.waitForTimeout(1000);
+
+  // Runner area should be visible
+  const runnerArea = page.locator('#runner-mode-area');
+  await expect(runnerArea).toBeVisible();
+
+  // Chameleon should be visible
+  const chameleon = page.locator('#runner-chameleon');
+  await expect(chameleon).toBeVisible();
+
+  // Score should start at 0
+  const score = page.locator('#runner-score-display');
+  await expect(score).toHaveText('0');
+
+  // Tap to jump a few times
+  for (let i = 0; i < 3; i++) {
+    await page.locator('#runner-mode-area').tap().catch(() =>
+      page.locator('#runner-mode-area').click()
+    );
+    await page.waitForTimeout(600);
+  }
+
+  // Game should still be running (runner area still visible)
+  await expect(runnerArea).toBeVisible();
+});

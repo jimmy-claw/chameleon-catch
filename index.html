@@ -237,8 +237,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 50px;
-    gap: 8px;
+    padding: 0 8px;
+    gap: 6px;
     z-index: 20;
     pointer-events: none;
   }
@@ -614,16 +614,12 @@
 
   /* ===== MUTE BUTTON ===== */
   #mute-btn {
-    position: absolute;
-    top: 12px;
-    right: 12px;
     z-index: 55;
-    background: rgba(0,0,0,0.35);
+    background: rgba(0,0,0,0.3);
     backdrop-filter: blur(4px);
     border: none;
-    border-radius: 50%;
-    width: 34px;
-    height: 34px;
+    border-radius: 10px;
+    padding: 4px 8px;
     font-size: 1.1rem;
     cursor: pointer;
     color: #fff;
@@ -631,20 +627,39 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
+    pointer-events: auto;
+  }
+  /* When inside a HUD bar, flow inline */
+  #hud > #mute-btn,
+  #car-hud > #mute-btn,
+  #maze-hud > #mute-btn,
+  #runner-hud > #mute-btn,
+  #hud > #pause-btn,
+  #car-hud > #pause-btn,
+  #maze-hud > #pause-btn,
+  #runner-hud > #pause-btn {
+    position: static;
+  }
+  /* When floating (start screen / game-over) */
+  #mute-btn.floating {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    padding: 0;
   }
 
   /* ===== PAUSE BUTTON ===== */
   #pause-btn {
-    position: absolute;
-    top: 12px;
-    left: 12px;
     z-index: 55;
-    background: rgba(0,0,0,0.35);
+    background: rgba(0,0,0,0.3);
     backdrop-filter: blur(4px);
     border: none;
-    border-radius: 50%;
-    width: 34px;
-    height: 34px;
+    border-radius: 10px;
+    padding: 4px 8px;
     font-size: 1.1rem;
     cursor: pointer;
     color: #fff;
@@ -652,6 +667,8 @@
     display: none;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
+    pointer-events: auto;
   }
 
   /* ===== PAUSE OVERLAY ===== */
@@ -1027,8 +1044,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 50px;
-    gap: 8px;
+    padding: 0 8px;
+    gap: 6px;
     z-index: 20;
     pointer-events: none;
   }
@@ -1327,7 +1344,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 50px;
+    padding: 0 8px;
     z-index: 20;
     pointer-events: none;
     gap: 4px;
@@ -1656,8 +1673,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 50px;
-    gap: 8px;
+    padding: 0 8px;
+    gap: 6px;
     z-index: 20;
     pointer-events: none;
   }
@@ -1809,7 +1826,7 @@
   </div>
 
   <!-- Mute Button -->
-  <button id="mute-btn">🔊</button>
+  <button id="mute-btn" class="floating">🔊</button>
 
   <!-- Pause Button -->
   <button id="pause-btn">⏸️</button>
@@ -2619,6 +2636,22 @@
   const pauseQuitBtn   = document.getElementById('pause-quit-btn');
   let gamePaused = false;
 
+  /** Move pause (first) & mute (last) into the given HUD bar */
+  function attachBtnsToHud(hudEl) {
+    if (!hudEl) return;
+    muteBtn.classList.remove('floating');
+    hudEl.insertBefore(pauseBtn, hudEl.firstChild);
+    hudEl.appendChild(muteBtn);
+  }
+  /** Return mute btn to game-container as a floating button */
+  function detachBtnsFromHud() {
+    var gc = document.getElementById('game-container');
+    if (gc) {
+      gc.appendChild(muteBtn);
+      gc.appendChild(pauseBtn);
+    }
+    muteBtn.classList.add('floating');
+  }
   function showPauseBtn() {
     pauseBtn.style.display = 'flex';
   }
@@ -3438,11 +3471,12 @@
     gameActive = true;
     startScreen.style.display   = 'none';
     gameoverScreen.style.display= 'none';
+    // Show classic HUD
+    document.getElementById('hud').style.display = 'flex';
+    attachBtnsToHud(document.getElementById('hud'));
     showPauseBtn();
     // Ensure car mode area is hidden for classic
     if (carArea) carArea.style.display = 'none';
-    // Show classic HUD
-    document.getElementById('hud').style.display = 'flex';
 
     // Restore skin (it gets cleared during thirst/game over)
     applySkin(currentSkin);
@@ -3466,6 +3500,7 @@
     gameActive = false;
     cancelAnimationFrame(rafId);
     hidePauseBtn();
+    detachBtnsFromHud();
     stopWeatherSystem();
     tongue = null;
     ctx.clearRect(0,0,tongueCanvas.width,tongueCanvas.height);
@@ -4137,6 +4172,7 @@
     carArea.style.display = '';
     if (nitroLines) nitroLines.style.display = 'none';
     carTongue.classList.remove('active');
+    attachBtnsToHud(document.getElementById('car-hud'));
     showPauseBtn();
 
     // Hide classic game elements
@@ -4159,6 +4195,7 @@
     carActive = false;
     cancelAnimationFrame(carRafId);
     hidePauseBtn();
+    detachBtnsFromHud();
     stopWeatherSystem();
 
     // Clean up
@@ -5097,6 +5134,7 @@
     if (carArea) carArea.style.display = 'none';
     document.getElementById('hud').style.display = 'none';
     mazeArea.style.display = 'block';
+    attachBtnsToHud(document.getElementById('maze-hud'));
     showPauseBtn();
     applyMazeSkin();
 
@@ -5108,6 +5146,7 @@
     mazeActive = false;
     clearMazeTimers();
     hidePauseBtn();
+    detachBtnsFromHud();
     mazeArea.style.display = 'none';
 
     if (silent) return;
@@ -5568,6 +5607,7 @@
     if (carArea) carArea.style.display = 'none';
     mazeArea.style.display = 'none';
     runnerArea.style.display = 'block';
+    attachBtnsToHud(document.getElementById('runner-hud'));
     showPauseBtn();
 
     // Calculate ground position NOW that area is visible
@@ -5589,6 +5629,7 @@
     runnerActive = false;
     cancelAnimationFrame(runnerRafId);
     hidePauseBtn();
+    detachBtnsFromHud();
 
     // Clean up
     runnerObstacles.forEach(function(o) { o.el.remove(); });

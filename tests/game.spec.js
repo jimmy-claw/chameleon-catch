@@ -249,9 +249,11 @@ test('snake runner mode smoke test', async ({ page }) => {
   await page.goto('/');
   await page.waitForTimeout(500);
 
-  // Click runner card
+  // Select runner mode then click Start
   const runnerBtn = page.locator('#mode-runner-btn');
   await runnerBtn.click();
+  await page.waitForTimeout(300);
+  await page.locator('#start-btn').click();
   await page.waitForTimeout(1000);
 
   // Runner area should be visible

@@ -5234,8 +5234,8 @@
   var runnerDucking = false;
   var runnerVelY = 0;
   var runnerY = 0;                // px above ground (0 = on ground)
-  var runnerGravity = 1800;       // px/s^2
-  var runnerJumpVel = 620;        // initial jump velocity (positive = up, bottom-based)
+  var runnerGravity = 900;        // px/s^2 — floaty for kids
+  var runnerJumpVel = 700;        // initial jump velocity
   var runnerGroundY = 0;          // calculated at start
 
   // DOM refs
@@ -5397,8 +5397,8 @@
     if (runnerObstacleTimer <= 0) {
       createRunnerObstacle();
       // Random interval, decreases with speed
-      var minGap = Math.max(0.8, 1.5 - (runnerLevel - 1) * 0.08);
-      var maxGap = Math.max(1.2, 2.5 - (runnerLevel - 1) * 0.1);
+      var minGap = Math.max(2.0, 3.0 - (runnerLevel - 1) * 0.1);
+      var maxGap = Math.max(3.0, 5.0 - (runnerLevel - 1) * 0.15);
       runnerNextObstacleIn = minGap + Math.random() * (maxGap - minGap);
       runnerObstacleTimer = runnerNextObstacleIn;
     }
@@ -5518,7 +5518,7 @@
     runnerDucking = false;
     runnerInvincible = false;
     runnerInvincibleTimer = 0;
-    runnerObstacleTimer = 1.5;
+    runnerObstacleTimer = 3.0;
 
     // Clear old obstacles
     runnerObstacles.forEach(function(o) { o.el.remove(); });

@@ -5218,7 +5218,7 @@
   var runnerScore = 0;
   var runnerLevel = 1;
   var runnerLives = 3;
-  var runnerSpeed = 200;          // px/s obstacle speed
+  var runnerSpeed = 120;          // px/s obstacle speed (slow for kids)
   var runnerObstacles = [];       // {el, type, x, hitboxW, hitboxH}
   var runnerRafId = null;
   var runnerLastTime = 0;
@@ -5303,7 +5303,7 @@
 
   // ─── Runner Scroll Speed ────────────────────────────────────────────
   function updateRunnerScrollSpeed() {
-    var duration = 8 / (runnerSpeed / 200);
+    var duration = 8 / (runnerSpeed / 120);
     if (runnerForest) runnerForest.style.animationDuration = duration + 's';
     if (runnerGrass) runnerGrass.style.animationDuration = (duration / 2) + 's';
   }
@@ -5437,7 +5437,7 @@
         // Level up every 20 dodged
         if (runnerDodged % 20 === 0) {
           runnerLevel++;
-          runnerSpeed = 200 + (runnerLevel - 1) * 30;
+          runnerSpeed = 120 + (runnerLevel - 1) * 15;
           updateRunnerScrollSpeed();
           updateRunnerHUD();
           // Show level banner
@@ -5510,7 +5510,7 @@
     runnerScore = 0;
     runnerLevel = 1;
     runnerLives = 3;
-    runnerSpeed = 200;
+    runnerSpeed = 120;
     runnerDodged = 0;
     runnerY = 0;
     runnerVelY = 0;
@@ -5544,7 +5544,7 @@
 
     // Calculate ground position NOW that area is visible
     var rAreaH = runnerArea.offsetHeight || window.innerHeight || 600;
-    runnerGroundY = Math.round(rAreaH * 0.38);
+    runnerGroundY = Math.round(rAreaH * 0.60);
 
     // Position chameleon on ground
     runnerChameleon.classList.remove('hit', 'jumping', 'ducking');

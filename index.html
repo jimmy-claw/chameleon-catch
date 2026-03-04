@@ -1606,7 +1606,7 @@
     font-size: 2.8rem;
     z-index: 10;
     line-height: 1;
-    will-change: bottom;
+    will-change: transform;
     transition: bottom 0.18s ease-out;
   }
   #runner-chameleon.mid-air {
@@ -5400,6 +5400,7 @@
 
   // ─── Position chameleon on current level ───────────────────────────
   function positionChameleon() {
+    runnerChameleon.style.transform = '';
     runnerChameleon.style.bottom = runnerPlatformY[runnerCurrentLevel] + 'px';
   }
 
@@ -5578,6 +5579,7 @@
 
     // Position chameleon on ground (level 0) — disable transition for initial placement
     runnerChameleon.classList.remove('hit', 'mid-air');
+    runnerChameleon.style.transform = '';
     runnerChameleon.style.transition = 'none';
     positionChameleon();
     void runnerChameleon.offsetWidth; // force reflow

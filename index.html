@@ -2002,6 +2002,252 @@
     line-height: 1.3;
   }
 
+  /* ═══════════ EDUCATION MODE ═══════════ */
+  #edu-mode-area {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 15;
+    background: linear-gradient(180deg, #1a4a2e 0%, #2d6a4f 50%, #52b788 100%);
+    display: none;
+    flex-direction: column;
+  }
+  #edu-hud {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    z-index: 20;
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.2rem, 5vw, 1.6rem);
+    color: var(--gold);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  }
+  #edu-cage-section {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: clamp(24px, 8vh, 60px);
+  }
+  #edu-cage {
+    position: relative;
+    width: clamp(180px, 55vw, 280px);
+    height: clamp(160px, 45vw, 240px);
+    border: 5px solid #6b3a1f;
+    border-radius: 14px 14px 0 0;
+    background: rgba(0,0,0,0.15);
+    overflow: hidden;
+  }
+  #edu-cage-bars {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0 8px;
+    transition: transform 0.8s ease-in;
+  }
+  #edu-cage-bars.open {
+    transform: translateY(-110%);
+  }
+  .edu-bar {
+    width: 6px;
+    background: linear-gradient(180deg, #8B7355, #6b3a1f, #8B7355);
+    border-radius: 3px;
+    box-shadow: 1px 0 3px rgba(0,0,0,0.3);
+  }
+  #edu-chameleon {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(3rem, 12vw, 5rem);
+    line-height: 1;
+    transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  #edu-chameleon.free {
+    bottom: 50%;
+    transform: translateX(-50%) scale(1.3);
+  }
+  #edu-locks {
+    display: flex;
+    gap: clamp(16px, 6vw, 32px);
+    margin-top: 10px;
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+  .edu-lock {
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: inline-block;
+  }
+  .edu-lock.unlocked {
+    animation: edu-lock-bounce 0.5s ease;
+  }
+  @keyframes edu-lock-bounce {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.5) rotate(-10deg); }
+    70% { transform: scale(1.2) rotate(5deg); }
+    100% { transform: scale(1); }
+  }
+  #edu-puzzle-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 16px 32px;
+    gap: 8px;
+  }
+  #edu-feedback {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.5rem, 5.5vw, 2rem);
+    color: var(--gold);
+    min-height: 2em;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  #edu-question {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.8rem, 7vw, 2.5rem);
+    color: #fff;
+    text-align: center;
+    margin-bottom: 18px;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    line-height: 1.4;
+    white-space: pre-line;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #edu-answers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    max-width: 420px;
+  }
+  .edu-ans-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 6vw, 2.5rem);
+    background: linear-gradient(135deg, #2d7a4f, #1e6b45);
+    color: #fff;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 18px;
+    padding: 16px 28px;
+    min-width: 80px;
+    min-height: 80px;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s ease, background 0.15s ease;
+    text-shadow: 0 2px 3px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .edu-ans-btn:hover {
+    transform: scale(1.06);
+    border-color: rgba(255,255,255,0.5);
+  }
+  .edu-ans-btn:active {
+    transform: scale(0.94);
+  }
+  .edu-ans-btn.correct {
+    background: linear-gradient(135deg, #27ae60, #2ecc71) !important;
+    border-color: var(--gold) !important;
+  }
+  .edu-ans-btn.wrong {
+    background: linear-gradient(135deg, #c0392b, #e74c3c) !important;
+    border-color: #ff6b6b !important;
+  }
+  /* Color puzzle target */
+  .edu-color-target {
+    width: clamp(90px, 28vw, 130px);
+    height: clamp(90px, 28vw, 130px);
+    border-radius: 50%;
+    border: 5px solid rgba(255,255,255,0.5);
+    margin-bottom: 18px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+  }
+  /* Color puzzle answer circles */
+  .edu-color-circle {
+    width: clamp(70px, 20vw, 100px);
+    height: clamp(70px, 20vw, 100px);
+    border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.3);
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .edu-color-circle:hover {
+    transform: scale(1.1);
+  }
+  .edu-color-circle:active {
+    transform: scale(0.9);
+  }
+  .edu-color-circle.correct {
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 20px rgba(255,215,0,0.6) !important;
+  }
+  .edu-color-circle.wrong {
+    opacity: 0.4;
+  }
+  /* Cage shake animation */
+  @keyframes edu-cage-shake {
+    0%, 100% { transform: translateX(0); }
+    15% { transform: translateX(-8px) rotate(-1deg); }
+    30% { transform: translateX(8px) rotate(1deg); }
+    45% { transform: translateX(-6px); }
+    60% { transform: translateX(6px); }
+    75% { transform: translateX(-3px); }
+    90% { transform: translateX(3px); }
+  }
+  #edu-cage.shake {
+    animation: edu-cage-shake 0.5s ease;
+  }
+  /* Victory screen */
+  #edu-victory {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, rgba(26,74,46,0.95), rgba(45,106,79,0.95));
+    z-index: 25;
+  }
+  #edu-victory-chameleon {
+    font-size: clamp(4rem, 18vw, 7rem);
+    animation: edu-victory-bounce 1s ease infinite alternate;
+  }
+  @keyframes edu-victory-bounce {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-20px) scale(1.1); }
+  }
+  #edu-victory-text {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.5rem, 6vw, 2.5rem);
+    color: var(--gold);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    margin: 16px 0 24px;
+    text-align: center;
+  }
+  /* Confetti */
+  .edu-confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    z-index: 30;
+    pointer-events: none;
+    animation: edu-confetti-fall linear forwards;
+  }
+  @keyframes edu-confetti-fall {
+    0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+    100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+  }
+
 </style>
 </head>
 <body>
@@ -2106,6 +2352,11 @@
           <span class="menu-card-emoji">🎨</span>
           <span class="menu-card-name">Color!</span>
           <span class="menu-card-tagline">Paint the chameleon!</span>
+        </div>
+        <div class="menu-card" id="mode-education-btn" data-mode="education">
+          <span class="menu-card-emoji">🔒</span>
+          <span class="menu-card-name">Free Me!</span>
+          <span class="menu-card-tagline">Solve puzzles to free the chameleon!</span>
         </div>
       </div>
       <!-- Hidden elements for backwards compat -->
@@ -2278,6 +2529,39 @@
 
   <!-- ========== BRING TO LIFE ANIMATION OVERLAY ========== -->
   <div id="coloring-anim-overlay" style="display:none;"></div>
+
+  <!-- ========== EDUCATION MODE AREA ========== -->
+  <div id="edu-mode-area" style="display:none;">
+    <div id="edu-hud">
+      <span id="edu-stars-display">⭐ 0</span>
+    </div>
+    <div id="edu-cage-section">
+      <div id="edu-cage">
+        <div id="edu-cage-bars">
+          <div class="edu-bar"></div><div class="edu-bar"></div><div class="edu-bar"></div>
+          <div class="edu-bar"></div><div class="edu-bar"></div><div class="edu-bar"></div>
+          <div class="edu-bar"></div><div class="edu-bar"></div><div class="edu-bar"></div>
+        </div>
+        <div id="edu-chameleon">🦎</div>
+      </div>
+      <div id="edu-locks">
+        <span class="edu-lock" id="edu-lock-0">🔒</span>
+        <span class="edu-lock" id="edu-lock-1">🔒</span>
+        <span class="edu-lock" id="edu-lock-2">🔒</span>
+      </div>
+    </div>
+    <div id="edu-puzzle-section">
+      <div id="edu-feedback"></div>
+      <div id="edu-question"></div>
+      <div id="edu-answers"></div>
+    </div>
+    <div id="edu-victory" style="display:none;">
+      <div id="edu-victory-chameleon">🦎</div>
+      <div id="edu-victory-text">You freed the chameleon! 🎉</div>
+      <button class="btn" id="edu-play-again-btn">🔄 Play Again!</button>
+      <button class="btn" id="edu-back-btn" style="margin-top:8px;">🏠 Back to Menu</button>
+    </div>
+  </div>
 
   <!-- Game Over Screen -->
   <div class="screen" id="gameover-screen" style="display:none">
@@ -2928,6 +3212,9 @@
     if (runnerActive) {
       cancelAnimationFrame(runnerRafId);
     }
+    if (eduActive) {
+      // Education mode is turn-based, just show overlay
+    }
     pauseOverlay.style.display = 'flex';
   }
 
@@ -2980,6 +3267,10 @@
       endRunnerGame(null, true);
       selectedMode = 'classic';
       localStorage.setItem('chameleon-mode', 'classic');
+    } else if (eduActive) {
+      endEducationGame(null, true);
+      selectedMode = 'classic';
+      localStorage.setItem('chameleon-mode', 'classic');
     }
     updateModeUI();
     renderStartLeaderboard();
@@ -2998,6 +3289,8 @@
       endMazeGame(null, true);
     } else if (runnerActive) {
       endRunnerGame(null, true);
+    } else if (eduActive) {
+      endEducationGame(null, true);
     }
     startScreen.style.display = 'flex';
   });
@@ -3842,11 +4135,12 @@
   const modeMazeBtn = document.getElementById('mode-maze-btn');
   const modeRunnerBtn = document.getElementById('mode-runner-btn');
   const modeColoringBtn = document.getElementById('mode-coloring-btn');
+  const modeEducationBtn = document.getElementById('mode-education-btn');
   const modeDescText = document.getElementById('mode-desc-text');
   const modeHintText = document.getElementById('mode-hint-text');
 
   // All card buttons for easy iteration
-  var allModeCards = [modeClassicBtn, modeCarBtn, modeMazeBtn, modeRunnerBtn, modeColoringBtn].filter(Boolean);
+  var allModeCards = [modeClassicBtn, modeCarBtn, modeMazeBtn, modeRunnerBtn, modeColoringBtn, modeEducationBtn].filter(Boolean);
 
   function updateModeUI() {
     // Update card selection
@@ -3892,6 +4186,8 @@
       startRunnerGame();
     } else if (selectedMode === 'coloring') {
       startColoringMode();
+    } else if (selectedMode === 'education') {
+      startEducationGame();
     } else {
       startGame();
     }
@@ -6467,12 +6763,449 @@
     }
   };
 
+  // ═══════════════════════════════════════════════════════════════════════
+  // ═══════════ EDUCATION MODE ("Free the Chameleon!") ═════════════════
+  // ═══════════════════════════════════════════════════════════════════════
+  var eduActive = false;
+  var eduStars = 0;
+  var eduSolvedCount = 0;
+  var eduCurrentPuzzle = null;
+  var eduBestSession = parseInt(localStorage.getItem('chameleon-edu-best') || '0', 10);
+
+  var eduArea = document.getElementById('edu-mode-area');
+  var eduStarsDisplay = document.getElementById('edu-stars-display');
+  var eduQuestionEl = document.getElementById('edu-question');
+  var eduAnswersEl = document.getElementById('edu-answers');
+  var eduFeedbackEl = document.getElementById('edu-feedback');
+  var eduCage = document.getElementById('edu-cage');
+  var eduCageBars = document.getElementById('edu-cage-bars');
+  var eduChameleonEl = document.getElementById('edu-chameleon');
+  var eduVictory = document.getElementById('edu-victory');
+  var eduPuzzleSection = document.getElementById('edu-puzzle-section');
+
+  // Letter-emoji mapping
+  var EDU_LETTER_EMOJI = {
+    A:'🍎', B:'🦋', C:'🐱', D:'🐶', E:'🐘', F:'🐟', G:'🍇', H:'🏠', I:'🍦',
+    J:'🎃', K:'🪁', L:'🦁', M:'🐒', N:'👃', O:'🐙', P:'🐧', Q:'👸', R:'🌈',
+    S:'⭐', T:'🐯', U:'☂️', V:'🎻', W:'🐳', X:'🎸', Y:'🪀', Z:'🦓'
+  };
+
+  var EDU_COLORS = {
+    red: '#e74c3c', blue: '#3498db', green: '#2ecc71', yellow: '#f1c40f',
+    orange: '#e67e22', purple: '#9b59b6', pink: '#e91e8a'
+  };
+  var EDU_COLOR_NAMES = Object.keys(EDU_COLORS);
+
+  function eduRand(max) {
+    return Math.floor(Math.random() * max);
+  }
+
+  function eduShuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = eduRand(i + 1);
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function eduGetLetterPool() {
+    var diff = difficulty || 2;
+    if (diff === 1) return 'ABCDE'.split('');
+    if (diff === 2) return 'ABCDEFGHIJKLM'.split('');
+    return 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  }
+
+  function eduGetMaxNumber() {
+    var diff = difficulty || 2;
+    if (diff === 1) return 10;
+    if (diff === 2) return 10;
+    return 20;
+  }
+
+  function eduGetCountMax() {
+    var diff = difficulty || 2;
+    if (diff === 1) return 5;
+    if (diff === 2) return 8;
+    return 10;
+  }
+
+  function eduGetPuzzleTypes() {
+    var diff = difficulty || 2;
+    if (diff === 1) return ['color', 'counting', 'letterRecog'];
+    if (diff === 2) return ['color', 'counting', 'letterRecog', 'letterMatch'];
+    return ['color', 'counting', 'letterRecog', 'letterMatch', 'math'];
+  }
+
+  // ─── Puzzle generators ──────────────────────────────────────────────
+  function eduGenMath() {
+    // Simple addition only, max result 5
+    var a = 1 + eduRand(3); // 1-3
+    var b = 1 + eduRand(5 - a); // ensure a+b <= 5
+    var answer = a + b;
+    var choices = [answer];
+    while (choices.length < 3) {
+      var wrong = 1 + eduRand(5);
+      if (choices.indexOf(wrong) === -1) choices.push(wrong);
+    }
+    return {
+      type: 'math',
+      question: a + ' + ' + b + ' = ?',
+      answer: String(answer),
+      choices: eduShuffle(choices).map(String),
+      display: 'buttons'
+    };
+  }
+
+  function eduGenLetterMatch() {
+    var pool = eduGetLetterPool();
+    var correct = pool[eduRand(pool.length)];
+    var emoji = EDU_LETTER_EMOJI[correct];
+    var choices = [correct];
+    while (choices.length < 3) {
+      var wrong = pool[eduRand(pool.length)];
+      if (choices.indexOf(wrong) === -1) choices.push(wrong);
+    }
+    return {
+      type: 'letterMatch',
+      question: '',
+      emoji: emoji,
+      answer: correct,
+      choices: eduShuffle(choices),
+      display: 'buttons'
+    };
+  }
+
+  function eduGenColor() {
+    var available = EDU_COLOR_NAMES.slice();
+    var correctIdx = eduRand(available.length);
+    var correctName = available[correctIdx];
+    var choices = [correctName];
+    while (choices.length < 4) {
+      var other = available[eduRand(available.length)];
+      if (choices.indexOf(other) === -1) choices.push(other);
+    }
+    return {
+      type: 'color',
+      question: 'Which colour matches? \uD83C\uDFA8',
+      answer: correctName,
+      targetColor: correctName,
+      choices: eduShuffle(choices),
+      display: 'colors'
+    };
+  }
+
+  function eduGenCounting() {
+    var max = eduGetCountMax();
+    var count = 1 + eduRand(max);
+    var countEmojis = ['⭐','🦟','🌸','🐞','🍎'];
+    var emoji = countEmojis[eduRand(countEmojis.length)];
+    var flies = '';
+    for (var i = 0; i < count; i++) flies += emoji + ' ';
+    var choices = [count];
+    while (choices.length < 3) {
+      var wrong = 1 + eduRand(max);
+      if (choices.indexOf(wrong) === -1) choices.push(wrong);
+    }
+    return {
+      type: 'counting',
+      question: '',
+      emojiDisplay: flies.trim(),
+      answer: String(count),
+      choices: eduShuffle(choices).map(String),
+      display: 'buttons'
+    };
+  }
+
+  function eduGenLetterRecog() {
+    var pool = eduGetLetterPool();
+    var correct = pool[eduRand(pool.length)];
+    var choices = [correct];
+    while (choices.length < 3) {
+      var wrong = pool[eduRand(pool.length)];
+      if (choices.indexOf(wrong) === -1) choices.push(wrong);
+    }
+    return {
+      type: 'letterRecog',
+      question: 'Find the letter ' + correct + '!',
+      answer: correct,
+      choices: eduShuffle(choices),
+      display: 'buttons'
+    };
+  }
+
+  function eduGeneratePuzzle() {
+    var types = eduGetPuzzleTypes();
+    var type = types[eduRand(types.length)];
+    switch (type) {
+      case 'math': return eduGenMath();
+      case 'letterMatch': return eduGenLetterMatch();
+      case 'color': return eduGenColor();
+      case 'counting': return eduGenCounting();
+      case 'letterRecog': return eduGenLetterRecog();
+      default: return eduGenMath();
+    }
+  }
+
+  // ─── Rendering ──────────────────────────────────────────────────────
+  function eduRenderPuzzle(puzzle) {
+    eduCurrentPuzzle = puzzle;
+    eduQuestionEl.innerHTML = '';
+    eduAnswersEl.innerHTML = '';
+    eduFeedbackEl.textContent = '';
+
+    if (puzzle.display === 'colors') {
+      // Show small label for adults
+      var label = document.createElement('div');
+      label.textContent = puzzle.question;
+      label.style.fontSize = '0.9rem';
+      label.style.opacity = '0.7';
+      label.style.marginBottom = '8px';
+      eduQuestionEl.appendChild(label);
+      // Show big target color circle
+      var target = document.createElement('div');
+      target.className = 'edu-color-target';
+      target.style.background = EDU_COLORS[puzzle.targetColor];
+      eduQuestionEl.appendChild(target);
+      // Answer circles
+      puzzle.choices.forEach(function(colorName) {
+        var circle = document.createElement('div');
+        circle.className = 'edu-color-circle';
+        circle.style.background = EDU_COLORS[colorName];
+        circle.dataset.value = colorName;
+        circle.addEventListener('click', function() { eduHandleAnswer(colorName, circle); });
+        eduAnswersEl.appendChild(circle);
+      });
+    } else if (puzzle.type === 'letterMatch') {
+      // Show big emoji at top, letter buttons below
+      var emojiDiv = document.createElement('div');
+      emojiDiv.textContent = puzzle.emoji;
+      emojiDiv.style.fontSize = 'clamp(3.5rem, 14vw, 5rem)';
+      emojiDiv.style.marginBottom = '12px';
+      eduQuestionEl.appendChild(emojiDiv);
+      var hint = document.createElement('div');
+      hint.textContent = 'Starts with...';
+      hint.style.fontSize = '1rem';
+      hint.style.opacity = '0.7';
+      eduQuestionEl.appendChild(hint);
+      puzzle.choices.forEach(function(choice) {
+        var btn = document.createElement('button');
+        btn.className = 'edu-ans-btn';
+        btn.textContent = choice;
+        btn.dataset.value = choice;
+        btn.addEventListener('click', function() { eduHandleAnswer(choice, btn); });
+        eduAnswersEl.appendChild(btn);
+      });
+    } else if (puzzle.type === 'counting') {
+      // Show big emojis, then number buttons
+      var emojis = document.createElement('div');
+      emojis.textContent = puzzle.emojiDisplay;
+      emojis.style.fontSize = 'clamp(2.5rem, 9vw, 3.5rem)';
+      emojis.style.lineHeight = '1.5';
+      emojis.style.textAlign = 'center';
+      emojis.style.marginBottom = '12px';
+      emojis.style.maxWidth = '340px';
+      emojis.style.wordBreak = 'break-word';
+      eduQuestionEl.appendChild(emojis);
+      var countLabel = document.createElement('div');
+      countLabel.textContent = 'How many? \uD83E\uDD14';
+      countLabel.style.fontSize = '1rem';
+      countLabel.style.opacity = '0.7';
+      eduQuestionEl.appendChild(countLabel);
+      puzzle.choices.forEach(function(choice) {
+        var btn = document.createElement('button');
+        btn.className = 'edu-ans-btn';
+        btn.textContent = choice;
+        btn.dataset.value = choice;
+        btn.addEventListener('click', function() { eduHandleAnswer(choice, btn); });
+        eduAnswersEl.appendChild(btn);
+      });
+    } else {
+      eduQuestionEl.textContent = puzzle.question;
+      puzzle.choices.forEach(function(choice) {
+        var btn = document.createElement('button');
+        btn.className = 'edu-ans-btn';
+        btn.textContent = choice;
+        btn.dataset.value = choice;
+        btn.addEventListener('click', function() { eduHandleAnswer(choice, btn); });
+        eduAnswersEl.appendChild(btn);
+      });
+    }
+  }
+
+  function eduHandleAnswer(value, el) {
+    if (!eduActive) return;
+    var isCorrect = (value === eduCurrentPuzzle.answer);
+
+    if (isCorrect) {
+      el.classList.add('correct');
+      playSound('catch');
+      eduStars++;
+      eduSolvedCount++;
+      eduUpdateHUD();
+      eduFeedbackEl.textContent = '⭐ Amazing!';
+
+      // Unlock a lock
+      var lockIdx = eduSolvedCount - 1;
+      var lockEl = document.getElementById('edu-lock-' + lockIdx);
+      if (lockEl) {
+        lockEl.textContent = '🔓';
+        lockEl.classList.add('unlocked');
+      }
+
+      // Disable further clicks
+      eduDisableAnswers();
+
+      if (eduSolvedCount >= 3) {
+        // Victory!
+        setTimeout(function() { eduShowVictory(); }, 800);
+      } else {
+        // Next puzzle after delay
+        setTimeout(function() {
+          if (eduActive) {
+            var p = eduGeneratePuzzle();
+            eduRenderPuzzle(p);
+          }
+        }, 1000);
+      }
+    } else {
+      el.classList.add('wrong');
+      playSound('miss');
+      eduFeedbackEl.textContent = 'Try again! 💪';
+      // Shake cage
+      eduCage.classList.remove('shake');
+      void eduCage.offsetWidth;
+      eduCage.classList.add('shake');
+      // Disable wrong button
+      el.style.pointerEvents = 'none';
+    }
+  }
+
+  function eduDisableAnswers() {
+    var btns = eduAnswersEl.querySelectorAll('.edu-ans-btn, .edu-color-circle');
+    btns.forEach(function(b) { b.style.pointerEvents = 'none'; });
+  }
+
+  function eduUpdateHUD() {
+    eduStarsDisplay.textContent = '⭐ ' + eduStars;
+  }
+
+  function eduShowVictory() {
+    eduActive = false;
+    // Animate cage bars sliding up
+    eduCageBars.classList.add('open');
+    // Chameleon jumps out
+    setTimeout(function() {
+      eduChameleonEl.classList.add('free');
+    }, 400);
+    setTimeout(function() {
+      eduPuzzleSection.style.display = 'none';
+      eduVictory.style.display = 'flex';
+      eduSpawnConfetti();
+      playSound('levelup');
+      // Save best
+      if (eduStars > eduBestSession) {
+        eduBestSession = eduStars;
+        localStorage.setItem('chameleon-edu-best', String(eduBestSession));
+      }
+    }, 1200);
+  }
+
+  function eduSpawnConfetti() {
+    var colors = ['#e74c3c','#3498db','#2ecc71','#f1c40f','#9b59b6','#e67e22','#e91e8a','#ffd700'];
+    for (var i = 0; i < 40; i++) {
+      var c = document.createElement('div');
+      c.className = 'edu-confetti';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.top = '-10px';
+      c.style.background = colors[eduRand(colors.length)];
+      c.style.width = (6 + Math.random() * 8) + 'px';
+      c.style.height = (6 + Math.random() * 8) + 'px';
+      c.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+      c.style.animationDelay = (Math.random() * 0.8) + 's';
+      document.body.appendChild(c);
+      (function(el) {
+        setTimeout(function() { el.remove(); }, 4000);
+      })(c);
+    }
+  }
+
+  function startEducationGame() {
+    initAudio();
+    eduActive = true;
+    eduSolvedCount = 0;
+    // Stars persist across rounds within session
+    eduStars = parseInt(localStorage.getItem('chameleon-edu-session-stars') || '0', 10);
+
+    // Reset UI
+    for (var i = 0; i < 3; i++) {
+      var lk = document.getElementById('edu-lock-' + i);
+      if (lk) { lk.textContent = '🔒'; lk.classList.remove('unlocked'); }
+    }
+    eduCageBars.classList.remove('open');
+    eduChameleonEl.classList.remove('free');
+    eduVictory.style.display = 'none';
+    eduPuzzleSection.style.display = 'flex';
+    eduFeedbackEl.textContent = '';
+    eduUpdateHUD();
+
+    // Show area
+    startScreen.style.display = 'none';
+    gameoverScreen.style.display = 'none';
+    document.getElementById('hud').style.display = 'none';
+    thirstHud.style.display = 'none';
+    comboHud.style.display = 'none';
+    if (carArea) carArea.style.display = 'none';
+    mazeArea.style.display = 'none';
+    runnerArea.style.display = 'none';
+    eduArea.style.display = 'flex';
+    showPauseBtn();
+
+    // Generate first puzzle
+    var p = eduGeneratePuzzle();
+    eduRenderPuzzle(p);
+  }
+
+  function endEducationGame(reason, silent) {
+    eduActive = false;
+    hidePauseBtn();
+    // Save session stars
+    localStorage.setItem('chameleon-edu-session-stars', String(eduStars));
+    if (eduStars > eduBestSession) {
+      eduBestSession = eduStars;
+      localStorage.setItem('chameleon-edu-best', String(eduBestSession));
+    }
+    eduArea.style.display = 'none';
+    if (!silent) {
+      startScreen.style.display = 'flex';
+    }
+  }
+
+  // Play again button
+  var eduPlayAgainBtn = document.getElementById('edu-play-again-btn');
+  if (eduPlayAgainBtn) {
+    eduPlayAgainBtn.addEventListener('click', function() {
+      // Save session stars before restarting
+      localStorage.setItem('chameleon-edu-session-stars', String(eduStars));
+      startEducationGame();
+    });
+  }
+
+  // Back to menu button
+  var eduBackBtn = document.getElementById('edu-back-btn');
+  if (eduBackBtn) {
+    eduBackBtn.addEventListener('click', function() {
+      endEducationGame(null, false);
+    });
+  }
+
   window.__forceEndGame = function() {
     if (typeof endGame       === 'function') endGame('test');
     if (typeof endCarGame    === 'function') endCarGame('test', true);
     if (typeof endMazeGame   === 'function') endMazeGame('test', true);
     if (typeof endRunnerGame === 'function') endRunnerGame('test', true);
     if (typeof endColoringMode === 'function') endColoringMode();
+    if (typeof endEducationGame === 'function') endEducationGame('test', true);
   };
 
   // Dev mode error overlay

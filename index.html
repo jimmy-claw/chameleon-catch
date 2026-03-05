@@ -937,8 +937,8 @@
   #car-player {
     position: absolute;
     bottom: 18%;
-    width: 60px;
-    height: 80px;
+    width: 64px;
+    height: 90px;
     z-index: 10;
     transition: left 0.15s ease-out;
     display: flex;
@@ -1047,7 +1047,7 @@
   #fuel-bar.low { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
   #fuel-bar.critical { background: linear-gradient(90deg, #e63946, #ff6b6b); animation: bar-pulse 0.5s ease infinite alternate; }
 
-  /* Car HUD */
+  /* Car HUD — pause btn left, hud-boxes center, mute btn right */
   #car-hud {
     position: absolute;
     top: 12px; left: 0; right: 0;
@@ -1058,6 +1058,17 @@
     gap: 6px;
     z-index: 20;
     pointer-events: none;
+  }
+  /* Pause/mute btns inside car-hud get pointer-events and push to edges */
+  #car-hud > #pause-btn {
+    margin-right: auto;
+    pointer-events: auto;
+    flex-shrink: 0;
+  }
+  #car-hud > #mute-btn {
+    margin-left: auto;
+    pointer-events: auto;
+    flex-shrink: 0;
   }
 
   /* Car combo HUD */
@@ -1444,7 +1455,7 @@
     display: none;
   }
 
-  /* ═══════════ V9: IMPROVED CAR DESIGN ═══════════ */
+  /* ═══════════ V15: IMPROVED CAR DESIGN ═══════════ */
   #car-player {
     --car-color: #4CAF50;
   }
@@ -1453,93 +1464,153 @@
     inset: 0;
     z-index: 1;
   }
+  /* Main car body — curvy, asymmetric front/back */
   .car-body-main {
     position: absolute;
     bottom: 0;
     left: 4px;
     right: 4px;
-    top: 8px;
+    top: 4px;
     background: var(--car-color);
-    border-radius: 10px 10px 6px 6px;
-    clip-path: polygon(10% 0%, 90% 0%, 100% 25%, 100% 100%, 0% 100%, 0% 25%);
-    box-shadow: inset 0 -4px 8px rgba(0,0,0,0.2);
+    border-radius: 30px 30px 12px 12px;
+    box-shadow:
+      inset 0 -6px 10px rgba(0,0,0,0.2),
+      inset 0 4px 8px rgba(255,255,255,0.15),
+      0 2px 6px rgba(0,0,0,0.35);
   }
+  /* Subtle hood/roof highlight */
+  .car-body-main::before {
+    content: '';
+    position: absolute;
+    top: 4px; left: 10%; right: 10%;
+    height: 30%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, transparent 100%);
+    border-radius: 24px 24px 0 0;
+    pointer-events: none;
+  }
+  /* Windshield — larger, visible, lighter */
   .car-windshield {
     position: absolute;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    height: 22px;
-    background: rgba(135,206,235,0.45);
-    border-radius: 6px 6px 2px 2px;
-    border: 1px solid rgba(255,255,255,0.15);
+    top: 14px;
+    left: 10px;
+    right: 10px;
+    height: 26px;
+    background: linear-gradient(180deg, rgba(173,216,230,0.65) 0%, rgba(135,206,250,0.4) 100%);
+    border-radius: 10px 10px 4px 4px;
+    border: 1.5px solid rgba(255,255,255,0.25);
     z-index: 2;
+    box-shadow: inset 0 1px 4px rgba(255,255,255,0.3);
   }
+  /* Chameleon face — visible through windshield, "driving" */
   .car-face {
     position: absolute;
-    top: 14px;
+    top: 15px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 0.9rem;
+    font-size: 1rem;
     z-index: 3;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.3));
   }
+  /* Spoiler / tail fin at the back */
+  .car-spoiler {
+    position: absolute;
+    bottom: -2px;
+    left: 2px;
+    right: 2px;
+    height: 7px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.35));
+    border-radius: 0 0 6px 6px;
+    z-index: 1;
+  }
+  .car-spoiler::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 8px;
+    right: 8px;
+    height: 4px;
+    background: var(--car-color);
+    border-radius: 2px 2px 0 0;
+    filter: brightness(0.75);
+    box-shadow: 0 -1px 3px rgba(0,0,0,0.3);
+  }
+  /* Wheels — dark rounded squares at corners */
   .car-wheel {
     position: absolute;
-    width: 10px;
-    height: 16px;
-    background: #222;
-    border-radius: 3px;
+    width: 12px;
+    height: 18px;
+    background: #1a1a1a;
+    border-radius: 4px;
     z-index: 0;
+    box-shadow: inset 0 0 0 1.5px #333, 0 1px 3px rgba(0,0,0,0.4);
   }
-  .car-wheel.fl { top: 16px; left: -3px; }
-  .car-wheel.fr { top: 16px; right: -3px; }
-  .car-wheel.bl { bottom: 4px; left: -3px; }
-  .car-wheel.br { bottom: 4px; right: -3px; }
+  .car-wheel.fl { top: 12px; left: -4px; }
+  .car-wheel.fr { top: 12px; right: -4px; }
+  .car-wheel.bl { bottom: 6px; left: -4px; }
+  .car-wheel.br { bottom: 6px; right: -4px; }
+  /* Headlights — two small yellow circles at the front */
   .car-headlight {
     position: absolute;
     width: 8px;
     height: 8px;
-    background: radial-gradient(circle, #fff700, #ffaa00);
+    background: radial-gradient(circle, #fff9c4, #fff700, #ffaa00);
     border-radius: 50%;
-    top: 6px;
+    top: 4px;
     z-index: 2;
-    box-shadow: 0 0 6px rgba(255,247,0,0.6);
+    box-shadow: 0 0 8px rgba(255,247,0,0.7), 0 -4px 10px rgba(255,247,0,0.15);
   }
-  .car-headlight.left { left: 8px; }
-  .car-headlight.right { right: 8px; }
+  .car-headlight.left { left: 9px; }
+  .car-headlight.right { right: 9px; }
+  /* Taillights — two small red circles at the back */
   .car-taillight {
     position: absolute;
     width: 8px;
-    height: 6px;
-    background: radial-gradient(circle, #ff3333, #cc0000);
-    border-radius: 2px;
-    bottom: 2px;
+    height: 8px;
+    background: radial-gradient(circle, #ff6666, #ff3333, #cc0000);
+    border-radius: 50%;
+    bottom: 4px;
     z-index: 2;
-    box-shadow: 0 0 4px rgba(255,0,0,0.5);
+    box-shadow: 0 0 6px rgba(255,0,0,0.6);
   }
-  .car-taillight.left { left: 8px; }
-  .car-taillight.right { right: 8px; }
+  .car-taillight.left { left: 9px; }
+  .car-taillight.right { right: 9px; }
+  /* Exhaust puffs */
   .car-exhaust {
     position: absolute;
     width: 8px;
     height: 8px;
-    background: rgba(160,160,160,0.5);
+    background: rgba(180,180,180,0.6);
     border-radius: 50%;
     z-index: 0;
     pointer-events: none;
-    animation: exhaust-fade 1s ease-out forwards;
+    animation: exhaust-fade 0.8s ease-out forwards;
   }
   @keyframes exhaust-fade {
-    0%   { opacity: 0.6; transform: scale(1); }
-    100% { opacity: 0; transform: scale(2.5) translateY(20px); }
+    0%   { opacity: 0.6; width: 8px; height: 8px; transform: translateY(0); }
+    100% { opacity: 0; width: 20px; height: 20px; transform: translateY(30px); }
   }
+  /* Skid marks on lane change */
+  .car-skid {
+    position: absolute;
+    width: 2px;
+    height: 30px;
+    background: rgba(40,40,40,0.5);
+    z-index: 0;
+    pointer-events: none;
+    animation: skid-fade 0.4s ease-out forwards;
+  }
+  @keyframes skid-fade {
+    0%   { opacity: 0.5; }
+    100% { opacity: 0; transform: translateY(20px); }
+  }
+  /* Nitro flame trail behind car */
   .car-nitro-flame {
     position: absolute;
-    bottom: -18px;
+    bottom: -20px;
     left: 50%;
     transform: translateX(-50%);
-    width: 20px;
-    height: 30px;
+    width: 24px;
+    height: 34px;
     z-index: 0;
     pointer-events: none;
     animation: nitro-flame-flicker 0.1s ease infinite alternate;
@@ -1550,23 +1621,32 @@
     border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
   }
   .car-nitro-flame::before {
-    width: 16px;
-    height: 24px;
-    left: 2px;
-    background: linear-gradient(to bottom, #00bfff, #0066ff, transparent);
+    width: 18px;
+    height: 28px;
+    left: 3px;
+    background: linear-gradient(to bottom, #00e5ff, #0066ff, transparent);
     opacity: 0.9;
   }
   .car-nitro-flame::after {
-    width: 10px;
-    height: 18px;
-    left: 5px;
+    width: 12px;
+    height: 20px;
+    left: 6px;
     top: 2px;
-    background: linear-gradient(to bottom, #99e6ff, #00bfff, transparent);
+    background: linear-gradient(to bottom, #b3f5ff, #00bfff, transparent);
     opacity: 0.7;
   }
   @keyframes nitro-flame-flicker {
     from { transform: translateX(-50%) scaleX(0.9); }
     to   { transform: translateX(-50%) scaleX(1.1); }
+  }
+  /* Nitro boost scale pulse */
+  @keyframes nitro-scale-pulse {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+  #car-player.nitro-pulse {
+    animation: nitro-scale-pulse 0.5s ease-out;
   }
 
   /* ═══════════ V14: SNAKE RUNNER MODE ═══════════ */
@@ -2419,6 +2499,7 @@
         <div class="car-headlight right"></div>
         <div class="car-taillight left"></div>
         <div class="car-taillight right"></div>
+        <div class="car-spoiler"></div>
       </div>
     </div>
     <!-- Car tongue (brief animation on catch) -->
@@ -4284,11 +4365,26 @@
     const roadLeft = W * 0.15;
     const roadWidth = W * 0.70;
     const laneWidth = roadWidth / 3;
-    return roadLeft + laneWidth * lane + laneWidth / 2 - 30; // center car (60px wide)
+    return roadLeft + laneWidth * lane + laneWidth / 2 - 32; // center car (64px wide)
   }
 
   function updateCarPlayerPos() {
     carPlayer.style.left = getCarLaneX(carLane) + 'px';
+  }
+
+  // V15: Skid marks on lane change
+  function spawnSkidMarks() {
+    var pRect = carPlayer.getBoundingClientRect();
+    // Two thin lines at rear wheel positions
+    var offsets = [8, pRect.width - 10];
+    for (var si = 0; si < 2; si++) {
+      var skid = document.createElement('div');
+      skid.className = 'car-skid';
+      skid.style.left = (pRect.left + offsets[si]) + 'px';
+      skid.style.top = (pRect.bottom - 10) + 'px';
+      carArea.appendChild(skid);
+      setTimeout(function(el) { el.remove(); }, 400, skid);
+    }
   }
 
   function updateCarHUD() {
@@ -4439,7 +4535,7 @@
   function checkCarCollision(objLane, objY, objH) {
     if (objLane !== carLane) return false;
     const playerBottom = window.innerHeight * 0.82;
-    const playerTop = playerBottom - 80;
+    const playerTop = playerBottom - 90;
     return objY + objH > playerTop && objY < playerBottom;
   }
 
@@ -4478,17 +4574,20 @@
       }
     }
 
-    // V9: Exhaust puff every 0.5s
+    // V15: Exhaust puff every 0.5s — from back of car
     carExhaustTimer += dt;
     if (carExhaustTimer >= 0.5) {
       carExhaustTimer -= 0.5;
-      var puff = document.createElement('div');
-      puff.className = 'car-exhaust';
       var pRect = carPlayer.getBoundingClientRect();
-      puff.style.left = (pRect.left + pRect.width / 2 - 4) + 'px';
-      puff.style.top = (pRect.bottom) + 'px';
-      carArea.appendChild(puff);
-      setTimeout(function() { puff.remove(); }, 1000);
+      // Spawn two puffs — one near each rear wheel
+      for (var ep = 0; ep < 2; ep++) {
+        var puff = document.createElement('div');
+        puff.className = 'car-exhaust';
+        puff.style.left = (pRect.left + (ep === 0 ? 8 : pRect.width - 16)) + 'px';
+        puff.style.top = (pRect.bottom - 6) + 'px';
+        carArea.appendChild(puff);
+        setTimeout(function(el) { el.remove(); }, 800, puff);
+      }
     }
 
     // V9: Weather wind drift on car — removed car drift, wind only affects flies
@@ -4544,6 +4643,11 @@
           // Nitro burst!
           carNitroTimer = 1.5;
           if (nitroLines) nitroLines.style.display = '';
+          // V15: Scale pulse on nitro
+          carPlayer.classList.remove('nitro-pulse');
+          void carPlayer.offsetWidth;
+          carPlayer.classList.add('nitro-pulse');
+          setTimeout(function() { carPlayer.classList.remove('nitro-pulse'); }, 500);
         } else if (ft === 'red') {
           pointsMult = 2;
         } else if (ft === 'bee') {
@@ -4701,18 +4805,23 @@
     carPoos.forEach(function(p) { p.el.remove(); });
     carPoos = [];
 
-    // V9: Apply skin to improved car design
+    // V15: Apply skin to improved car design
     var carColors = {
       green: '#4CAF50', purple: '#9b59b6', blue: '#3498db',
       orange: '#e67e22', rainbow: '#4CAF50'
     };
     var bodyEl = carPlayer.querySelector('.car-body-main');
+    var spoilerEl = carPlayer.querySelector('.car-spoiler');
     if (bodyEl) {
       carPlayer.style.setProperty('--car-color', carColors[currentSkin] || '#4CAF50');
       bodyEl.style.background = 'var(--car-color)';
     }
     if (currentSkin === 'rainbow') {
-      if (bodyEl) bodyEl.style.animation = 'rainbow-hue 2s linear infinite';
+      if (bodyEl) {
+        bodyEl.style.background = 'linear-gradient(135deg, #ff0000, #ff8800, #ffff00, #00cc00, #0088ff, #8800ff)';
+        bodyEl.style.animation = 'rainbow-hue 2s linear infinite';
+      }
+      if (spoilerEl) spoilerEl.style.setProperty('--car-color', '#8800ff');
       carPlayer.style.filter = 'none';
     } else {
       if (bodyEl) bodyEl.style.animation = '';
@@ -4827,8 +4936,8 @@
       const dx = endX - carTouchStartX;
       if (Math.abs(dx) > 40) {
         // Swipe
-        if (dx < 0 && carLane > 0) { carLane--; updateCarPlayerPos(); }
-        else if (dx > 0 && carLane < 2) { carLane++; updateCarPlayerPos(); }
+        if (dx < 0 && carLane > 0) { carLane--; updateCarPlayerPos(); spawnSkidMarks(); }
+        else if (dx > 0 && carLane < 2) { carLane++; updateCarPlayerPos(); spawnSkidMarks(); }
         carTouchStartX = null;
         return;
       }
@@ -4838,9 +4947,11 @@
     if (endX < W / 2 && carLane > 0) {
       carLane--;
       updateCarPlayerPos();
+      spawnSkidMarks();
     } else if (endX >= W / 2 && carLane < 2) {
       carLane++;
       updateCarPlayerPos();
+      spawnSkidMarks();
     }
     carTouchStartX = null;
   }, { passive: true });
@@ -4851,9 +4962,11 @@
     if ((e.key === 'ArrowLeft' || e.key === 'a') && carLane > 0) {
       carLane--;
       updateCarPlayerPos();
+      spawnSkidMarks();
     } else if ((e.key === 'ArrowRight' || e.key === 'd') && carLane < 2) {
       carLane++;
       updateCarPlayerPos();
+      spawnSkidMarks();
     }
   });
 

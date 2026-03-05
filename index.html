@@ -2900,11 +2900,10 @@
   /** Return mute btn to game-container as a floating button */
   function detachBtnsFromHud() {
     var gc = document.getElementById('game-container');
-    if (gc) {
-      gc.appendChild(muteBtn);
-      gc.appendChild(pauseBtn);
-    }
-    muteBtn.classList.add('floating');
+    if (!gc) return;
+    try { gc.appendChild(muteBtn); } catch(e) { console.error('detachBtnsFromHud muteBtn', e); }
+    try { gc.appendChild(pauseBtn); } catch(e) { console.error('detachBtnsFromHud pauseBtn', e); }
+    try { muteBtn.classList.add('floating'); } catch(e) {}
   }
   function showPauseBtn() {
     pauseBtn.style.display = 'flex';
@@ -3753,26 +3752,28 @@
   function endGame(reason, silent) {
     gameActive = false;
     cancelAnimationFrame(rafId);
-    hidePauseBtn();
-    detachBtnsFromHud();
-    stopWeatherSystem();
+
+    // Defensive cleanup — errors must never prevent the game-over modal
+    try { hidePauseBtn(); } catch(e) { console.error('endGame hidePauseBtn', e); }
+    try { detachBtnsFromHud(); } catch(e) { console.error('endGame detachBtnsFromHud', e); }
+    try { stopWeatherSystem(); } catch(e) { console.error('endGame stopWeatherSystem', e); }
     tongue = null;
-    ctx.clearRect(0,0,tongueCanvas.width,tongueCanvas.height);
-    flies.forEach(f => f.el.remove());
+    try { ctx.clearRect(0,0,tongueCanvas.width,tongueCanvas.height); } catch(e) {}
+    try { flies.forEach(f => f.el.remove()); } catch(e) {}
     flies = [];
-    poos.forEach(p => p.remove());
+    try { poos.forEach(p => p.remove()); } catch(e) {}
     poos = [];
-    thirstHud.style.display = 'none';
-    comboHud.style.display = 'none';
+    try { thirstHud.style.display = 'none'; } catch(e) {}
+    try { comboHud.style.display = 'none'; } catch(e) {}
     pointerDown = false;
 
     if (silent) return;
 
-    playSound('gameover');
+    try { playSound('gameover'); } catch(e) {}
 
     if (score > highScore) {
       highScore = score;
-      localStorage.setItem('chameleon_hs', highScore);
+      try { localStorage.setItem('chameleon_hs', highScore); } catch(e) {}
     }
 
     gameoverMsg.textContent   = reason || 'The flies got away... 🪰🪰🪰';
@@ -3781,42 +3782,46 @@
     highScoreEl.textContent   = highScore > 0 ? `🏆 Best: ${highScore}` : '';
 
     // V9: Daily mode score saving
-    if (dailyMode) {
-      var dailyData = getDailyData();
-      var today = getTodayDateStr();
-      if (dailyData.date !== today || score > (dailyData.score || 0)) {
-        saveDailyData({ date: today, score: score, level: level });
+    try {
+      if (dailyMode) {
+        var dailyData = getDailyData();
+        var today = getTodayDateStr();
+        if (dailyData.date !== today || score > (dailyData.score || 0)) {
+          saveDailyData({ date: today, score: score, level: level });
+        }
+        var best = getDailyData();
+        highScoreEl.textContent = '📅 Daily Best: ' + (best.score || score);
       }
-      var best = getDailyData();
-      highScoreEl.textContent = '📅 Daily Best: ' + (best.score || score);
-    }
+    } catch(e) { console.error('endGame dailyMode', e); }
     dailyMode = false;
     dailyRng = null;
 
     // Show leaderboard and name entry if top score
-    const isTop = isTopScore(score);
-    if (isTop && score > 0) {
-      nameEntrySection.style.display = '';
-      nameInput.value = '';
-      // Wire up save button (remove old listeners by replacing element)
-      const newSaveBtn = saveScoreBtn.cloneNode(true);
-      saveScoreBtn.parentNode.replaceChild(newSaveBtn, saveScoreBtn);
-      // Re-get reference
-      const currentSaveBtn = document.getElementById('save-score-btn');
-      currentSaveBtn.addEventListener('click', function() {
-        const name = (document.getElementById('name-input').value || 'You').substring(0, 8);
-        addToLeaderboard(name, score, level);
-        document.getElementById('name-entry-section').style.display = 'none';
-        renderLeaderboard(
-          document.getElementById('gameover-leaderboard-table'),
-          document.getElementById('gameover-leaderboard')
-        );
-      });
-    } else {
-      nameEntrySection.style.display = 'none';
-    }
+    try {
+      const isTop = isTopScore(score);
+      if (isTop && score > 0) {
+        nameEntrySection.style.display = '';
+        nameInput.value = '';
+        // Wire up save button (remove old listeners by replacing element)
+        const newSaveBtn = saveScoreBtn.cloneNode(true);
+        saveScoreBtn.parentNode.replaceChild(newSaveBtn, saveScoreBtn);
+        // Re-get reference
+        const currentSaveBtn = document.getElementById('save-score-btn');
+        currentSaveBtn.addEventListener('click', function() {
+          const name = (document.getElementById('name-input').value || 'You').substring(0, 8);
+          addToLeaderboard(name, score, level);
+          document.getElementById('name-entry-section').style.display = 'none';
+          renderLeaderboard(
+            document.getElementById('gameover-leaderboard-table'),
+            document.getElementById('gameover-leaderboard')
+          );
+        });
+      } else {
+        nameEntrySection.style.display = 'none';
+      }
+    } catch(e) { console.error('endGame leaderboard', e); nameEntrySection.style.display = 'none'; }
 
-    renderLeaderboard(gameoverLeaderboardTable, gameoverLeaderboard);
+    try { renderLeaderboard(gameoverLeaderboardTable, gameoverLeaderboard); } catch(e) {}
     gameoverScreen.style.display = 'flex';
   }
 

@@ -1716,6 +1716,18 @@
     0%   { transform: translateX(0) translateZ(0); }
     100% { transform: translateX(-50%) translateZ(0); }
   }
+  /* Platform branch lines */
+  .runner-platform {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(180deg, #8B5A2B 0%, #6b3a1f 50%, #4a2810 100%);
+    z-index: 4;
+    border-radius: 3px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    display: none;
+  }
   /* Chameleon runner */
   #runner-chameleon {
     position: absolute;
@@ -1725,12 +1737,10 @@
     z-index: 10;
     line-height: 1;
     will-change: transform;
+    transition: transform 0.18s ease-out;
   }
-  #runner-chameleon.jumping {
-  }
-  #runner-chameleon.ducking {
-    transform: scaleY(0.5) scaleX(1.2) !important;
-    transform-origin: bottom center;
+  #runner-chameleon.mid-air {
+    transition: bottom 0.18s ease-out;
   }
   #runner-chameleon.hit {
     animation: runner-hit-flash 0.15s ease infinite alternate;
@@ -1739,6 +1749,31 @@
     0% { opacity: 1; }
     100% { opacity: 0.3; }
   }
+  /* Drop button */
+  #runner-drop-btn {
+    position: absolute;
+    bottom: 24%;
+    right: 16px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 3px solid rgba(255,255,255,0.6);
+    background: rgba(0,0,0,0.35);
+    color: #fff;
+    font-size: 1.5rem;
+    z-index: 25;
+    cursor: pointer;
+    touch-action: manipulation;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #runner-drop-btn:active {
+    background: rgba(0,0,0,0.55);
+    transform: scale(0.92);
+  }
   /* Obstacles */
   .runner-obstacle {
     position: absolute;
@@ -1746,15 +1781,7 @@
     pointer-events: none;
     line-height: 1;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
-  }
-  .runner-obstacle.ground-snake {
-    bottom: 18%;
     font-size: 2.2rem;
-    transform: translateY(50%);
-  }
-  .runner-obstacle.hanging-cobra {
-    font-size: 2.2rem;
-    top: 0;
   }
   /* Runner HUD */
   #runner-hud {
@@ -2570,12 +2597,16 @@
     </div>
   </div>
 
-  <!-- ========== RUNNER MODE AREA (v14) ========== -->
+  <!-- ========== RUNNER MODE AREA (v15 multi-level platformer) ========== -->
   <div id="runner-mode-area">
     <div id="runner-ground"></div>
     <div id="runner-ground-line"></div>
     <div id="runner-forest"></div>
     <div id="runner-grass"></div>
+    <!-- Platform branch lines -->
+    <div class="runner-platform" id="runner-platform-0"></div>
+    <div class="runner-platform" id="runner-platform-1"></div>
+    <div class="runner-platform" id="runner-platform-2"></div>
     <div id="runner-chameleon">🦎</div>
     <div id="runner-hud">
       <div class="hud-box">
@@ -2589,6 +2620,8 @@
     </div>
     <div id="runner-hearts">❤️❤️❤️</div>
     <div id="runner-level-banner" style="display:none;"></div>
+    <!-- Down-arrow button for dropping levels -->
+    <button id="runner-drop-btn" aria-label="Drop down">▼</button>
   </div>
 
   <!-- ========== COLORING MODE AREA ========== -->
@@ -5959,7 +5992,7 @@
   var runnerLevel = 1;
   var runnerLives = 3;
   var runnerSpeed = 120;          // px/s obstacle speed (slow for kids)
-  var runnerObstacles = [];       // {el, type, x, hitboxW, hitboxH}
+  var runnerObstacles = [];       // {el, platform, x, scored}
   var runnerRafId = null;
   var runnerLastTime = 0;
   var runnerObstacleTimer = 0;
@@ -5969,14 +6002,18 @@
   var runnerInvincibleTimer = 0;
   var runnerHighScore = parseInt(localStorage.getItem('chameleon_runner_hs') || '0', 10);
 
-  // Jump / duck state
-  var runnerJumping = false;
-  var runnerDucking = false;
+  // Platform / level state (replaces jump/duck physics)
+  var runnerCurrentLevel = 0;     // 0=ground, 1=mid, 2=high
+  var runnerY = 0;            // px above current platform
   var runnerVelY = 0;
-  var runnerY = 0;                // px above ground (0 = on ground)
-  var runnerGravity = 900;        // px/s^2 — floaty for kids
-  var runnerJumpVel = 480;        // initial jump velocity — not too high
-  var runnerGroundY = 0;          // calculated at start
+  var runnerJumping = false;
+  var runnerMidAir = false;       // true during level transition (no collision)
+  var runnerMidAirTimer = 0;
+  var RUNNER_TRANSITION_TIME = 0.18; // seconds — matches CSS transition
+
+  // Platform Y positions as % from bottom of runner area
+  var RUNNER_PLATFORM_PCT = [0.20, 0.45, 0.68];
+  var runnerPlatformY = [0, 0, 0]; // calculated px values at start
 
   // DOM refs
   var runnerArea = document.getElementById('runner-mode-area');
@@ -5987,6 +6024,12 @@
   var runnerForest = document.getElementById('runner-forest');
   var runnerGrass = document.getElementById('runner-grass');
   var runnerLevelBanner = document.getElementById('runner-level-banner');
+  var runnerDropBtn = document.getElementById('runner-drop-btn');
+  var runnerPlatformEls = [
+    document.getElementById('runner-platform-0'),
+    document.getElementById('runner-platform-1'),
+    document.getElementById('runner-platform-2')
+  ];
 
   // Populate scrolling forest/grass
   var treeLine = '🌳🌲🌿🌳🌴🌲🌳🌿🌲🌴🌳🌲🌿🌳🌴🌲';
@@ -6048,39 +6091,30 @@
     if (runnerGrass) runnerGrass.style.animationDuration = (duration / 2) + 's';
   }
 
+  // ─── Determine which platforms get snakes based on game level ──────
+  function getActivePlatforms() {
+    if (runnerLevel <= 3) return [0];           // ground only
+    if (runnerLevel <= 6) return [0, 1];        // ground + mid
+    return [0, 1, 2];                            // all 3
+  }
+
   // ─── Create Obstacle ────────────────────────────────────────────────
   function createRunnerObstacle() {
     if (!runnerActive) return;
     var containerW = runnerArea.offsetWidth;
-    var containerH = runnerArea.offsetHeight;
-    var groundTop = containerH * 0.4; // ground starts at 40% from top
+    var activePlats = getActivePlatforms();
 
-    // Decide type: mostly ground snakes, some hanging cobras at higher levels
-    var type = 'ground';
-    if (runnerLevel >= 2 && Math.random() < 0.25 + (runnerLevel - 2) * 0.05) {
-      type = 'hanging';
-    }
+    // Pick a random active platform
+    var platIdx = activePlats[Math.floor(Math.random() * activePlats.length)];
+    var platY = runnerPlatformY[platIdx];
 
     var el = document.createElement('div');
     el.className = 'runner-obstacle';
+    el.textContent = '🐍';
+    // Position snake on the platform line
+    el.style.bottom = (platY - 4) + 'px';
 
-    var obs = { el: el, type: type, x: containerW + 20, scored: false };
-
-    if (type === 'ground') {
-      el.classList.add('ground-snake');
-      el.textContent = Math.random() < 0.5 ? '🐍' : '🐍';
-      el.style.fontSize = '2.2rem';
-      obs.hitboxW = 30 * 0.7;
-      obs.hitboxH = 30 * 0.7;
-    } else {
-      el.classList.add('hanging-cobra');
-      // Hanging cobra drops from top, positioned at a height where ducking avoids it
-      el.textContent = '🐍';
-      el.style.fontSize = '2.2rem';
-      el.style.top = (groundTop - 70) + 'px';
-      obs.hitboxW = 30 * 0.7;
-      obs.hitboxH = 50 * 0.7;
-    }
+    var obs = { el: el, platform: platIdx, x: containerW + 20, scored: false };
 
     el.style.left = obs.x + 'px';
     runnerArea.appendChild(el);
@@ -6098,6 +6132,28 @@
     setTimeout(function() { el.remove(); }, 1600);
   }
 
+  // ─── Platform speed multipliers (ground slowest, top fastest) ──────
+  function getPlatformSpeed(platIdx) {
+    var base = runnerSpeed;
+    if (platIdx === 1) return base * 1.2;
+    if (platIdx === 2) return base * 1.45;
+    return base;
+  }
+
+  // ─── Position chameleon on current level ───────────────────────────
+  function positionChameleon() {
+    var baseY = runnerPlatformY[runnerCurrentLevel];
+    runnerChameleon.style.transform = 'translateY(' + (-(baseY + runnerY)) + 'px)';
+  }
+
+  // ─── Show/hide platforms based on game level ───────────────────────
+  function updatePlatformVisibility() {
+    var active = getActivePlatforms();
+    for (var i = 0; i < runnerPlatformEls.length; i++) {
+      runnerPlatformEls[i].style.display = active.indexOf(i) !== -1 ? 'block' : 'none';
+    }
+  }
+
   // ─── Runner Game Loop ───────────────────────────────────────────────
   function runnerGameLoop(timestamp) {
     if (!runnerActive) return;
@@ -6105,26 +6161,46 @@
     runnerLastTime = timestamp;
 
     var containerW = runnerArea.offsetWidth;
-    var containerH = runnerArea.offsetHeight;
-    var groundBottom = containerH * 0.6; // 60% from top = bottom 40%
 
-    // ── Update jump physics ──
+    // ── Arc jump physics ──
     if (runnerJumping) {
-      // Asymmetric gravity: slow up AND slow down = floaty arc
-      var grav = runnerVelY > 0 ? 600 : 800;  // rising = lighter, falling = slightly heavier
+      var grav = runnerVelY > 0 ? 600 : 800;
       runnerVelY -= grav * dt;
       runnerY += runnerVelY * dt;
-      if (runnerY <= 0) {
+      // Check if we landed on a higher platform
+      var platforms = getActivePlatforms();
+      for (var pi = platforms.length - 1; pi >= 0; pi--) {
+        var platIdx = platforms[pi];
+        if (platIdx <= runnerCurrentLevel) continue;
+        var platY = runnerPlatformY[platIdx] - runnerPlatformY[runnerCurrentLevel];
+        if (runnerY >= platY && runnerVelY > 0) {
+          // peaked above this platform - will land here on way down
+        }
+        if (runnerY <= platY && runnerVelY < 0 && runnerY >= platY - 20) {
+          runnerCurrentLevel = platIdx;
+          runnerY = 0;
+          runnerJumping = false;
+          runnerVelY = 0;
+          break;
+        }
+      }
+      // Landed back on current or lower platform
+      if (runnerY <= 0 && runnerVelY < 0) {
         runnerY = 0;
         runnerJumping = false;
         runnerVelY = 0;
-        runnerChameleon.classList.remove('jumping');
       }
+      positionChameleon();
     }
 
-    // Position chameleon
-    runnerChameleon.style.bottom = runnerGroundY + 'px';
-    runnerChameleon.style.transform = runnerDucking ? 'scaleY(0.5) scaleX(1.2)' : 'translateY(' + (-runnerY) + 'px)';
+    // ── Mid-air timer (no collision during level transition) ──
+    if (runnerMidAir) {
+      runnerMidAirTimer -= dt;
+      if (runnerMidAirTimer <= 0) {
+        runnerMidAir = false;
+        runnerChameleon.classList.remove('mid-air');
+      }
+    }
 
     // ── Invincibility timer ──
     if (runnerInvincible) {
@@ -6139,26 +6215,23 @@
     runnerObstacleTimer -= dt;
     if (runnerObstacleTimer <= 0) {
       createRunnerObstacle();
-      // Random interval, decreases with speed
-      var minGap = Math.max(2.0, 3.0 - (runnerLevel - 1) * 0.1);
-      var maxGap = Math.max(3.0, 5.0 - (runnerLevel - 1) * 0.15);
+      var minGap = Math.max(1.5, 2.5 - (runnerLevel - 1) * 0.08);
+      var maxGap = Math.max(2.5, 4.0 - (runnerLevel - 1) * 0.12);
       runnerNextObstacleIn = minGap + Math.random() * (maxGap - minGap);
       runnerObstacleTimer = runnerNextObstacleIn;
     }
 
     // ── Move obstacles & check collisions ──
     var chameleonLeft = containerW * 0.15;
-    var chameleonW = 40 * 0.7;  // forgiving hitbox
-    var chameleonH = runnerDucking ? 20 * 0.7 : 40 * 0.7;
-    var chameleonBottom2 = runnerY;
-    var chameleonTop = chameleonBottom2 + (runnerDucking ? 25 : 50);
+    var chameleonW = 40 * 0.7;
 
     for (var i = runnerObstacles.length - 1; i >= 0; i--) {
       var obs = runnerObstacles[i];
-      obs.x -= runnerSpeed * dt;
+      var spd = getPlatformSpeed(obs.platform);
+      obs.x -= spd * dt;
       obs.el.style.left = obs.x + 'px';
 
-      // Off screen left — remove and score
+      // Off screen left — remove
       if (obs.x < -60) {
         obs.el.remove();
         runnerObstacles.splice(i, 1);
@@ -6172,18 +6245,16 @@
         runnerDodged++;
         updateRunnerHUD();
 
-        // Milestone every 10 dodged
         if (runnerDodged % 10 === 0) {
           showRunnerMilestone();
         }
 
-        // Level up every 20 dodged
         if (runnerDodged % 20 === 0) {
           runnerLevel++;
           runnerSpeed = 120 + (runnerLevel - 1) * 15;
           updateRunnerScrollSpeed();
+          updatePlatformVisibility();
           updateRunnerHUD();
-          // Show level banner
           if (runnerLevelBanner) {
             runnerLevelBanner.textContent = '🎉 Level ' + runnerLevel + '!';
             runnerLevelBanner.style.display = '';
@@ -6197,53 +6268,41 @@
         continue;
       }
 
-      // Collision check (forgiving hitboxes — 30% smaller than visual)
-      if (obs.scored || runnerInvincible) continue;
+      // Collision: same platform + horizontal overlap + not mid-air
+      if (obs.scored || runnerInvincible || runnerMidAir) continue;
+      if (obs.platform !== runnerCurrentLevel) continue;
 
       var obsLeft = obs.x;
       var obsRight = obs.x + 40;
-
-      // Chameleon bounds
       var cLeft = chameleonLeft;
       var cRight = chameleonLeft + chameleonW + 15;
 
-      // Horizontal overlap?
       if (cRight > obsLeft + 10 && cLeft < obsRight - 10) {
-        var hit = false;
+        runnerLives--;
+        updateRunnerHUD();
+        playSound('miss');
 
-        if (obs.type === 'ground') {
-          // Ground snake — chameleon must be jumping to avoid
-          // Snake hitbox: from ground up to ~35px
-          if (chameleonBottom2 < 35) {
-            hit = true;
-          }
-        } else {
-          // Hanging cobra — chameleon must be ducking to avoid
-          // Cobra hitbox: from top down, hits if chameleon is standing/jumping at that height
-          if (!runnerDucking && runnerY < 60) {
-            hit = true;
-          }
+        if (runnerLives <= 0) {
+          endRunnerGame('The snakes got you! 🐍🐍🐍');
+          return;
         }
 
-        if (hit) {
-          runnerLives--;
-          updateRunnerHUD();
-          playSound('miss');
-
-          if (runnerLives <= 0) {
-            endRunnerGame('The snakes got you! 🐍🐍🐍');
-            return;
-          }
-
-          // Invincibility window
-          runnerInvincible = true;
-          runnerInvincibleTimer = 1.5;
-          runnerChameleon.classList.add('hit');
-        }
+        runnerInvincible = true;
+        runnerInvincibleTimer = 1.5;
+        runnerChameleon.classList.add('hit');
       }
     }
 
     runnerRafId = requestAnimationFrame(runnerGameLoop);
+  }
+
+  // ─── Calculate platform positions ───────────────────────────────────
+  function calcPlatformPositions() {
+    var h = runnerArea.offsetHeight || window.innerHeight || 600;
+    for (var i = 0; i < RUNNER_PLATFORM_PCT.length; i++) {
+      runnerPlatformY[i] = Math.round(h * RUNNER_PLATFORM_PCT[i]);
+      runnerPlatformEls[i].style.bottom = runnerPlatformY[i] + 'px';
+    }
   }
 
   // ─── Start Runner ───────────────────────────────────────────────────
@@ -6255,10 +6314,12 @@
     runnerLives = 3;
     runnerSpeed = 120;
     runnerDodged = 0;
+    runnerCurrentLevel = 0;
+    runnerMidAir = false;
+    runnerMidAirTimer = 0;
     runnerY = 0;
     runnerVelY = 0;
     runnerJumping = false;
-    runnerDucking = false;
     runnerInvincible = false;
     runnerInvincibleTimer = 0;
     runnerObstacleTimer = 3.0;
@@ -6286,14 +6347,21 @@
     attachBtnsToHud(document.getElementById('runner-hud'));
     showPauseBtn();
 
-    // Calculate ground position NOW that area is visible
-    var rAreaH = runnerArea.offsetHeight || window.innerHeight || 600;
-    runnerGroundY = Math.round(rAreaH * 0.20);
+    // Calculate platform positions NOW that area is visible
+    calcPlatformPositions();
+    updatePlatformVisibility();
 
-    // Position chameleon on ground
-    runnerChameleon.classList.remove('hit', 'jumping', 'ducking');
-    runnerY = 0;
-    runnerChameleon.style.bottom = runnerGroundY + 'px';
+    // Show drop button
+    runnerDropBtn.style.display = 'flex';
+
+    // Position chameleon on ground (level 0) — disable transition for initial placement
+    runnerChameleon.classList.remove('hit', 'mid-air');
+    runnerChameleon.style.bottom = '0px';
+    runnerChameleon.style.transition = 'none';
+    runnerChameleon.style.transform = 'translateY(0)';
+    void runnerChameleon.offsetWidth;
+    runnerChameleon.style.transition = '';
+    positionChameleon();
 
     runnerActive = true;
     runnerLastTime = performance.now();
@@ -6310,7 +6378,8 @@
     // Clean up
     runnerObstacles.forEach(function(o) { o.el.remove(); });
     runnerObstacles = [];
-    runnerChameleon.classList.remove('hit', 'jumping', 'ducking');
+    runnerChameleon.classList.remove('hit', 'mid-air');
+    runnerDropBtn.style.display = 'none';
     var oldMilestones = runnerArea.querySelectorAll('.runner-milestone');
     oldMilestones.forEach(function(m) { m.remove(); });
 
@@ -6356,91 +6425,72 @@
   }
 
   // ─── Runner Controls ────────────────────────────────────────────────
-  // Tap/click anywhere = jump, hold = duck
-  var runnerTouchTimer = null;
-  var runnerHolding = false;
+  // Tap/click = jump UP one level, down button/key = drop DOWN one level
 
-  function runnerDoJump() {
+  function runnerJumpUp() {
     if (!runnerActive || gamePaused) return;
-    if (!runnerJumping && runnerY <= 0) {
+    if (runnerJumping) return; // already in air
+    runnerJumping = true;
+    runnerVelY = 480;  // launch upward
+    runnerMidAir = true;
+    runnerMidAirTimer = 0.6;
+    runnerChameleon.classList.add('mid-air');
+    playSound('tongue');
+  }
+
+  function runnerDropDown() {
+    if (!runnerActive || gamePaused) return;
+    if (runnerCurrentLevel <= 0 && !runnerJumping) return;
+    if (runnerJumping) {
+      // fast drop
+      runnerVelY = -600;
+    } else {
+      runnerCurrentLevel = Math.max(0, runnerCurrentLevel - 1);
       runnerJumping = true;
-      runnerVelY = runnerJumpVel;
-      runnerChameleon.classList.add('jumping');
-      playSound('tongue');
+      runnerVelY = -300;
+      runnerMidAir = true;
+      runnerMidAirTimer = 0.3;
+      runnerChameleon.classList.add('mid-air');
     }
   }
 
-  function runnerStartDuck() {
-    if (!runnerActive || gamePaused) return;
-    runnerDucking = true;
-    runnerChameleon.classList.add('ducking');
-  }
-
-  function runnerStopDuck() {
-    runnerDucking = false;
-    runnerChameleon.classList.remove('ducking');
-  }
-
-  // Touch controls
+  // Touch controls: tap anywhere = jump up (except on drop button)
   runnerArea.addEventListener('touchstart', function(e) {
     if (!runnerActive || gamePaused) return;
+    if (e.target === runnerDropBtn || runnerDropBtn.contains(e.target)) return;
     e.preventDefault();
-    runnerHolding = false;
-    runnerTouchTimer = setTimeout(function() {
-      runnerHolding = true;
-      runnerStartDuck();
-    }, 200);
+    runnerJumpUp();
   }, { passive: false });
 
-  runnerArea.addEventListener('touchend', function(e) {
-    if (!runnerActive) return;
-    e.preventDefault();
-    clearTimeout(runnerTouchTimer);
-    if (runnerHolding) {
-      runnerStopDuck();
-      runnerHolding = false;
-    } else {
-      runnerDoJump();
-    }
-  }, { passive: false });
-
-  // Mouse controls
+  // Mouse controls: click = jump up (except on drop button)
   runnerArea.addEventListener('mousedown', function(e) {
     if (!runnerActive || gamePaused) return;
-    runnerHolding = false;
-    runnerTouchTimer = setTimeout(function() {
-      runnerHolding = true;
-      runnerStartDuck();
-    }, 200);
+    if (e.target === runnerDropBtn || runnerDropBtn.contains(e.target)) return;
+    runnerJumpUp();
   });
 
-  runnerArea.addEventListener('mouseup', function(e) {
-    if (!runnerActive) return;
-    clearTimeout(runnerTouchTimer);
-    if (runnerHolding) {
-      runnerStopDuck();
-      runnerHolding = false;
-    } else {
-      runnerDoJump();
-    }
+  // Drop button
+  runnerDropBtn.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    runnerDropDown();
+  }, { passive: false });
+
+  runnerDropBtn.addEventListener('mousedown', function(e) {
+    e.stopPropagation();
+    runnerDropDown();
   });
 
-  // Keyboard: space/up = jump, down = duck
+  // Keyboard: space/up/w = jump up, down/s = drop down
   document.addEventListener('keydown', function(e) {
     if (!runnerActive || gamePaused) return;
     if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'w') {
       e.preventDefault();
-      runnerDoJump();
+      runnerJumpUp();
     }
     if (e.key === 'ArrowDown' || e.key === 's') {
       e.preventDefault();
-      runnerStartDuck();
-    }
-  });
-  document.addEventListener('keyup', function(e) {
-    if (!runnerActive) return;
-    if (e.key === 'ArrowDown' || e.key === 's') {
-      runnerStopDuck();
+      runnerDropDown();
     }
   });
 
